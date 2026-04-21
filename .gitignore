@@ -1,0 +1,20 @@
+# Email files (source, not needed on site)
+*.eml
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.kiro/
+
+# Python
+__pycache__/
+*.pyc
+
+# Outlook scripts (internal use only)
+scripts/send-via-outlook.ps1
+scripts/setup-task-scheduler.ps1
+scripts/generate-eml.ps1

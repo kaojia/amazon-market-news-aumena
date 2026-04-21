@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amazon Market News AU/MENA POST | 跨境電商情報站</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #f5f5f5;
+  --surface: #ffffff;
+  --text: #1a1a1a;
+  --text-secondary: #555;
+  --text-muted: #999;
+  --border: #ebebeb;
+  --accent: #232f3e;
+  --accent-light: #fff7ed;
+  --featured-bg: #fffbeb;
+  --featured-border: #f59e0b;
+  --tag-tax-bg: #fef2f2; --tag-tax: #b91c1c;
+  --tag-compliance-bg: #fffbeb; --tag-compliance: #b45309;
+  --tag-macro-bg: #f0fdf4; --tag-macro: #15803d;
+  --tag-platform-bg: #f5f3ff; --tag-platform: #6d28d9;
+  --tag-logistics-bg: #eff6ff; --tag-logistics: #1d4ed8;
+  --tag-trade-bg: #fdf4ff; --tag-trade: #86198f;
+  --tag-geopolitics-bg: #fef2f2; --tag-geopolitics: #dc2626;
+}
+body {
+  font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+.site-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between; height: 64px;
+}
+.nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; flex-shrink: 0; }
+.nav-brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+.nav-brand-name { font-family: 'Noto Sans TC', sans-serif; font-size: 17px; font-weight: 700; color: #232f3e; letter-spacing: 1px; }
+.nav-brand-sub { font-size: 11px; color: var(--text-muted); font-weight: 400; letter-spacing: 0.5px; }
+.nav-links { display: flex; align-items: center; gap: 4px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.nav-links::-webkit-scrollbar { display: none; }
+.nav-link { padding: 6px 14px; font-size: 13px; font-weight: 500; color: var(--text-secondary); text-decoration: none; border-radius: 20px; white-space: nowrap; transition: all 0.2s; cursor: pointer; }
+.nav-link:hover { background: var(--accent-light); color: var(--accent); }
+.nav-link.active { background: var(--accent); color: #fff; }
+.nav-link[data-filter="featured"] { color: #b45309; }
+.nav-link[data-filter="featured"]:hover { background: #fffbeb; color: #92400e; }
+.nav-link[data-filter="featured"].active { background: #f59e0b; color: #fff; }
+.nav-search { display: flex; align-items: center; gap: 8px; margin-left: 12px; }
+.search-input { width: 180px; padding: 7px 14px; border: 1px solid var(--border); border-radius: 20px; font-size: 13px; font-family: inherit; outline: none; transition: border-color 0.2s, width 0.3s; background: var(--bg); }
+.search-input:focus { border-color: var(--accent); width: 240px; }
+.search-input::placeholder { color: var(--text-muted); }
+</style>
+</head>
+<body>
+<style>
+.hero { max-width: 1200px; margin: 0 auto; padding: 32px 24px 0; }
+.hero-card {
+  position: relative;
+  background: linear-gradient(135deg, #232f3e 0%, #37475a 50%, #ff9900 100%);
+  border-radius: 16px; padding: 56px 48px; color: #fff; overflow: hidden;
+  cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;
+}
+.hero-card:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(35,47,62,0.25); }
+.hero-badge { display: inline-block; background: rgba(255,255,255,0.18); padding: 4px 14px; border-radius: 16px; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+.hero-date { font-size: 13px; opacity: 0.7; margin-bottom: 12px; }
+.hero-title { font-family: 'Noto Sans TC', sans-serif; font-size: 28px; font-weight: 700; line-height: 1.4; max-width: 700px; }
+.hero-excerpt { font-size: 15px; opacity: 0.85; margin-top: 14px; max-width: 600px; line-height: 1.8; }
+.hero-tags { margin-top: 18px; display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-tag { padding: 3px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; background: rgba(255,255,255,0.2); color: #fff; }
+.section-header { max-width: 1200px; margin: 0 auto; padding: 40px 24px 16px; display: flex; align-items: baseline; justify-content: space-between; }
+.section-title { font-family: 'Noto Sans TC', sans-serif; font-size: 22px; font-weight: 700; color: var(--text); }
+.section-count { font-size: 13px; color: var(--text-muted); }
+.articles-grid { max-width: 1200px; margin: 0 auto; padding: 0 24px 40px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.article-card { background: var(--surface); border-radius: 12px; overflow: hidden; border: 1px solid transparent; transition: transform 0.25s, box-shadow 0.25s; cursor: pointer; display: flex; flex-direction: column; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+.article-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
+.article-card.featured { background: #fffbeb; border-color: transparent; box-shadow: 0 2px 12px rgba(245,158,11,0.12); }
+.card-color-bar { height: 4px; width: 100%; }
+.card-body { padding: 20px 22px 18px; flex: 1; display: flex; flex-direction: column; }
+.card-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+.card-date { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+.card-type { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; background: var(--accent-light); color: var(--accent); }
+.card-type.type-featured { background: #fef3c7; color: #92400e; }
+.card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.card-tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
+.tag-稅務 { background: var(--tag-tax-bg); color: var(--tag-tax); }
+.tag-合規 { background: var(--tag-compliance-bg); color: var(--tag-compliance); }
+.tag-總經 { background: var(--tag-macro-bg); color: var(--tag-macro); }
+.tag-平台 { background: var(--tag-platform-bg); color: var(--tag-platform); }
+.tag-物流 { background: var(--tag-logistics-bg); color: var(--tag-logistics); }
+.tag-貿易 { background: var(--tag-trade-bg); color: var(--tag-trade); }
+.tag-地緣政治 { background: var(--tag-geopolitics-bg); color: var(--tag-geopolitics); }
+.card-title { font-family: 'Noto Sans TC', sans-serif; font-size: 16px; font-weight: 700; line-height: 1.55; color: var(--text); margin-bottom: 10px; flex: 1; }
+.card-excerpt { font-size: 13px; color: var(--text-secondary); line-height: 1.8; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.card-footer { padding: 12px 22px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.card-read-more { font-size: 12px; font-weight: 600; color: var(--accent); text-decoration: none; letter-spacing: 0.5px; }
+.card-source { font-size: 11px; color: var(--text-muted); }
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; overflow-y: auto; padding: 40px 20px; }
+.modal-overlay.open { display: flex; justify-content: center; align-items: flex-start; }
+.modal-content { background: var(--surface); border-radius: 16px; max-width: 740px; width: 100%; overflow: hidden; animation: modalIn 0.3s ease; }
+@keyframes modalIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.modal-header { padding: 32px 36px 24px; border-bottom: 1px solid var(--border); }
+.modal-close { float: right; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted); padding: 4px 8px; border-radius: 8px; transition: background 0.2s; }
+.modal-close:hover { background: var(--bg); }
+.modal-title { font-family: 'Noto Sans TC', sans-serif; font-size: 22px; font-weight: 700; line-height: 1.5; margin-top: 8px; }
+.modal-body { padding: 24px 36px 36px; }
+.modal-body .summary { font-size: 15px; color: var(--text-secondary); line-height: 1.85; margin-bottom: 20px; }
+.modal-body .impact { background: #eff6ff; padding: 18px 22px; border-radius: 12px; margin-bottom: 16px; font-size: 14px; line-height: 1.8; color: #1e3a5f; }
+.modal-body .impact strong { color: #1e40af; }
+.modal-body .action { background: #f0fdf4; padding: 18px 22px; border-radius: 12px; margin-bottom: 16px; font-size: 14px; line-height: 1.8; color: #14532d; }
+.modal-body .action strong { color: #166534; }
+.modal-body .source { font-size: 13px; color: var(--text-muted); margin-top: 16px; }
+.modal-body .source a { color: var(--accent); text-decoration: none; }
+.modal-body .source a:hover { text-decoration: underline; }
+.layout-wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px 60px; display: grid; grid-template-columns: 1fr 320px; gap: 32px; align-items: start; }
+.sidebar-card { background: #fefce8; border: 1px solid #fde047; border-radius: 12px; padding: 22px 24px; }
+.sidebar-wrap { position: sticky; top: 84px; display: flex; flex-direction: column; gap: 20px; max-height: calc(100vh - 100px); overflow-y: auto; scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
+.sidebar-wrap::-webkit-scrollbar { width: 4px; }
+.sidebar-wrap::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+.sidebar-title { font-family: 'Noto Sans TC', sans-serif; font-size: 16px; font-weight: 700; color: #854d0e; margin-bottom: 16px; text-align: center; }
+.sidebar-date { padding: 6px 0; font-size: 13px; color: #4a5568; border-bottom: 1px solid rgba(253,224,71,0.4); }
+.sidebar-date:last-child { border-bottom: none; }
+.sidebar-date strong { color: #92400e; display: inline-block; min-width: 70px; }
+.promo-card { background: #f0f9ff; border: 1px solid #7dd3fc; margin-top: 20px; }
+.promo-title { color: #0c4a6e; }
+.promo-event { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(125,211,252,0.3); }
+.promo-event:last-of-type { border-bottom: none; }
+.promo-event.past { opacity: 0.5; }
+.promo-event.upcoming { background: #dbeafe; margin: 0 -24px; padding: 12px 24px; border-radius: 8px; border-bottom: none; }
+.promo-badge { flex-shrink: 0; width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #fff; margin-top: 2px; }
+.promo-badge.q1 { background: #10b981; }
+.promo-badge.q2 { background: #f59e0b; }
+.promo-badge.q3 { background: #8b5cf6; }
+.promo-badge.q4 { background: #ef4444; }
+.promo-info { flex: 1; min-width: 0; }
+.promo-name { font-size: 13px; font-weight: 700; color: #0f172a; line-height: 1.3; }
+.promo-date-range { font-size: 12px; color: #0369a1; font-weight: 600; margin-top: 2px; }
+.promo-note { font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.4; }
+.promo-status { flex-shrink: 0; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; white-space: nowrap; margin-top: 4px; }
+.promo-status.done { background: #e2e8f0; color: #64748b; }
+.promo-status.next { background: #fef3c7; color: #92400e; animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+.promo-footer { padding-top: 10px; font-size: 10px; color: #94a3b8; text-align: center; }
+.no-results { grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 15px; }
+.site-footer { text-align: center; padding: 32px 24px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); line-height: 1.8; }
+.pagination { display: flex; justify-content: center; gap: 8px; padding: 20px 0 40px; }
+.page-btn { padding: 8px 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); font-size: 13px; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.page-btn:hover { border-color: var(--accent); color: var(--accent); }
+.page-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.page-btn:disabled { opacity: 0.4; cursor: default; }
+@media (max-width: 1024px) { .articles-grid { grid-template-columns: repeat(2, 1fr); } .layout-wrap { grid-template-columns: 1fr; } .sidebar-wrap { position: static; max-height: none; } }
+@media (max-width: 640px) { .articles-grid { grid-template-columns: 1fr; } .nav-links { display: none; } .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 64px; left: 0; right: 0; background: #fff; border-bottom: 1px solid var(--border); padding: 12px 24px; gap: 4px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); } .hero-card { padding: 36px 24px; } .hero-title { font-size: 22px; } .search-input { width: 140px; } .search-input:focus { width: 180px; } .modal-header, .modal-body { padding-left: 20px; padding-right: 20px; } }
+.nav-toggle { display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-secondary); padding: 4px; }
+@media (max-width: 640px) { .nav-toggle { display: block; } }
+</style>
+
+<!-- NAV -->
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-brand" onclick="resetAll(); return false;">
+      <svg width="42" height="42" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="120" height="120" rx="16" fill="#232f3e"/>
+        <rect x="4" y="4" width="112" height="112" rx="13" fill="none" stroke="#ff9900" stroke-width="2" opacity="0.5"/>
+        <!-- Amazon smile arrow -->
+        <path d="M30 68c12 8 28 12 44 12s28-3 38-8" stroke="#ff9900" stroke-width="5" stroke-linecap="round" fill="none"/>
+        <path d="M100 62l12 10-14 4" fill="#ff9900"/>
+        <!-- NEWS text -->
+        <text x="60" y="52" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="26" font-weight="700" fill="#ffffff" letter-spacing="2">NEWS</text>
+        <text x="60" y="104" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" font-weight="700" fill="#ff9900" letter-spacing="2">AU/MENA</text>
+      </svg>
+      <div class="nav-brand-text">
+        <span class="nav-brand-name">Amazon Market News AU/MENA</span>
+        <span class="nav-brand-sub">跨境電商情報站</span>
+      </div>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a class="nav-link active" data-filter="all">全部</a>
+      <a class="nav-link" data-filter="稅務">稅務</a>
+      <a class="nav-link" data-filter="合規">合規</a>
+      <a class="nav-link" data-filter="總經">總經</a>
+      <a class="nav-link" data-filter="物流">物流</a>
+      <a class="nav-link" data-filter="貿易">貿易</a>
+      <a class="nav-link" data-filter="地緣政治">地緣政治</a>
+    </div>
+    <div class="nav-search">
+      <input type="text" class="search-input" id="searchInput" placeholder="搜尋 RBA、VAT、Hormuz..." aria-label="搜尋情報">
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="選單">☰</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="heroSection"></div>
+
+<!-- SECTION HEADER -->
+<div class="section-header">
+  <div class="section-title" id="sectionTitle">最新情報</div>
+  <div class="section-count" id="sectionCount"></div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="layout-wrap">
+  <div>
+    <div class="articles-grid" id="articlesGrid"></div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+  <aside>
+    <div class="sidebar-wrap">
+    <div class="sidebar-card">
+      <div class="sidebar-title">📅 關鍵日期總覽</div>
+      <div class="sidebar-date"><strong>4/14</strong> UAE 新 VAT 罰則框架生效</div>
+      <div class="sidebar-date"><strong>4/15-16</strong> SA 四大經濟特區法規生效</div>
+      <div class="sidebar-date"><strong>4/17</strong> RBA 利率決策（預期升至 4.35%）</div>
+      <div class="sidebar-date"><strong>4/22</strong> 美伊停火到期</div>
+      <div class="sidebar-date"><strong>6/30</strong> ZATCA Wave 24 電子發票整合截止</div>
+      <div class="sidebar-date"><strong>7/1</strong> UAE 電子發票試點啟動</div>
+      <div class="sidebar-date"><strong>7/31</strong> UAE 大型企業 ASP 指定截止</div>
+      <div class="sidebar-date"><strong>10/1</strong> AU 信用卡附加費禁令生效</div>
+      <div class="sidebar-date"><strong>2027/1/1</strong> UAE 電子發票強制實施</div>
+      <div class="sidebar-date"><strong>2027/7/1</strong> AU 不公平交易行為禁令生效</div>
+    </div>
+
+    <div class="sidebar-card promo-card">
+      <div class="sidebar-title promo-title">🛒 Amazon AU/MENA 2026 大促檔期</div>
+      <div class="promo-event past">
+        <div class="promo-badge q1">Q1</div>
+        <div class="promo-info">
+          <div class="promo-name">AU Autumn Sale</div>
+          <div class="promo-date-range">3 月中旬</div>
+          <div class="promo-note">全站開放</div>
+        </div>
+        <div class="promo-status done">已結束</div>
+      </div>
+      <div class="promo-event">
+        <div class="promo-badge q2">Q2</div>
+        <div class="promo-info">
+          <div class="promo-name">Ramadan / Eid al-Fitr</div>
+          <div class="promo-date-range">3 月底 – 4 月初</div>
+          <div class="promo-note">AE/SA 站點重點檔期</div>
+        </div>
+      </div>
+      <div class="promo-event upcoming">
+        <div class="promo-badge q2">Q2</div>
+        <div class="promo-info">
+          <div class="promo-name">Prime Day</div>
+          <div class="promo-date-range">6 月下旬（預估）</div>
+          <div class="promo-note">全球同步 · Prime 限定</div>
+        </div>
+        <div class="promo-status next">即將到來</div>
+      </div>
+      <div class="promo-event">
+        <div class="promo-badge q3">Q3</div>
+        <div class="promo-info">
+          <div class="promo-name">Back to School (AU)</div>
+          <div class="promo-date-range">1 月（AU 學年制）</div>
+          <div class="promo-note">文具、3C、校服</div>
+        </div>
+      </div>
+      <div class="promo-event">
+        <div class="promo-badge q4">Q4</div>
+        <div class="promo-info">
+          <div class="promo-name">White Friday (AE/SA)</div>
+          <div class="promo-date-range">11 月下旬</div>
+          <div class="promo-note">中東版 Black Friday · 全年最大檔</div>
+        </div>
+      </div>
+      <div class="promo-event">
+        <div class="promo-badge q4">Q4</div>
+        <div class="promo-info">
+          <div class="promo-name">Singles' Day</div>
+          <div class="promo-date-range">11/11</div>
+          <div class="promo-note">跨境賣家重點檔期</div>
+        </div>
+      </div>
+      <div class="promo-event">
+        <div class="promo-badge q4">Q4</div>
+        <div class="promo-info">
+          <div class="promo-name">Black Friday / Cyber Monday (AU)</div>
+          <div class="promo-date-range">11/27 – 11/30</div>
+          <div class="promo-note">AU 站點全年最大檔</div>
+        </div>
+      </div>
+      <div class="promo-footer"><span>* 日期為預估，以 Seller Central 公告為準</span></div>
+    </div>
+    </div>
+  </aside>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="modal-close" id="modalClose" aria-label="關閉">&times;</button>
+      <div class="card-meta" id="modalMeta"></div>
+      <div class="modal-title" id="modalTitle"></div>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="site-footer">
+  <p>Amazon Market News AU/MENA | 跨境電商情報站</p>
+  <p>由 Kiro AI 自動彙整，每日更新 | 資訊僅供參考，請以官方公告為準</p>
+  <p style="margin-top:8px;">Hosted on GitHub Pages</p>
+</div>
+
+<script>
+let articles = [];
+let currentFilter = 'all';
+let currentSearch = '';
+const PER_PAGE = 9;
+let currentPage = 1;
+
+function getFiltered() {
+  return articles.filter(a => {
+    const matchFilter = currentFilter === 'all' || a.tags.includes(currentFilter);
+    const matchSearch = !currentSearch
+      || a.title.toLowerCase().includes(currentSearch)
+      || a.summary.toLowerCase().includes(currentSearch)
+      || (a.impact || '').toLowerCase().includes(currentSearch)
+      || a.tags.some(t => t.includes(currentSearch));
+    return matchFilter && matchSearch;
+  });
+}
+
+function renderHero() {
+  const latest = articles[0];
+  if (!latest) return;
+  document.getElementById('heroSection').innerHTML = `
+    <div class="hero-card" onclick="openModal(0)">
+      <div class="hero-badge">LATEST INTEL</div>
+      <div class="hero-date">${latest.date}</div>
+      <div class="hero-title">${latest.title}</div>
+      <div class="hero-excerpt">${latest.summary.substring(0, 200)}...</div>
+      <div class="hero-tags">
+        ${latest.tags.map(t => `<span class="hero-tag">${t}</span>`).join('')}
+      </div>
+    </div>`;
+}
+
+function renderGrid() {
+  const filtered = getFiltered();
+  const start = (currentPage - 1) * PER_PAGE;
+  const paged = filtered.slice(start, start + PER_PAGE);
+  const grid = document.getElementById('articlesGrid');
+  const filterLabel = currentFilter === 'all' ? '最新情報' : currentFilter;
+  document.getElementById('sectionTitle').textContent = currentSearch ? `搜尋：${currentSearch}` : filterLabel;
+  document.getElementById('sectionCount').textContent = `共 ${filtered.length} 則`;
+  if (paged.length === 0) {
+    grid.innerHTML = '<div class="no-results">沒有找到符合條件的情報 🔍</div>';
+    document.getElementById('pagination').innerHTML = '';
+    return;
+  }
+  grid.innerHTML = paged.map((a) => {
+    const globalIdx = articles.indexOf(a);
+    return `
+    <div class="article-card" onclick="openModal(${globalIdx})">
+      <div class="card-color-bar" style="background:${a.color}"></div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-date">${a.date}</span>
+          <span class="card-type">日報</span>
+          <div class="card-tags">
+            ${a.tags.map(t => `<span class="card-tag tag-${t}">${t}</span>`).join('')}
+          </div>
+        </div>
+        <div class="card-title">${a.title}</div>
+        <div class="card-excerpt">${a.summary.substring(0, 150)}...</div>
+      </div>
+      <div class="card-footer">
+        <span class="card-read-more">CONTINUE READING →</span>
+        <span class="card-source">${(a.sources && a.sources[0]) ? a.sources[0].name : ''}</span>
+      </div>
+    </div>`;
+  }).join('');
+  const totalPages = Math.ceil(filtered.length / PER_PAGE);
+  const pag = document.getElementById('pagination');
+  if (totalPages <= 1) { pag.innerHTML = ''; return; }
+  let html = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹ 上一頁</button>`;
+  for (let p = 1; p <= totalPages; p++) {
+    html += `<button class="page-btn ${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`;
+  }
+  html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>下一頁 ›</button>`;
+  pag.innerHTML = html;
+}
+
+function goPage(p) { currentPage = p; renderGrid(); window.scrollTo({ top: document.querySelector('.section-header').offsetTop - 80, behavior: 'smooth' }); }
+
+function openModal(idx) {
+  const a = articles[idx];
+  document.getElementById('modalMeta').innerHTML = `
+    <span class="card-date">${a.date}</span>
+    <span class="card-type">日報</span>
+    ${a.tags.map(t => `<span class="card-tag tag-${t}">${t}</span>`).join('')}`;
+  document.getElementById('modalTitle').textContent = a.title;
+  document.getElementById('modalBody').innerHTML = `
+    <div class="summary">${a.summary}</div>
+    ${a.impact ? `<div class="impact"><strong>🎯 對 Amazon 經營的影響：</strong>${a.impact}</div>` : ''}
+    ${a.action ? `<div class="action"><strong>✅ Action 建議：</strong>${a.action}</div>` : ''}
+    <div class="source">
+      來源：${(a.sources || []).map(s => `<a href="${s.url}" target="_blank" rel="noopener">${s.name}</a>`).join(' | ')}
+    </div>`;
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('open'); document.body.style.overflow = ''; }
+
+function resetAll() {
+  currentFilter = 'all'; currentSearch = ''; currentPage = 1;
+  document.getElementById('searchInput').value = '';
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.querySelector('.nav-link[data-filter="all"]').classList.add('active');
+  renderHero(); renderGrid();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', () => {
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+    currentFilter = link.dataset.filter;
+    currentPage = 1;
+    renderGrid();
+  });
+});
+document.getElementById('searchInput').addEventListener('input', (e) => { currentSearch = e.target.value.toLowerCase().trim(); currentPage = 1; renderGrid(); });
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+document.getElementById('navToggle').addEventListener('click', () => { document.getElementById('navLinks').classList.toggle('open'); });
+
+const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
+  {
+    "date": "2026-04-15",
+    "tags": [
+      "物流",
+      "地緣政治"
+    ],
+    "title": "美國正式啟動伊朗港口海上封鎖：首日無船突破封鎖線，海峽通行量暴跌逾 95%，全球船東警告「風險過高無法通行」",
+    "summary": "美國中央司令部（CENTCOM）4/14 宣布，針對伊朗港口的海上封鎖已於美東時間週一上午 10 時正式啟動，首 24 小時內無船舶突破封鎖線。CENTCOM 強調封鎖僅適用於「進出伊朗港口與沿海區域的所有國籍船舶」，非伊朗港口的航行自由不受影響，約 10,000 名美軍水兵、海軍陸戰隊員與飛行員及十餘艘軍艦參與行動。然而 CNN 引述 Kpler 數據指出，封鎖啟動後仍有至少 9 艘商船通過海峽，包括兩艘美國制裁的伊朗關聯油輪。Al Jazeera 統計，自 2/28 開戰以來僅 279 艘船舶通過海峽，較戰前日均約 100 艘暴跌逾 95%。停火後（4/8 起）也僅 45 艘船舶進出。全球船東警告在美國封鎖與伊朗控制指令相互衝突下，通行風險過高。伊朗警告若其港口被封鎖，鄰國海灣港口也將不安全。油價跳漲，美股期貨下跌。WSJ 報導美伊雙方雖立場僵持，但均釋出願意繼續外交談判的信號。",
+    "impact": "封鎖從「停火期間的不確定性」升級為「主動軍事行動」，AE/SA 站點供應鏈中斷已進入最嚴峻階段。CENTCOM 雖聲稱非伊朗港口航行自由不受影響，但伊朗威脅報復鄰國港口使 UAE/SA 港口安全性存疑。船東普遍認為風險過高拒絕通行，意味著即使理論上可通過，實際運力仍極度受限。油價跳漲將進一步推升運費與物流成本。封鎖若持續，AE/SA 站點的庫存補充將面臨結構性困難，空運成為唯一可靠但極昂貴的替代方案。",
+    "action": "① AE/SA 賣家應將備貨週期進一步延長至 12-14 週，封鎖啟動意味著海運恢復時間表更加不可預測 ② 高毛利輕量化商品應立即評估空運方案，鎖定艙位避免空運價格進一步飆升 ③ 密切關注伊朗是否對鄰國港口採取報復行動，評估 UAE 港口（Jebel Ali、Hamriyah）的安全風險 ④ 建議賣家與貨代確認戰爭險保單是否涵蓋「封鎖」情境，避免理賠爭議",
+    "sources": [
+      {
+        "name": "CNN",
+        "url": "https://www.cnn.com/2026/04/14/world/live-news/iran-war-blockade-us-trump"
+      },
+      {
+        "name": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/4/14/no-ships-make-it-past-us-blockade-in-hormuz-strait-in-first-day-pentagon"
+      },
+      {
+        "name": "Al Jazeera 數據",
+        "url": "https://www.aljazeera.com/news/2026/4/14/how-many-ships-have-passed-the-strait-of-hormuz-and-how-many-were-attacked"
+      },
+      {
+        "name": "CBS News",
+        "url": "https://www.cbsnews.com/live-updates/iran-war-us-iran-ports-blockade-strait-of-hormuz-trump/"
+      }
+    ],
+    "color": "#dc2626"
+  },
+  {
+    "date": "2026-04-15",
+    "tags": [
+      "總經"
+    ],
+    "title": "RBA 明日（4/17）利率決策：市場定價升息至 4.35% 機率逾六成，四大銀行一致預測連續第三次升息，Q1 CPI 數據成關鍵",
+    "summary": "RBA 將於明日（4/16-17）召開利率決策會議，市場與四大銀行普遍預期將再升息 25 個基點至 4.35%，為 2026 年第三次連續升息。Fenro 分析指出，RBA 3 月會議以 5:4 的微弱多數通過升息至 4.10%，目前利率已高於 1990 年以來長期均值 3.87%。Janus Henderson 4 月報告警告，中東衝突帶來的能源價格衝擊需求彈性極低，高油價實質上等同於對家庭徵稅，ANZ-Roy Morgan 消費者信心指數已跌至 1973 年以來歷史低位。Finder 調查顯示僅 38% 經濟學家正確預測了 3 月升息，顯示市場對 RBA 決策的不確定性仍高。ABC 報導，RBA 副行長 Andrew Hauser 此前表示高通膨「有毒」，決策者決心將通膨壓低。CPI 年增率仍達 3.7%，遠高於 RBA 目標區間 2-3%。NAB 家庭支出數據顯示 2 月消費仍增長 0.4%，過去 12 個月增長 6.7%，頑強的消費支出使 RBA 抗通膨之路更加困難。四大銀行固定利率已突破 6%。",
+    "impact": "若 RBA 如預期升息至 4.35%，將是 2023 年 11 月以來的最高利率水準，直接壓縮澳洲家庭可支配收入。消費者信心處於 50 年低位意味著非必需品類銷售將持續承壓。固定利率突破 6% 使房貸壓力進一步加劇，尤其影響雪梨與墨爾本外圍郊區的年輕房貸族——這正是線上消費的主力族群。NAB 數據顯示消費仍有韌性，但這反而可能促使 RBA 更鷹派，形成「消費越強→升息越多→最終消費崩跌」的惡性循環風險。賣家需為 Q2-Q3 消費環境持續惡化做好準備。",
+    "action": "① 密切關注明日 RBA 利率決策（4/17 下午 2:30 AEST 公布）與行長 Bullock 記者會，評估是否釋放暫停升息信號 ② AU 站點賣家應立即調整 Q2 銷售預期，非必需品類需準備更積極的促銷與折扣策略 ③ 強化「必需品化」產品定位，善用 Subscribe & Save、Coupon 等工具鎖定重複購買 ④ 關注 4 月底公布的 Q1 CPI 數據，這將決定 5 月是否繼續升息",
+    "sources": [
+      {
+        "name": "Fenro",
+        "url": "https://fenro.com.au/rba-interest-rates-2026/"
+      },
+      {
+        "name": "Janus Henderson",
+        "url": "https://www.janushenderson.com/en-au/adviser/article/australian-economic-view-april-2026/"
+      },
+      {
+        "name": "ABC News",
+        "url": "https://www.abc.net.au/news/2026-03-17/rba-lifts-interest-rates-for-second-time-in-2026/106463146"
+      },
+      {
+        "name": "Finder",
+        "url": "https://www.finder.com.au/rba-cash-rate"
+      }
+    ],
+    "color": "#dc2626"
+  },
+  {
+    "date": "2026-04-15",
+    "tags": [
+      "稅務"
+    ],
+    "title": "UAE 電子發票強制令倒數：7/1 試點啟動、大型企業須 7/31 前指定 ASP，Peppol PINT AE 技術規格已公布 50 項必填欄位",
+    "summary": "UAE 財政部（MoF）與聯邦稅務局（FTA）的電子發票強制令進入實質準備階段。根據 2/23 公布的技術指引文件，UAE 採用去中心化模式，以 Peppol 網路為基礎，要求所有 B2B 與 B2G 交易發票以 XML 格式（PINT AE 標準）透過認證服務提供商（ASP）傳輸。KPMG 分析指出，技術文件定義了 50 項必填資料欄位與 16 種業務情境，涵蓋自由區交易、視同供應、電商交易、出口等。關鍵時程：7/1 試點啟動（自願參與）、年營收 ≥ AED 5,000 萬企業須於 7/31 前指定 ASP、2027/1/1 起強制實施。RSM 報告指出，不合規罰款包括未實施系統每月 AED 5,000、每張未開電子發票 AED 100（月上限 AED 5,000）、未報告系統故障每日 AED 1,000。B2C 交易暫時排除在外。VAT 集團成員間交易享有 24 個月寬限期（至 2029/1/1）。此強制令與 4/14 生效的新 VAT 罰則框架形成雙重合規壓力。",
+    "impact": "UAE 電子發票強制令對 AE 站點賣家的影響取決於營收規模。年營收 ≥ AED 5,000 萬的大型賣家須在 7/31 前完成 ASP 指定，距今僅 3.5 個月。中小型賣家（< AED 5,000 萬）的強制期限為 2027/7/1，但提前準備可避免屆時倉促應對。電商交易被列為 16 種特殊業務情境之一，意味著平台賣家的發票格式與資料要求可能有特殊規定。50 項必填欄位要求 ERP 系統升級與資料清理，TRN、法定名稱、地址等主資料必須與 FTA 記錄完全一致，否則電子發票將被即時退回。此強制令疊加昨日生效的新 VAT 罰則框架，AE 站點賣家面臨前所未有的合規壓力。",
+    "action": "① AE 站點年營收 ≥ AED 5,000 萬的賣家應立即啟動 ASP 評估與選擇流程，確保 7/31 前完成指定 ② 所有 AE 賣家應開始清理主資料：驗證客戶與供應商 TRN、法定名稱、地址是否與 FTA 記錄一致 ③ 評估現有會計/ERP 系統是否支援 Peppol PINT AE XML 格式輸出，不支援者需規劃系統升級 ④ 關注 FTA 後續公布的電商交易專屬發票規定，確認平台賣家的特殊合規要求",
+    "sources": [
+      {
+        "name": "KPMG",
+        "url": "https://kpmg.com/us/en/taxnewsflash/news/2026/02/uae-technical-guidance-mandatory-e-invoicing-fields.html"
+      },
+      {
+        "name": "Novasoft",
+        "url": "https://novasoft.global/uae-e-invoicing-2026/"
+      },
+      {
+        "name": "RSM",
+        "url": "https://www.rsm.global/uae/sites/default/files/media/e-invoiving/RSM%20UAE%20E-Invoicing%20Pager%202026%20(5).pdf"
+      },
+      {
+        "name": "UAE MoF 指引",
+        "url": "https://mof.gov.ae/wp-content/uploads/2026/02/UAE-Electronic-Invoicing-Guidelines_V-1.0-23Feb2026.pdf"
+      }
+    ],
+    "color": "#dc2626"
+  },
+  {
+    "date": "2026-04-15",
+    "tags": [
+      "稅務"
+    ],
+    "title": "沙烏地四大經濟特區法規今日（4/15）正式生效：Zakat 豁免、預扣稅全免、區內零 VAT，跨境電商物流據點新選項浮現",
+    "summary": "沙烏地四大經濟特區（King Abdullah Economic City、Ras Al-Khair、Jazan、Cloud Computing SEZ）的監管框架於今日（4/15-16）正式生效，標誌著 Vision 2030 經濟多元化戰略的重要里程碑。The Saudi Times 4/14 報導，合格特區企業可享受的核心優惠包括：Zakat 義務豁免、預扣稅全額免除、區內貨物交換零 VAT 稅率、從沙烏地本土進入特區的貨物零 VAT、從海外進口至特區的貨物可能不在 VAT 範圍內。KPMG SA 分析指出，特區企業同時豁免適用沙烏地公司法、商業登記法與商號法，大幅降低外國投資者的行政負擔。Al Tamimi 律所提醒，企業須以沙烏地有限責任公司（LLC）形式設立，且需符合各區特定的許可條件與經濟實質要求。Aurifer Tax 分析指出，2-3 月已開放經濟實質要求（ESR）公眾諮詢，顯示稅務優惠將與實質營運掛鉤。House of Saud 報告指出，工業特區（KAEC、RAK、Jazan）提供 20 年企業所得稅減免 75%，前 5 年免 Saudization 配額。",
+    "impact": "四大特區的稅務優惠為在 SA 設立物流或營運據點的跨境賣家提供了顯著的成本優勢。零 VAT 與預扣稅豁免可大幅降低區內營運的稅務負擔。KAEC 定位於先進製造與物流，對電商供應鏈最具直接相關性——若賣家在 KAEC 設立倉儲或配送中心，區內貨物流轉可享零 VAT。Cloud Computing SEZ 對數據密集型電商營運（如 AI 定價、庫存管理系統）提供稅務優勢。然而，經濟實質要求意味著不能僅設立空殼公司，須有實際營運與人員。前 5 年免 Saudization 配額降低了初期人力成本壓力。",
+    "action": "① 評估在 KAEC 設立 SA 站點物流據點的可行性，特別是零 VAT 與預扣稅豁免對供應鏈成本的潛在節省 ② 關注各特區管理機構後續公布的具體許可條件與合格活動清單，確認電商相關活動是否符合資格 ③ 注意經濟實質要求：特區優惠與實質營運掛鉤，須有實際辦公場所、人員與決策功能 ④ 建議有意進入 SA 市場的大型賣家將特區方案納入中長期稅務規劃，善用首批進駐者的先行者優勢",
+    "sources": [
+      {
+        "name": "The Saudi Times",
+        "url": "https://thesauditimes.net/en/saudi-arabias-special-economic-zone-regulations-take-effect-this-week-opening-a-new-era-for-global-investors/"
+      },
+      {
+        "name": "KPMG SA",
+        "url": "https://kpmg.com/sa/en/insights/tax-insights/saudi-arabia-publishes-regulatory-frameworks-governing-four-of-its-special-economic-zones.html"
+      },
+      {
+        "name": "Al Tamimi",
+        "url": "https://www.tamimi.com/our-knowledge/publications/eyes-on-2026/articles/saudi-arabia-issues-regulations-for-special-economic-zones-under-royal-decree-no-m-140/"
+      },
+      {
+        "name": "Aurifer Tax",
+        "url": "https://aurifer.tax/saudi-arabia-has-officially-activated-the-regulatory-frameworks-for-its-special-economic-zones-sezs-marking-a-significant-milestone-in-the-kingdoms-vision-2030-economic-diversification-strategy/"
+      }
+    ],
+    "color": "#f59e0b"
+  },
+  {
+    "date": "2026-04-15",
+    "tags": [
+      "貿易"
+    ],
+    "title": "美國 15% 臨時進口附加稅持續影響澳洲出口：兩項 Section 301 調查 7 月結果出爐，de minimis 豁免持續暫停衝擊跨境小包",
+    "summary": "United States Studies Centre（USSC）4/2 發布「解放日一週年」分析報告，全面回顧美國關稅政策對澳洲的影響。2025 年 4 月的「解放日」關稅經美國最高法院 2026 年 2 月裁定違憲後，美國隨即以《1974 年貿易法》第 122 條為依據，對全球實施 15% 臨時進口附加稅（原為 10%，後上調至 15%），有效期 150 天。Fenro 分析指出，牛肉等關鍵農產品獲豁免，但多數澳洲商品面臨 15% 稅率。更具威脅性的是兩項 Section 301 調查將於 7 月出結果，其中一項評估貿易夥伴是否執行禁止強迫勞動商品進口的法律，不利裁定可能導致針對澳洲的懲罰性關稅。同時，de minimis 豁免（原 US$800 以下免稅）已於 2025 年 8 月暫停並於 2026 年 2 月確認延續，所有小額包裹均須繳納關稅。Queensland TIQ 指出，Section 232 國安關稅（鋼鐵、銅、特定晶片）不受最高法院裁定影響，持續適用。澳洲出口商反映政府支援不足，部分在中國製造的澳洲品牌面臨遠高於 15% 的實際稅率。",
+    "impact": "de minimis 豁免暫停對跨境電商影響最為直接——從澳洲直發美國的小額包裹不再享有免稅待遇，所有商品均須繳納 15% 附加稅，大幅壓縮低單價商品的利潤空間。對 AU 站點賣家而言，若其供應鏈涉及中國製造，出口至美國的實際稅率可能遠高於 15%（中國商品面臨 60-145% 不等的關稅）。7 月 Section 301 調查結果是最大不確定性——若澳洲被認定執法不力，可能面臨額外懲罰性關稅。澳歐 FTA 3 月底完成談判，為澳洲出口商提供了市場多元化的新選項，但距正式生效仍需 1-2 年。整體而言，全球貿易環境的不確定性持續升高，跨境賣家需更靈活的多市場策略。",
+    "action": "① 涉及美國市場的跨境賣家應重新計算 15% 附加稅對利潤的影響，評估是否需要調整定價或退出低毛利品類 ② 在中國製造的澳洲品牌賣家應評估供應鏈轉移方案，降低對中國製造的依賴以規避疊加關稅 ③ 密切關注 7 月 Section 301 調查結果，提前準備應對可能的額外關稅 ④ 善用澳歐 FTA 談判完成的契機，評估歐洲市場作為出口多元化目標的可行性（98% 澳洲商品將享零關稅）",
+    "sources": [
+      {
+        "name": "USSC",
+        "url": "https://www.ussc.edu.au/one-year-after-liberation-day-how-trump-s-tariffs-shaped-australia-and-the-world"
+      },
+      {
+        "name": "Fenro",
+        "url": "https://fenro.com.au/us-tariffs-australia-2026/"
+      },
+      {
+        "name": "Queensland TIQ",
+        "url": "https://www.tiq.qld.gov.au/news-and-events/insights-hub/articles/tariff-latest-changes-to-us-tariff-rates"
+      },
+      {
+        "name": "DFAT A-EU FTA",
+        "url": "https://www.dfat.gov.au/trade/agreements/not-yet-in-force/aeufta"
+      }
+    ],
+    "color": "#f59e0b"
+  },
+  {
+    "date": "2026-04-14",
+    "tags": [
+      "物流",
+      "地緣政治"
+    ],
+    "title": "伊斯蘭堡和談破裂、美國宣布封鎖伊朗石油出口：荷姆茲海峽危機升級，聯合國警告全球糧食危機迫近",
+    "summary": "美伊停火後的伊斯蘭堡週末和談未能取得突破，Trump 總統隨即宣布對伊朗石油出口實施海上封鎖。據 BBC Verify 分析，停火以來每日僅個位數船舶通過海峽，遠低於衝突前日均 138 艘。Spectrum News 報導，伊朗戰爭已進入第 45 天，供應鏈專家警告影響將是「多面向且長期的」。船用燃料價格在六週內翻倍，美國汽油均價較戰前上漲 $1.15/加侖。Hapag-Lloyd 估計每週額外成本 $5,000-6,000 萬美元，約 1,000 艘商船仍滯留波斯灣。聯合國 FAO 發出警告，海峽承載全球 20% 石油與天然氣、三分之一農業肥料及 50% 硫磺出口，停火前出發的貨物已抵達目的地，全球正進入供應可能收緊的階段，糧食危機風險上升。Resilience.org 分析指出，即使海峽重新開放，煉油廠與管線損壞意味著能源與物資全面恢復需數月時間。保險成本飆升進一步推高全球貿易成本基礎。",
+    "impact": "和談破裂與美國封鎖令使中東物流前景進一步惡化。AE/SA 站點供應鏈中斷已從「暫時性」轉為「結構性」風險。肥料短缺可能推高農產品價格，影響食品類商品成本。船用燃料翻倍直接推升運費，遠東至中東航線成本持續攀升。保險費率飆升為所有經過高風險區域的貨物增加額外成本層。Hapag-Lloyd 明確表示部分成本將轉嫁客戶，賣家物流成本壓力將持續加劇。空運替代方案因中東航班受限而容量有限且價格高昂。",
+    "action": "① AE/SA 賣家應將備貨週期延長至 10-12 週，和談破裂意味著短期內無恢復可能 ② 評估關鍵商品的空運可行性，特別是高毛利、輕量化產品 ③ 密切關注 Trump 封鎖令的執行細節與國際反應，評估是否觸發新一輪制裁合規風險 ④ 建議賣家與貨代確認保險覆蓋範圍，避免因「戰爭除外條款」導致理賠糾紛",
+    "sources": [
+      {
+        "name": "Spectrum News",
+        "url": "https://spectrumlocalnews.com/nc/triad/business/2026/04/13/iran-war-supply-chain-disruptions"
+      },
+      {
+        "name": "BBC Verify",
+        "url": "https://www.bbc.com/news/articles/c3w39lg84w2o"
+      },
+      {
+        "name": "UN News / FAO",
+        "url": "https://news.un.org/en/story/2026/04/1167289"
+      },
+      {
+        "name": "Resilience.org",
+        "url": "https://www.resilience.org/stories/2026-04-13/strait-of-hormuz-reopens-for-now-but-global-supply-chains-remain-at-risk/"
+      }
+    ],
+    "color": "#dc2626"
+  },
+  {
+    "date": "2026-04-14",
+    "tags": [
+      "總經"
+    ],
+    "title": "澳洲消費者信心崩跌 12.5% 至 80.1：COVID 以來最大單月跌幅，油價飆至 $2.40/L，RBA 副行長暗示可能再升息",
+    "summary": "Westpac-Melbourne Institute 4 月消費者信心指數暴跌 12.5% 至 80.1，為 COVID 疫情以來最大單月跌幅，逼近歷史低點。Westpac 澳洲宏觀預測主管 Matthew Hassan 指出，油價飆升與 RBA 再次升息 25 個基點形成雙重打擊。Capital Brief 報導，4 月第一週平均油價達 $2.40/升，較 3 月調查時上漲 37 分，較 2 月初上漲 77 分——為該調查歷史上最大漲幅，百分比漲幅可比 1979 年石油危機。「家庭財務 vs 一年前」分項指數暴跌 16.7% 至 66.8，「是否適合購買大型家用品」指數下跌 15% 至 83.3。RBA 副行長 Andrew Hauser 同日在紐約演講中表示，決策者「不再有信心認為當前利率設定足夠限制性」，利率可能需要進一步上升。Bloomberg 報導，商業信心同步暴跌。Westpac 銀行向 ASX 警告，中東衝突已影響其資金市場部門收益，淨利息收益率貢獻從 Q1 的 15bp 降至 Q2 的 7bp。市場目前定價 5 月升息機率約 65-72%。",
+    "impact": "消費者信心崩跌直接衝擊非必需品類銷售。「是否適合購買大型家用品」指數跌至 83.3，顯示消費者大幅縮減大額支出意願，電子產品、家具、家電等品類首當其衝。油價 $2.40/L 意味著物流配送成本同步上升，壓縮賣家利潤空間。80% 受訪者預期未來一年房貸利率將上升，40% 預期漲幅超過 1 個百分點——這將進一步壓縮家庭可支配收入。RBA 副行長的鷹派發言強化了 5 月再升息預期，消費環境短期內難以改善。Westpac 銀行自身業績受損顯示金融體系壓力正在擴散。",
+    "action": "① AU 站點賣家應立即調整 Q2 銷售預期，非必需品類需準備更積極的促銷策略 ② 強化「必需品化」定位，將產品價值主張從「想要」轉向「需要」，突出實用性與耐用性 ③ 善用 Subscribe & Save、Coupon 等工具鎖定價格敏感消費者的重複購買 ④ 密切關注 5 月 RBA 利率決策（升息機率 65-72%）與聯邦預算案，評估是否有消費刺激措施",
+    "sources": [
+      {
+        "name": "Westpac IQ",
+        "url": "https://www.westpaciq.com.au/economics/2026/04/consumer-sentiment-april-2026"
+      },
+      {
+        "name": "Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-04-14/australia-consumer-confidence-plummets-on-fuel-surge-rate-hike"
+      },
+      {
+        "name": "Morningstar / Dow Jones",
+        "url": "https://www.morningstar.com/news/dow-jones/202604138674/australian-consumer-confidence-plunges-on-war-rates-fears"
+      },
+      {
+        "name": "Capital Brief",
+        "url": "https://www.capitalbrief.com/briefing/consumer-sentiment-nears-historic-lows-in-april-amid-cost-of-living-pressures-95841f4b-cad1-4cb8-a6b7-96a343b9e43b/"
+      }
+    ],
+    "color": "#dc2626"
+  },
+  {
+    "date": "2026-04-14",
+    "tags": [
+      "稅務"
+    ],
+    "title": "UAE 新 VAT 罰則框架今日正式生效：FTA 2025 年稽查量暴增 89%，「知情或應知情」規則擴大供應鏈連帶責任",
+    "summary": "UAE 內閣第 129/2025 號決議今日（4/14）正式生效，全面改革 VAT 行政罰則框架。Alpha Auditing 分析指出，新制核心變革包括遲繳稅款從複利制改為年利率 14% 單利制、自願揭露罰款改為每月 1%、申報錯誤首次罰款降至 AED 500。同時，FTA 於 4/7 公布 2025 年執法數據：全年進行約 176,000 次市場稽查，較 2024 年的 93,000 次暴增 89%，沒收 2,950 萬包無數位稅章菸草產品。Consultancy-me 4/10 報導，UAE VAT 法新增的「知情或應知情」（knew or should have known）規則要求企業對供應鏈中的逃稅行為承擔連帶責任——即使企業本身並未直接參與逃稅，若 FTA 認定其「應當知情」，進項稅額抵扣仍可被拒絕。ClearTax 分析指出，2026 年 VAT 修法同時取消了反向收費機制下的自開發票要求，並引入 5 年 VAT 退稅申請期限，逾期未申請的進項稅額將永久喪失。Deloitte 中東於 4/2 舉辦 UAE 自由區合規要求研討會，顯示自由區企業的海關與監管合規壓力持續升高。",
+    "impact": "FTA 稽查量暴增 89% 顯示執法力度大幅強化，AE 站點賣家面臨更高的合規審查風險。「知情或應知情」規則是最具影響力的變革——賣家必須對供應商進行 VAT 盡職調查，否則即使自身合規，仍可能因供應鏈中的逃稅行為而喪失進項稅額抵扣。5 年退稅期限意味著 2021 年的 VAT 進項稅額將於 2026 年底到期。取消反向收費自開發票簡化了合規流程，但要求賣家確保保留完整的供應商發票與進口文件。自由區賣家需特別關注海關合規要求的變化。",
+    "action": "① 立即建立供應商 VAT 盡職調查機制：定期驗證供應商 TRN 有效性、VAT 申報狀態與合規紀錄 ② 盤點 2021 年 VAT 進項稅額，在 12/31 前完成退還申請，避免永久喪失 ③ 更新內部記帳流程：取消反向收費自開發票，改為保留供應商發票與海關文件 ④ 建議 AE 自由區賣家審視海關合規狀態，確保符合最新監管要求",
+    "sources": [
+      {
+        "name": "Alpha Auditing",
+        "url": "https://www.alphaauditing.ae/vat/uae-vat-penalties-april-2026/"
+      },
+      {
+        "name": "UAE FTA",
+        "url": "https://tax.gov.ae/en/media.centre/news/federal.tax.authority.conducted.176000.market.inspection.visits.in.2025.up.89.yearonyear.aspx"
+      },
+      {
+        "name": "Consultancy-me",
+        "url": "https://www.consultancy-me.com/news/13100/uae-vat-law-six-steps-to-deal-with-the-knew-or-should-have-known-rule"
+      },
+      {
+        "name": "ClearTax",
+        "url": "https://www.cleartax.com/ae/new-vat-rules-uae-2026"
+      }
+    ],
+    "color": "#dc2626"
+  },
+  {
+    "date": "2026-04-14",
+    "tags": [
+      "總經"
+    ],
+    "title": "澳洲 ACCC 罰款上限翻倍至 $1 億澳元，不公平交易行為禁令法案進入國會：電商賣家定價與行銷合規風險升高",
+    "summary": "澳洲國會已通過《Treasury Laws Amendment (Doubling Penalties for ACCC Enforcement) Act 2026》，自 3 月 28 日起生效，將競爭法與消費者法違規的最高民事罰款從 $5,000 萬澳元翻倍至 $1 億澳元（約 USD 6,900 萬）。White & Case 分析指出，罰款計算仍取三者最高值：$1 億、違法所得的 3 倍、或違規期間調整後營業額的 30%。刑事罰則同步提高，涵蓋卡特爾行為、虛假陳述、產品安全違規與金字塔銷售。Norton Rose Fulbright 4 月報告特別警告，ACCC 在通膨與價格衝擊時期會加強對「價格哄抬」行為的監控，已明確表示將對「因價格急劇上漲而進行誤導性或欺騙性行為」的零售商採取行動。同時，《Competition and Consumer Amendment (Unfair Trading Practices) Bill 2026》已於 4/1 提交眾議院，預計 2027 年 7 月生效，將首次在 ACL 中引入原則性的不公平交易行為禁令，涵蓋訂閱陷阱、隱藏費用等行為。ACCC 已將不公平交易行為列為 2026-27 年執法重點。",
+    "impact": "罰款翻倍直接提高了 AU 站點賣家的合規風險成本。在當前油價飆升與通膨壓力下，ACCC 明確將「價格哄抬」列為監控重點——賣家在調整售價時必須確保定價行為有合理依據，避免被認定為「誤導性或欺騙性」。不公平交易行為法案雖預計 2027 年生效，但 ACCC 已開始關注訂閱模式、隱藏費用等行為，使用 Subscribe & Save 等訂閱功能的賣家需確保取消流程透明。虛假陳述罰則提高意味著產品 listing 中的功能宣稱、原產地標示、環保聲明等需更加嚴謹。",
+    "action": "① 立即審視 AU 站點所有產品 listing 的功能宣稱、價格標示與促銷描述，確保無誤導性內容 ② 在油價推動的漲價潮中，確保定價調整有成本依據，避免被 ACCC 認定為價格哄抬 ③ 審視訂閱類服務的取消流程是否足夠透明，為 2027 年不公平交易行為禁令提前準備 ④ 建議賣家更新內部合規培訓，將新罰則框架納入團隊知識庫",
+    "sources": [
+      {
+        "name": "White & Case",
+        "url": "https://www.whitecase.com/insight-alert/australia-increases-penalties-competition-and-consumer-law-breaches"
+      },
+      {
+        "name": "Norton Rose Fulbright",
+        "url": "https://www.nortonrosefulbright.com/en-au/knowledge/publications/1ced6421/competition-and-consumer-laws-toughen-in-times-of-crisis"
+      },
+      {
+        "name": "Johnson Winter Slattery",
+        "url": "https://jws.com.au/what-we-think/double-trouble-penalties-for-breaches-of-competition-and-consumer-laws-have-increased-again/"
+      },
+      {
+        "name": "K&L Gates / JD Supra",
+        "url": "https://www.jdsupra.com/legalnews/significant-changes-for-australian-7441735/"
+      }
+    ],
+    "color": "#f59e0b"
+  },
+  {
+    "date": "2026-04-14",
+    "tags": [
+      "稅務"
+    ],
+    "title": "沙烏地四大經濟特區法規 4/16 生效、ZATCA 電子發票 Wave 24 整合期限 6/30：跨境賣家合規時間表更新",
+    "summary": "BDO 發布 GCC Q1 2026 稅務更新報告，揭示沙烏地多項重大合規變革即將到來。四大經濟特區（King Abdullah Economic City、Ras Al-Khair、Jazan、Cloud Computing SEZ）的監管框架將於 4 月 16 日正式生效，提供區內貨物交換零 VAT 稅率、預扣稅豁免與 Zakat 排除等優惠。ZATCA 電子發票 Phase 2 第 24 波要求 2022-2024 年應稅銷售額超過 SAR 375,000 的企業須在 6 月 30 日前完成 FATOORA 平台整合。同時，SAMA 4/13 公布數據顯示沙烏地 2025 年電子支付佔零售支付總額的 85%（2024 年為 79%），電子交易量達 146 億筆（2024 年為 126 億筆），mada 支付系統在 POS 與電商交易中的使用量持續增長。PwC 中東 GCC 間接稅報告指出，SA 同時推出線上市場「視同供應商」VAT 規則指引，進一步明確數位平台在 VAT 徵收中的角色，並將稅務特赦計畫延長至 2026 年 6 月 30 日。",
+    "impact": "ZATCA Wave 24 電子發票整合期限（6/30）對 SA 站點賣家影響最為直接——年銷售額超過 SAR 375,000 的賣家必須在期限前完成系統與 FATOORA 平台的整合，否則面臨罰款。「視同供應商」規則指引進一步明確 Amazon 作為平台在 VAT 徵收中的責任，可能影響平台代扣代繳機制。電子支付佔比達 85% 顯示沙烏地消費者高度數位化，有利於電商滲透率持續提升。經濟特區優惠可能為在 SA 設立物流或營運據點的賣家提供稅務優勢。稅務特赦延長至 6/30 為有歷史合規問題的賣家提供了修正窗口。",
+    "action": "① SA 站點賣家立即確認是否符合 ZATCA Wave 24 標準（2022-2024 年應稅銷售額 > SAR 375,000），如符合須在 6/30 前完成 FATOORA 整合 ② 善用稅務特赦計畫（至 6/30），主動揭露並修正歷史 VAT/所得稅申報問題以減免罰款 ③ 關注「視同供應商」規則對 Amazon SA 平台代扣代繳機制的影響，確認自身 VAT 申報是否需要調整 ④ 評估四大經濟特區的物流與營運據點設立機會，特別是零 VAT 與預扣稅豁免的潛在效益",
+    "sources": [
+      {
+        "name": "BDO",
+        "url": "https://www.bdoalamri.com/en-gb/insights/gcc-tax-update-q1-2026"
+      },
+      {
+        "name": "PwC Middle East",
+        "url": "https://www.pwc.com/m1/en/services/tax/middle-east-tax-news-alerts/2026/gcc-indirect-tax-news-roundup.html"
+      },
+      {
+        "name": "Kazinform / SAMA",
+        "url": "https://qazinform.com/news/e-payments-represent-85-of-total-retail-payments-in-s-arabia-in-2025-52ca19"
+      }
+    ],
+    "color": "#f59e0b"
+  },
+  {
+    "date": "2026-04-13",
+    "tags": [
+      "物流",
+      "地緣政治"
+    ],
+    "title": "美伊停火後荷姆茲海峽仍「實質關閉」：伊朗堅持許可制通行並擬收取每船 200 萬美元通行費，600+ 船舶持續滯留",
+    "summary": "美國與伊朗於 4 月 8 日宣布為期兩週的停火協議，荷姆茲海峽重新開放為協議核心條件之一。然而截至 4 月 10 日，海峽仍處於「實質關閉」狀態。據 Straits Times、Al Jazeera 與 Windward 報導，停火後僅有少量散貨船通過海峽，每日通行量約 10-15 艘，遠低於衝突前的 135 艘。伊朗堅持所有船舶須經其革命衛隊協調許可方可通行，並在其 10 點和平方案中提出每船約 200 萬美元的通行費，收入由伊朗與阿曼分配。Lloyd's List Intelligence 數據顯示，超過 600 艘船舶（含 325 艘油輪）仍滯留波斯灣。ADNOC 執行長 Sultan Al Jaber 公開表示：「海峽並未開放，這不是航行自由，這是脅迫。」英國外相 Cooper 拒絕接受伊朗收取通行費的主張。Maersk 表示停火「可能創造通行機會，但尚未提供完整的海事確定性」，暫不調整航線。遠東至中東運費較衝突前上漲 50-80%，歐洲至中東上漲 40-50%。",
+    "impact": "停火未帶來實質性物流改善，AE/SA 站點的供應鏈中斷將持續。Maersk 維持繞行好望角策略不變，FBA 入倉時效仍嚴重延長。運費持續高位（遠東至中東漲幅 50-80%），賣家物流成本壓力未減。伊朗若成功實施通行費制度，將為全球航運增加新的永久性成本。Bahrain 港口關閉、Qatar 出口暫停、Kuwait 受限等區域港口狀態持續影響中東物流網絡。空運成本因中東航班停飛仍處高位。",
+    "action": "① 提醒 AE/SA 賣家：停火不等於物流恢復，短期內不應調整備貨策略，維持提前 8-10 週備貨 ② 密切關注 4/11 伊斯蘭堡和談進展，評估是否可能達成永久和平協議 ③ 建議賣家持續使用 Salalah、Jeddah 等替代港口，並評估陸路聯運方案 ④ 關注 Maersk、Hapag-Lloyd 等船公司是否在停火期間嘗試恢復海峽通行",
+    "sources": [
+      {
+        "name": "The Straits Times",
+        "url": "https://www.straitstimes.com/world/middle-east/why-us-iran-ceasefire-has-not-led-to-hormuz-reopening"
+      },
+      {
+        "name": "Al Jazeera",
+        "url": "https://www.aljazeera.com/amp/economy/2026/4/10/shipping-in-strait-of-hormuz-at-a-trickle-despite-us-iran-ceasefire"
+      },
+      {
+        "name": "France 24",
+        "url": "https://www.france24.com/en/middle-east/20260409-us-iran-ceasefire-why-tehran-wants-charge-ships-for-crossing-strait-of-hormuz"
+      }
+    ],
+    "color": "#dc2626"
+  },
+  {
+    "date": "2026-04-13",
+    "tags": [
+      "稅務"
+    ],
+    "title": "UAE 全新 VAT 罰則框架今日（4/14）正式生效：遲繳改為年利率 14% 單利制，企業須立即完成合規調整",
+    "summary": "UAE 內閣第 129/2025 號決議（Cabinet Decision No. 129 of 2025）於明日 4 月 14 日正式生效，全面改革 VAT、企業稅與消費稅的行政罰則框架。核心變革：(1) 遲繳稅款罰則從原本「2% 即時 + 每月 4%（最高 300%）」複利制，改為年利率 14% 按月計算的單利制——以 AED 100,000 遲繳 8 個月為例，舊制罰款 AED 30,000，新制僅 AED 9,333；(2) 自願揭露罰款改為每月 1%，鼓勵企業主動糾錯；(3) 申報錯誤首次罰款從 AED 1,000 降至 AED 500；(4) 未以阿拉伯文保存紀錄罰款從 AED 20,000 降至 AED 5,000（降幅 75%）；(5) 稅務稽核後揭露罰款從 50% 降至 15%。同時，FTA 獲授權拒絕與逃稅相關供應鏈的進項稅額抵扣，即使買方並非直接參與逃稅。2021 年的 VAT 進項稅額將於 2026 年底到期，未申請退還者將永久喪失。多家稅務顧問機構（PwC、Andersen、Flying Colour Tax）呼籲企業在生效前完成歷史申報自查。",
+    "impact": "AE 站點賣家面臨全新合規環境。短期遲繳壓力雖降低，但 FTA 新增的「進項稅額拒絕抵扣」權力影響深遠——若供應鏈中任何環節涉及逃稅，即使賣家本身合規，進項稅額仍可能被拒絕。這要求賣家對供應商進行更嚴格的 VAT 盡職調查。2021 年未申請退還的 VAT 進項稅額將於年底到期，涉及金額可能相當可觀。自願揭露的每月 1% 罰款意味著歷史錯誤越早修正代價越低。跨 AE/SA 雙站點賣家需同時應對 UAE 新罰則與 SA ZATCA 的合規要求。",
+    "action": "① 緊急提醒 AE 站點賣家：4/14 為新舊罰則分水嶺，歷史 VAT 申報錯誤應在今日前完成自願揭露以適用舊制較低罰款 ② 建議賣家立即盤點 2021 年 VAT 進項稅額，在 12/31 前完成退還申請，避免永久喪失 ③ 建立供應商 VAT 盡職調查機制，定期驗證供應商 TRN 有效性與合規狀態 ④ 更新內部合規日曆，將新罰則框架的關鍵日期（4/14 生效、12/31 進項稅額到期）納入追蹤",
+    "sources": [
+      {
+        "name": "Andersen UAE",
+        "url": "https://ae.andersen.com/insights/Andersen%20UAE%20-%20Key%20Amendments%20to%20UAE%20Administrative%20Penalties.pdf"
+      },
+      {
+        "name": "PwC Middle East",
+        "url": "https://www.pwc.com/m1/en/tax/documents/2025/use-revised-administrative-penalty-framework-for-violation-of-tax-laws.pdf"
+      },
+      {
+        "name": "Flying Colour Tax",
+        "url": "https://www.flyingcolourtax.com/blog/uae-vat-penalty-refresh-2026-cash-flow/"
+      }
+    ],
+    "color": "#dc2626"
+  },
+  {
+    "date": "2026-04-13",
+    "tags": [
+      "總經"
+    ],
+    "title": "RBA 4/17 利率決策在即：市場預期再升息至 4.35%，Deloitte 警告澳洲經濟「油箱見底」，GDP 恐降至 1.9%",
+    "summary": "RBA 將於本週四（4/17）召開利率決策會議，市場普遍預期將再升息 25 個基點至 4.35%，為今年第三次升息。Deloitte Access Economics 3 月季度報告以「Running on Empty」為題，警告澳洲經濟正面臨國內通膨與國際能源衝擊的雙重供給危機，預測 2026-27 年 GDP 成長率僅 1.9%（低於先前預估的 2.4%）。Janus Henderson 4 月報告指出，RBA 已在 2-3 月連續升息 50 個基點至 4.10%，能源價格衝擊的需求彈性極低，高油價實質上等同於對家庭徵稅。ANZ-Roy Morgan 消費者信心指數維持在 1973 年以來歷史低位附近。Trading Economics 數據顯示澳洲利率自 1990 年以來平均為 3.87%，目前 4.10% 已高於長期均值。Fenro 分析指出，RBA 3 月會議紀錄承認「已收緊但不確定是否收緊到位」，中東衝突帶來的油價上漲為短期通膨的關鍵驅動因素。",
+    "impact": "若 RBA 如預期升息至 4.35%，將進一步壓縮澳洲家庭可支配收入，非必需品類銷售持續承壓。消費者已進入「精準消費」模式，品牌忠誠度下降，價格敏感度上升。四大銀行固定利率已突破 6%，房貸壓力將進一步抑制消費支出。Deloitte 指出財政政策未能分擔通膨壓力，負擔集中在年輕房貸族與租屋族——這恰好是線上消費的主力族群。賣家需為 Q2-Q3 的消費持續疲軟做好準備。",
+    "action": "① 密切關注 4/17 RBA 利率決策與會後聲明，評估是否釋放暫停升息信號 ② 建議 AU 站點賣家強化促銷策略，聚焦性價比與必需品類，善用 Coupon 與 Subscribe & Save 吸引價格敏感消費者 ③ 重新審視廣告 ROAS 目標，在消費降級環境下優化廣告支出效率 ④ 關注 5 月聯邦預算案（Federal Budget），評估是否有刺激消費的財政措施",
+    "sources": [
+      {
+        "name": "Deloitte Access Economics",
+        "url": "https://www.deloitte.com/au/en/about/press-room/business-outlook.html"
+      },
+      {
+        "name": "Janus Henderson",
+        "url": "https://www.janushenderson.com/en-au/adviser/article/australian-economic-view-april-2026/"
+      },
+      {
+        "name": "Fenro",
+        "url": "https://fenro.com.au/rba-interest-rates-2026/"
+      }
+    ],
+    "color": "#dc2626"
+  },
+  {
+    "date": "2026-04-13",
+    "tags": [
+      "平台"
+    ],
+    "title": "Pattern 報告：Amazon AU 滲透率升至 60% 超越 eBay，Temu 達 47%，澳洲本土電商平台加速退場",
+    "summary": "Pattern 發布《2026 Marketplace Consumer Report》，揭示澳洲電商市場格局正經歷結構性轉變。Amazon AU 使用率從 2023 年的 52% 攀升至 2026 年的 60%，正式超越 eBay（從 62% 跌至 51%）成為澳洲最大電商平台。前瞻意向更為懸殊：66% 消費者計畫未來一年在 Amazon 購物。Temu 滲透率快速擴張至 47%，Shein 達 30%，中國跨境平台持續搶佔市場。本土平台方面，Catch 與 MyDeal 已關閉，Kogan 面臨競爭壓力。93% 的澳洲消費者在過去 12 個月內曾在電商平台購物。各平台呈現明確的品類分化：Amazon 在電子產品與家居用品領先，eBay 在二手商品與收藏品仍有優勢，Temu/Shein 主攻低價時尚與日用品。Australia Post 報告顯示 2025 年澳洲線上消費達創紀錄的 826 億澳元，年增 14%，線上零售佔比接近四分之一。",
+    "impact": "Amazon AU 市場領導地位確立，為跨境賣家提供更大的市場機會。但 Temu（47%）與 Shein（30%）的快速崛起帶來低價競爭壓力，尤其在時尚、日用品等品類。本土平台退場意味著更多消費者流向全球平台，Amazon AU 的流量與轉換率有望受益。826 億澳元的線上消費規模與 14% 的年增率顯示，即使在經濟逆風下，電商滲透率仍在加速。區域與郊區消費者的線上購物增長尤為顯著，物流覆蓋能力成為競爭關鍵。",
+    "action": "① 建議賣家善用 Amazon AU 市場領導地位帶來的流量紅利，優化 listing 與廣告投放 ② 針對 Temu/Shein 的低價競爭，建議賣家強化品牌差異化與品質主張，避免純價格戰 ③ 關注區域與郊區市場的增長機會，評估 FBA 配送覆蓋範圍是否足夠 ④ 建議下載 Pattern 完整報告，深入分析各品類的平台競爭格局與消費者偏好",
+    "sources": [
+      {
+        "name": "Value Added Resource",
+        "url": "https://www.valueaddedresource.net/amazon-leads-australia-ebay-falls-behind/"
+      },
+      {
+        "name": "Supply Chain Insights",
+        "url": "https://www.supplychain-insights.media/latest-news/amazon-temu-amp-shein-to-dominate-australias-marketplace-sector-at-the-expense-of-local-competition"
+      },
+      {
+        "name": "Wholesale Directory AU",
+        "url": "https://www.wholesaledirectory.com.au/blog/ecommerce-in-australia-2026"
+      }
+    ],
+    "color": "#f59e0b"
+  },
+  {
+    "date": "2026-04-13",
+    "tags": [
+      "合規"
+    ],
+    "title": "AUSTRAC Tranche 2 反洗錢新規 4 月起開放登記，9 萬家新實體納入監管，電商賣家 KYC 義務擴大",
+    "summary": "澳洲金融交易報告與分析中心（AUSTRAC）的反洗錢/反恐融資（AML/CTF）Tranche 2 改革已於 2026 年 3 月 31 日起開放登記，約 9 萬家新實體將被納入監管範圍，涵蓋律師、會計師、房地產經紀人、貴金屬交易商等專業服務提供者。過渡規則（Transitional Rules 2026）允許現有報告實體在過渡期內繼續使用舊有的客戶識別程序（ACIP），但須在過渡期結束前完成向新制客戶盡職調查（CDD）框架的轉換。關鍵日期：2026 年 6 月 30 日前須完成海外分支機構的合規通知。The Modern Regulator 4 月監管更新指出，AUSTRAC 承認無法立即監管所有 9 萬家新實體，將優先關注登記率與各專業領域的準備程度。同時，ACCC 新的併購審查門檻也於 4 月 1 日生效，擴大了少數股權與累積收購的通報範圍。",
+    "impact": "AML/CTF Tranche 2 擴大了澳洲的反洗錢監管範圍，雖然電商平台本身不在此波直接監管對象中，但為 Amazon AU 賣家提供服務的會計師、律師、支付服務商等專業機構將面臨更嚴格的 KYC/CDD 要求。這可能導致賣家在開戶、稅務申報、法律諮詢等環節面臨更多合規文件要求與更長的處理時間。同時，ACCC 併購審查門檻擴大可能影響電商領域的併購活動與市場整合。長期而言，澳洲整體合規環境趨嚴，跨境賣家需提前準備更完整的身份驗證與商業文件。",
+    "action": "① 提醒 AU 站點賣家：若使用澳洲本地會計師或律師服務，預期未來數月可能面臨額外的身份驗證與文件要求 ② 建議賣家提前準備完整的公司註冊文件、受益所有人資訊與資金來源證明 ③ 關注 AUSTRAC 後續公布的行業指引，評估電商平台是否可能在未來被納入 Tranche 3 監管 ④ 建議跨境賣家確認其支付服務商（PSP）是否已完成 AML/CTF 合規更新",
+    "sources": [
+      {
+        "name": "AUSTRAC",
+        "url": "https://www.austrac.gov.au/about-us/legislation/updates-legislation/amlctf-transitional-rules-2026"
+      },
+      {
+        "name": "The Modern Regulator",
+        "url": "https://themodernregulator.com/april-2026-regulatory-update-first-evidence/"
+      },
+      {
+        "name": "Fintech News AU",
+        "url": "https://fintechnews.au/120034/payments/australia-remove-card-surcharges-lower-fees/"
+      }
+    ],
+    "color": "#f59e0b"
+  },
+  {
+    "date": "2026-04-08",
+    "tags": [
+      "物流",
+      "地緣政治"
+    ],
+    "title": "Maersk 發布中東局勢更新：荷姆茲海峽軍事行動未見緩和跡象，亞歐航線運費飆升 29-31%",
+    "summary": "Maersk 於 4 月 1 日發布最新中東局勢報告指出，中東地區軍事行動「目前未顯示明確放緩跡象」，公司對衝突演變的能見度極低。Maersk 持續監控局勢並採取必要措施保護人員、資產與客戶貨物安全。同時，Xeneta 首席分析師 Peter Sand 指出，荷姆茲海峽封鎖五週以來，所有主要東西向航線的即期運費均大幅上升：遠東至美西上漲 29%、遠東至北歐上漲 31%、遠東至地中海上漲 30%。Maersk 同步宣布對澳洲與紐西蘭實施聯運燃油費更新（Intermodal Fuel Fee update），並引入臨時緊急燃油附加費（Emergency Bunker Surcharge, EBS）。超過 150 艘油輪在海峽外閒置，約佔全球油輪船隊的重要比例，進一步加劇其他航線的運力緊張。",
+    "impact": "AE/SA 站點的 FBA 入倉時效持續嚴重延長，從亞洲發往中東的貨物面臨航線中斷與運力不足。Maersk 對澳洲實施的聯運燃油費更新與 EBS 附加費，將直接推升 AU 站點的物流成本。全球運費飆升 29-31% 意味著所有站點的進口商品成本均在上升，賣家利潤空間持續被壓縮。繞行好望角導致運輸時間延長 10-20 天，庫存規劃難度大幅增加。",
+    "action": "① 提醒 AE/SA 賣家密切關注 Maersk Operational Updates 頁面，掌握最新航線調整與附加費公告 ② 建議所有站點賣家重新評估物流成本結構，將 EBS 與燃油附加費納入定價模型 ③ 建議提前 8-10 週備貨以應對持續延長的運輸時間 ④ 評估是否需要將部分高價值商品轉為空運以確保庫存連續性",
+    "sources": [
+      {
+        "name": "Maersk Advisories",
+        "url": "https://www.maersk.com/news/articles/2026/04/01/middle-east-situation-overview-2"
+      },
+      {
+        "name": "FreightWaves / Xeneta",
+        "url": "https://www.freightwaves.com/news/strait-of-hormuz-closure-pushes-asia-us-ocean-rates-up-29"
+      },
+      {
+        "name": "CGTN",
+        "url": "https://news.cgtn.com/news/2026-04-06/Escalating-Middle-East-conflicts-have-caused-multiple-supply-shocks--1M7pJqLVGsE/index.html"
+      }
+    ],
+    "color": "#dc2626"
+  },
+  {
+    "date": "2026-04-08",
+    "tags": [
+      "總經"
+    ],
+    "title": "Westpac 預測 RBA 再升息三次至 4.85%，澳洲 GDP 恐降至 1.0%，失業率年底升至 5.0%",
+    "summary": "Westpac 於 4 月 6 日發布最新經濟展望，預測 RBA 將在 5 月、6 月、8 月各升息 25 個基點，現金利率峰值將達 4.85%，隨後維持至 2028 年才開始降息。GDP 成長率預計從目前水準大幅放緩至 2026 年僅 1.0%，2027 年 1.6%，失業率年底將升至 5.0%。Janus Henderson 4 月經濟報告指出，RBA 已在 2 月與 3 月連續升息共 50 個基點至 4.10%，3 年期公債殖利率飆升 44 個基點至 4.65%，10 年期升 32 個基點至 4.97%。Rabobank 報告顯示澳元已跌破 0.69 美元。Oxford Economics 警告，若中東衝突延續至 4 月底之後，澳洲將面臨「急劇衰退」，GDP 可能在 Q2 萎縮 0.3%、Q3 再跌 0.8%。四大銀行固定利率已全面突破 6%。",
+    "impact": "RBA 持續升息將嚴重壓縮澳洲家庭可支配收入，HSBC 估計消費支出將被削減約 1.8 個百分點。消費者購買力急劇下降，非必需品類銷售將持續承壓，轉換率與客單價預計進一步下滑。失業率上升至 5.0% 將進一步打擊消費信心。澳元貶值雖有利於出口，但將推升進口商品成本，跨境賣家的採購成本上升。賣家需為可能的經濟衰退做好準備。",
+    "action": "① 建議 AU 站點賣家強化促銷策略與價值主張，聚焦性價比與必需品類 ② 密切關注 5 月 5 日 RBA 利率決策，評估升息對消費行為的即時影響 ③ 建議賣家重新審視廣告 ROAS 與 ACoS 目標，在消費降級環境下優化廣告支出 ④ 關注本週公布的澳洲家庭支出指標（Household Spending Indicator）與 MI 通膨指標",
+    "sources": [
+      {
+        "name": "Westpac IQ",
+        "url": "https://www.westpaciq.com.au/economics/2026/04/australia-and-nz-weekly-6-april-2026"
+      },
+      {
+        "name": "Janus Henderson",
+        "url": "https://www.janushenderson.com/en-au/institutional/article/australian-economic-view-april-2026/"
+      },
+      {
+        "name": "news.com.au / Oxford Economics",
+        "url": "https://www.news.com.au/finance/economy/australian-economy/australia-faces-sharp-recession-warning-as-middle-east-conflict-drives-oil-prices/news-story/6c1a25f2f8a45a3a4c770e582f2fc171"
+      }
+    ],
+    "color": "#dc2626"
+  },
+  {
+    "date": "2026-04-08",
+    "tags": [
+      "稅務"
+    ],
+    "title": "UAE 全新 VAT 罰則框架 4/14 正式生效：遲繳改為年利率 14%，自願揭露罰款改為每月 1%，行政罰款大幅降低",
+    "summary": "UAE 內閣第 129/2025 號決議（Cabinet Decision No. 129 of 2025）將於 2026 年 4 月 14 日正式生效，全面改革 VAT、企業稅與消費稅的行政罰則框架。主要變革包括：(1) 遲繳稅款罰則從原本的「2% 即時 + 每月 4%（最高 300%）」複利制，改為年利率 14% 按日計算的單利制；(2) 自願揭露（Voluntary Disclosure）罰款從原本的 5%-40% 階梯制，改為每月 1% 的時間比例制，無上限；(3) 稅務稽核後揭露的固定罰款從 50% 降至 15%；(4) 申報錯誤罰款從首次 AED 1,000 降至 AED 500；(5) 行政類罰款（如未更新地址、未提交紀錄）降幅達 75%。同時，稅務程序法引入 5 年追溯期限制，但涉及逃稅可延長至 15 年。多家稅務顧問機構呼籲企業在 4/14 前完成歷史 VAT 申報的自我審查與自願揭露。",
+    "impact": "AE 站點賣家面臨全新的 VAT 合規環境。新罰則框架雖然短期遲繳壓力降低（14% 年利率 vs 原本可達 300%），但自願揭露的每月 1% 無上限罰款意味著歷史錯誤拖越久代價越高。同時，新法要求賣家對供應商進行 VAT 盡職調查（Know Your Supplier），若供應鏈涉及逃稅且賣家「應知而未知」，進項稅額可能被拒絕抵扣。跨 AE/SA 雙站點賣家需同時應對兩套不同的合規要求。",
+    "action": "① 緊急提醒 AE 站點賣家在 4/14 前完成過去 3-5 年 VAT 申報的自我審查，有錯誤應立即提交自願揭露 ② 建議賣家更新 FTA 註冊資訊（地址、活動類型、代表人），避免行政罰款 ③ 提醒賣家建立供應商 VAT 盡職調查機制，確認供應商 TRN 有效性 ④ 建議跨站點賣家諮詢專業稅務顧問，建立統一的合規框架",
+    "sources": [
+      {
+        "name": "Flying Colour Tax",
+        "url": "https://www.flyingcolourtax.com/blog/uae-vat-penalty-refresh-2026-cash-flow/"
+      },
+      {
+        "name": "Middle East Briefing",
+        "url": "https://www.middleeastbriefing.com/news/uae-tightens-tax-procedures-regulations-effective-april-1-2026/"
+      },
+      {
+        "name": "Fintrack UAE",
+        "url": "https://www.fintrackuae.com/blogs/post/uae-tax-procedure-changes-key-rules-explained"
+      }
+    ],
+    "color": "#dc2626"
+  },
+  {
+    "date": "2026-04-08",
+    "tags": [
+      "合規"
+    ],
+    "title": "RBA 宣布 10 月 1 日起全面禁止信用卡附加費，交換費上限大幅調降，電商賣家定價策略需調整",
+    "summary": "澳洲央行（RBA）支付系統委員會（PSB）於 4 月 1 日發布結論報告，宣布自 2026 年 10 月 1 日起，全面禁止商家對 eftpos、Visa 與 Mastercard 的借記卡、預付卡及信用卡交易收取附加費（surcharge）。同時，信用卡交換費（interchange fee）上限從 0.8% 大幅調降至 0.3%，借記卡從 10 分或 0.2% 降至 8 分或 0.16%。聯邦政府估計此舉每年可為消費者與企業節省近 18 億澳元。2027 年 4 月起將進一步實施外國發行卡交換費上限與透明度要求。RBA 預計 2026 年中啟動第二階段公眾諮詢，評估是否將行動錢包、BNPL 與電商平台納入監管。American Express 不在此次禁令範圍內。",
+    "impact": "雖然 Amazon AU 本身不對消費者收取信用卡附加費，但此政策將改變整體零售定價生態。競爭對手（尤其實體零售商與獨立電商）過去透過附加費轉嫁支付成本，禁令後將被迫調整定價策略，可能縮小與 Amazon 的價格差距。交換費調降將降低所有商家的支付處理成本，有利於整體電商生態。RBA 預計將電商平台納入第二階段監管審查，Amazon AU 需關注後續政策走向。對於使用獨立站（如 Shopify）的跨境賣家，附加費禁令將直接影響其定價與成本回收方式。",
+    "action": "① 提醒同時經營獨立站的賣家，10 月前需移除所有信用卡附加費設定，將支付成本納入商品定價 ② 建議賣家關注 RBA 2026 年中的第二階段諮詢，評估電商平台可能面臨的新監管要求 ③ 利用交換費調降帶來的成本節省，優化整體支付處理方案 ④ 關注競爭對手定價策略變化，適時調整 Amazon AU 站點的價格競爭力",
+    "sources": [
+      {
+        "name": "The Paypers",
+        "url": "https://thepaypers.com/regulations/news/rba-to-ban-card-surcharging-and-reduce-interchange-fees-from-october-2026"
+      },
+      {
+        "name": "Victorian Chamber",
+        "url": "https://www.victorianchamber.com.au/news/credit-card-surcharges-to-be-abolished-in-australia"
+      },
+      {
+        "name": "UTS",
+        "url": "https://www.uts.edu.au/news/2026/04/banning-card-surcharges-will-make-paying-simpler-but-not-necessarily-cheaper"
+      }
+    ],
+    "color": "#f59e0b"
+  },
+  {
+    "date": "2026-04-08",
+    "tags": [
+      "稅務"
+    ],
+    "title": "ZATCA Fatoora Wave 24 門檻降至 SAR 37.5 萬，數千家中小企業須於 6/30 前完成電子發票整合",
+    "summary": "沙烏地稅務海關總署（ZATCA）正式公告 Fatoora 電子發票計畫第 24 波次（Wave 24），首次將營收門檻降至 SAR 375,000（約 USD 100,000），大幅擴大強制適用範圍。凡在 2022、2023 或 2024 年任一年度 VAT 應稅營收超過 SAR 375,000 的企業，均須於 2026 年 6 月 30 日前完成與 Fatoora 平台的第二階段（Phase 2）電子發票整合。受影響的企業類型包括：獨立零售商、專業服務提供商（會計師、律師、顧問）、餐飲業、醫療診所、電商與數位服務業者、物流運輸業者等。這是 Fatoora 計畫自啟動以來門檻最低的一波，預計將數千家中小企業納入強制電子發票範圍。未按時完成整合的企業將面臨發票被拒絕與財務罰款。",
+    "impact": "SA 站點的中小型第三方賣家首當其衝。過去因營收未達門檻而免於 Phase 2 整合的賣家，現在可能被納入 Wave 24 範圍。Amazon SA 平台作為「視同供應商」，需確保其系統能支援賣家的電子發票合規需求。未完成整合的賣家可能面臨發票被 ZATCA 拒絕，影響正常交易與 VAT 申報。同時，UAE 的 Peppol 電子發票系統也將於 7 月啟動試點，跨 SA/AE 雙站點賣家需同時應對兩套不同標準（FATOORA vs Peppol）。",
+    "action": "① 緊急提醒 SA 站點賣家確認是否落入 Wave 24 範圍（2022-2024 年任一年度 VAT 應稅營收 > SAR 375,000）② 建議受影響賣家立即選擇 ZATCA 認證的電子發票解決方案，啟動技術對接流程 ③ 提醒賣家 6/30 為硬性截止日，不可延期，建議預留至少 6-8 週進行系統整合與測試 ④ 建議跨 SA/AE 雙站點賣家同步評估 UAE Peppol 電子發票系統的準備工作",
+    "sources": [
+      {
+        "name": "Insightss",
+        "url": "https://insightss.co/blogs/zatca-fatoora-wave-24-compliance/"
+      },
+      {
+        "name": "Middle East Briefing",
+        "url": "https://www.middleeastbriefing.com/news/uae-e-invoicing-mandate-compliance-checklist/"
+      },
+      {
+        "name": "ClearTax",
+        "url": "https://www.cleartax.com/ae/uae-e-invoicing-compliance-checklist"
+      }
+    ],
+    "color": "#f59e0b"
+  },
+  {
+    "date": "2026-03-31",
+    "tags": [
+      "貿易"
+    ],
+    "title": "澳洲與歐盟正式完成 FTA 談判，99% 以上商品將享零關稅待遇",
+    "summary": "3 月 24 日，澳洲總理 Albanese 與歐盟執委會主席 von der Leyen 共同宣布，歷時近八年的澳歐自由貿易協定（A-EU FTA）談判正式完成。根據協定，97.8% 的澳洲出口商品將享有歐盟零關稅待遇，歐盟方面則有 97.2%（全面實施後達 99.5%）的出口商品免稅進入澳洲。協定涵蓋數位貿易專章，包括禁止強制轉移原始碼、支持無紙化貿易與電子簽章等條款。歐盟預估未來十年對澳出口可增長 33%，每年為歐盟企業節省約 10 億歐元關稅。PwC 分析指出，企業應立即開始準備原產地規則與優惠稅率申請流程。",
+    "impact": "歐盟商品進入澳洲的關稅大幅降低，將直接影響 Amazon AU 站點的歐洲品牌商品定價競爭力。歐洲食品、酒類、汽車零件、化妝品等品類的進口成本下降，有利於擴大選品。數位貿易專章的電子簽章與無紙化貿易條款，將簡化跨境賣家的合規流程。長期而言，更多歐洲品牌可能透過 Amazon AU 進入澳洲市場。",
+    "action": "① 提醒歐洲品牌賣家關注 FTA 生效時程（預計 2027 年中簽署），提前規劃澳洲市場進入策略 ② 建議賣家研究原產地規則（Rules of Origin），確認商品是否符合優惠稅率資格 ③ 關注 DFAT 後續公布的協定全文與國內立法時程",
+    "sources": [
+      {
+        "name": "澳洲總理府",
+        "url": "https://www.pm.gov.au/media/australia-european-union-free-trade-agreement"
+      },
+      {
+        "name": "歐盟執委會",
+        "url": "https://commission.europa.eu/topics/trade/eu-australia-trade-agreement_en"
+      },
+      {
+        "name": "PwC AU",
+        "url": "https://www.pwc.com.au/tax/tax-alerts/trade-impacts-and-next-steps.html"
+      }
+    ],
+    "color": "#dc2626"
+  },
+  {
+    "date": "2026-03-31",
+    "tags": [
+      "總經"
+    ],
+    "title": "澳洲消費者信心指數跌至 1973 年以來歷史新低 63.1，RBA 升息至 4.1%，通膨預期飆至 6.9%",
+    "summary": "ANZ-Roy Morgan 最新調查顯示，澳洲消費者信心指數本週暴跌 5.4 點至 63.1，創下自 1973 年該指標建立以來的歷史新低，甚至低於 2020 年 COVID 封城時期。通膨預期飆升至 6.9%，為 2010 年開始追蹤以來最高。RBA 於上週將現金利率上調至 4.1%，金融市場已定價年底前再升息三次。全國平均無鉛汽油價格飆至每公升 $2.534，較衝突前上漲約 40%。SQM Research 總經理 Louis Christopher 警告，澳洲可能已「即時進入衰退」。Perpetual 分析指出，3 月汽油價格月增 30%，將為 CPI 增加整整一個百分點。",
+    "impact": "消費者購買力急劇下降，非必需品類銷售將嚴重承壓。消費者已從「促銷恐慌」轉向「精準消費」模式，品牌忠誠度持續下降。RBA 持續升息將進一步壓縮家庭可支配收入，影響線上消費意願。賣家需密切關注轉換率、退貨率及廣告 ROAS 的變化。物流成本上升疊加消費降級，中小型賣家利潤空間將被嚴重擠壓。",
+    "action": "① 建議賣家強化促銷策略與 Coupon 使用，吸引價格敏感消費者 ② 關注 RBA 5 月利率決策，評估是否暫停升息 ③ 建議賣家優化 listing 的價值主張，強調性價比與免運費門檻 ④ 關注 3 月 CPI 數據（預計大幅上升），評估對消費行為的進一步影響",
+    "sources": [
+      {
+        "name": "Yahoo Finance AU",
+        "url": "https://au.finance.yahoo.com/news/confidence-tanks-fuel-spike-flows-051002323.html"
+      },
+      {
+        "name": "The Guardian",
+        "url": "https://www.theguardian.com/world/2026/mar/25/australians-can-expect-high-fuel-costs-to-linger-for-far-longer-than-the-war-in-iran"
+      },
+      {
+        "name": "Perpetual",
+        "url": "https://www.perpetual.com.au/insights/weekly-economic-update-energy-supply-shocks-inflation-pressures-and-shifting-rate-expectations/"
+      }
+    ],
+    "color": "#dc2626"
+  },
+  {
+    "date": "2026-03-31",
+    "tags": [
+      "物流",
+      "地緣政治"
+    ],
+    "title": "荷姆茲海峽通行量暴跌 94%，全球物流進入「繞道非洲」新常態，亞歐航線延長 10-14 天",
+    "summary": "美以對伊朗軍事行動（2/28 起）持續衝擊全球物流。據 Windward 與 BBC 數據，荷姆茲海峽通行量較戰前暴跌 94%（從每日 120-140 艘降至 5-6 艘），阿拉伯灣港口停靠量下降 47%。Maersk、Hapag-Lloyd、CMA CGM 均已撤回紅海復航計畫，Vespucci Maritime CEO Lars Jensen 在 TPM26 表示「紅海正常化至少推遲六個月以上」。超過 700 艘船舶在海峽外等待，約佔全球貨櫃船隊 10%。亞歐航線繞行好望角，運輸時間延長 10-14 天。GCCA 警告，替代路線（Jeddah、Salalah、Sohar、Fujairah）正面臨擁堵風險，冷鏈設備失衡問題加劇。",
+    "impact": "AE/SA 站點的 FBA 入倉時效將持續嚴重延長，空運成本因中東航班大規模停飛而飆升。從亞洲（尤其中國）發往 UAE/SA 的貨物面臨航線中斷與運力嚴重不足。AU 站點也因全球航運改道而受到間接影響，進口商品到貨時間延長。保險費率持續攀升，整體物流成本較衝突前上升 30-50%。",
+    "action": "① 提醒 AE/SA 賣家密切關注 Maersk、Hapag-Lloyd 等船公司的最新航線調整與附加費公告 ② 建議賣家提前 6-8 週備貨以應對物流延遲，並考慮使用 Oman Sohar、Fujairah 等替代港口 ③ 評估陸路聯運（bonded land bridge）方案作為海運替代 ④ 關注海運保險費率持續上升對整體成本的影響",
+    "sources": [
+      {
+        "name": "Supply Chain Dive",
+        "url": "https://www.supplychaindive.com/news/iran-conflict-global-ocean-shipping-flows-lars-jensen-tpm26/814250/"
+      },
+      {
+        "name": "GCCA",
+        "url": "https://www.gcca.org/news-announcements/middle-east-conflict-disruption-updates-situation-report-march-12-2026/"
+      },
+      {
+        "name": "Automotive Logistics",
+        "url": "https://www.automotivelogistics.media/supply-chain/iran-conflict-threatens-key-shipping-routes-in-the-middle-east-shippers-halt-operations-reroute-vessels-and-introduce-surcharges/2616951"
+      }
+    ],
+    "color": "#dc2626"
+  },
+  {
+    "date": "2026-03-31",
+    "tags": [
+      "總經"
+    ],
+    "title": "澳洲《不公平交易行為法案》草案出爐，瞄準電商暗黑模式、訂閱陷阱與滴漏定價",
+    "summary": "澳洲聯邦政府於 2 月 9 日發布《Competition and Consumer Amendment (Unfair Trading Practices) Bill 2026》草案，擬修訂澳洲消費者法（ACL），禁止數位經濟中的不公平交易行為。法案主要針對三大領域：(1) 暗黑模式（dark patterns）等不合理操縱消費者決策的行為；(2) 不公平訂閱行為，包括取消訂閱障礙與自動續約未充分通知；(3) 滴漏定價（drip pricing），即在交易過程中逐步加價。ACCC 2026-2027 年度執法重點也將聚焦數位市場操縱行為。若通過，新法將於 2027 年 7 月生效，違規罰款可達 5,000 萬澳元以上。",
+    "impact": "Amazon AU 及其第三方賣家需審視現有的定價展示、訂閱服務（如 Subscribe & Save）及結帳流程是否符合新法要求。滴漏定價條款將影響運費、手續費等附加費用的展示方式。暗黑模式禁令可能影響 UI/UX 設計中的促銷倒數計時、庫存緊迫提示等常見手法。ACCC 明確表示執法不限於大型平台，所有線上銷售介面均在監管範圍內。",
+    "action": "① 提醒賣家檢視 listing 中是否有可能被認定為「暗黑模式」的元素（如虛假緊迫感、誤導性折扣標示）② 建議使用訂閱模式的賣家確認取消流程是否足夠透明便捷 ③ 關注法案最終版本與 ACCC 後續執法指引",
+    "sources": [
+      {
+        "name": "JD Supra / Herbert Smith Freehills",
+        "url": "https://www.jdsupra.com/legalnews/australia-s-digital-economy-on-notice-8247494/"
+      },
+      {
+        "name": "Baker McKenzie",
+        "url": "https://www.bakermckenzie.com/en/insight/publications/2026/02/australia-proposed-acl-unfair-trading-reforms"
+      },
+      {
+        "name": "National Law Review",
+        "url": "https://natlawreview.com/article/cracking-down-manipulative-and-false-practices-promoting-competition-digital"
+      }
+    ],
+    "color": "#f59e0b"
+  },
+  {
+    "date": "2026-03-31",
+    "tags": [
+      "稅務"
+    ],
+    "title": "沙烏地 ZATCA「視同供應商」新規正式生效，電商平台 VAT 責任大幅加重；UAE 電子發票系統 7 月上路",
+    "summary": "沙烏地 ZATCA 發布的電子市場營運商（ECO）VAT 指引已於 2026 年 1 月 1 日正式生效。根據修訂後的 VAT 實施條例第 47 條，電商平台為未註冊 VAT 的沙烏地境內賣家代銷商品時，將被視為「視同供應商」（deemed supplier），需承擔完整的 VAT 申報與繳納責任（稅率 15%）。平台需對賣家進行持續的居住地與 VAT 註冊狀態查核。同時，UAE 財政部已公布電子發票系統（EIS）綜合指引 V1.0，採用 Peppol 標準的電子發票系統預計 2026 年 7 月啟動，賣家需透過認證服務提供商（ASP）進行合規對接。",
+    "impact": "Amazon SA 作為電商平台，需確保其「視同供應商」機制完全符合 ZATCA 新規，包括對第三方賣家的 VAT 註冊狀態查核、發票開立與申報流程。未註冊 VAT 的中小型賣家可能面臨被平台要求補辦註冊或調整合作模式。UAE 電子發票系統的上線將增加 AE 站點賣家的合規成本與系統對接需求。跨 SA/AE 雙站點經營的賣家需同時應對兩套不同的電子發票標準（FATOORA vs Peppol）。",
+    "action": "① 提醒 SA 站點賣家確認 VAT 註冊狀態，避免因未註冊而觸發平台代扣代繳機制 ② 建議 AE 站點賣家提前評估 Peppol 電子發票系統的對接需求與認證服務提供商選擇 ③ 協助跨 SA/AE 雙站點賣家建立統一的稅務合規框架 ④ 關注 ZATCA 後續公布的 FATOORA 第二階段新波次時程",
+    "sources": [
+      {
+        "name": "Grant Thornton SA",
+        "url": "https://www.grantthornton.sa/en/insights/articles-and-publications/vat_and_electronic_marketplace_in_saudi_arabia/"
+      },
+      {
+        "name": "Kozman & Co.",
+        "url": "https://www.linkedin.com/pulse/saudi-arabia-vat-update-2026-deemed-supplier-rules-electronic-ryhxe"
+      },
+      {
+        "name": "OrchidaTax",
+        "url": "https://orchidatax.com/e-invoicing-2026-latest-global-developments-and-what-they-mean-for-your-business/"
+      }
+    ],
+    "color": "#f59e0b"
+  }
+]/*__END_ARTICLES_JSON__*/;
+
+articles = __RAW_ARTICLES__.sort((a, b) => b.date.localeCompare(a.date));
+renderHero();
+renderGrid();
+</script>
+</body>
+</html>
