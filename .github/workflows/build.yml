@@ -6,6 +6,7 @@ on:
       - 'daily-report-*.html'
       - 'scripts/build.py'
       - 'index.html'
+  workflow_dispatch:
 
 jobs:
   build:
