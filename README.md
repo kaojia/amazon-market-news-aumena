@@ -62,6 +62,34 @@ daily-report-*.html  →  build.py  →  index.html  →  GitHub Pages
 
 ---
 
+## AI Pulse — AI 產業每日新聞
+
+🔗 **網站：https://kaojia.github.io/amazon-market-news-aumena/ai-news/**
+
+獨立的 AI 產業新聞追蹤頁面，每日精選 3-5 則重要 AI 新聞，涵蓋 LLM、晶片、政策、新創、研究等領域。
+
+### 運作機制
+
+```
+ai-news/ai-report-*.json  →  ai-news/build.py  →  ai-news/data.js  →  ai-news/index.html
+       (每日新聞 JSON)           (合併腳本)          (前端資料)           (網站頁面)
+```
+
+### 更新方式
+
+```bash
+# 1. 建立 ai-news/ai-report-YYYY-MM-DD.json
+# 2. 執行建置
+python ai-news/build.py    # 在 ai-news/ 目錄下執行
+
+# 3. Push
+git add ai-news/
+git commit -m "AI Pulse: add daily news YYYY-MM-DD"
+git push
+```
+
+---
+
 ## 本地開發
 
 ```bash
