@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Pulse | AI 科技新聞情報站</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-brand" onclick="resetAll(); return false;">
+      <div class="nav-brand-icon">AI</div>
+      <div class="nav-brand-text">
+        <span class="nav-brand-name">AI Pulse</span>
+        <span class="nav-brand-sub">AI 科技新聞情報站</span>
+      </div>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a class="nav-link active" data-filter="all">全部</a>
+      <a class="nav-link" data-filter="LLM">LLM</a>
+      <a class="nav-link" data-filter="視覺">視覺</a>
+      <a class="nav-link" data-filter="機器人">機器人</a>
+      <a class="nav-link" data-filter="晶片">晶片</a>
+      <a class="nav-link" data-filter="新創">新創</a>
+      <a class="nav-link" data-filter="研究">研究</a>
+      <a class="nav-link" data-filter="政策">政策</a>
+      <a class="nav-link" data-filter="產品">產品</a>
+    </div>
+    <div class="nav-search">
+      <input type="text" class="search-input" id="searchInput" placeholder="搜尋 GPT、Gemini、NVIDIA..." aria-label="搜尋新聞">
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="選單">&#9776;</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="heroSection"></div>
+
+<!-- SECTION HEADER -->
+<div class="section-header">
+  <div class="section-title" id="sectionTitle">最新情報</div>
+  <div class="section-count" id="sectionCount"></div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="layout-wrap">
+  <div>
+    <div class="articles-grid" id="articlesGrid"></div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+  <aside>
+    <div class="sidebar-wrap">
+      <div class="sidebar-card">
+        <div class="sidebar-title">&#128200; AI 市場動態</div>
+        <div class="sidebar-stat">
+          <span class="sidebar-stat-label">NVIDIA (NVDA)</span>
+          <span class="sidebar-stat-value">$1,247<span class="sidebar-stat-change up">+2.3%</span></span>
+        </div>
+        <div class="sidebar-stat">
+          <span class="sidebar-stat-label">Microsoft (MSFT)</span>
+          <span class="sidebar-stat-value">$498<span class="sidebar-stat-change up">+1.1%</span></span>
+        </div>
+        <div class="sidebar-stat">
+          <span class="sidebar-stat-label">Alphabet (GOOGL)</span>
+          <span class="sidebar-stat-value">$192<span class="sidebar-stat-change down">-0.8%</span></span>
+        </div>
+        <div class="sidebar-stat">
+          <span class="sidebar-stat-label">OpenAI 估值</span>
+          <span class="sidebar-stat-value">$340B</span>
+        </div>
+        <div class="sidebar-stat">
+          <span class="sidebar-stat-label">全球 AI 支出 (2026)</span>
+          <span class="sidebar-stat-value">$680B<span class="sidebar-stat-change up">+38%</span></span>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-title">&#128197; 近期重要事件</div>
+        <div class="sidebar-item"><strong>5/20</strong> Google I/O 2026 開發者大會</div>
+        <div class="sidebar-item"><strong>6/9</strong> WWDC 2026 — Apple AI 更新</div>
+        <div class="sidebar-item"><strong>6/15</strong> CVPR 2026 電腦視覺頂會</div>
+        <div class="sidebar-item"><strong>7/20</strong> ICML 2026 機器學習頂會</div>
+        <div class="sidebar-item"><strong>9/22</strong> NeurIPS 2026 論文截止</div>
+        <div class="sidebar-item"><strong>11/3</strong> OpenAI DevDay 2026</div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-title">&#127942; 模型排行榜 (Chatbot Arena)</div>
+        <div class="sidebar-item"><strong>#1</strong> GPT-5 Turbo — ELO 1380</div>
+        <div class="sidebar-item"><strong>#2</strong> Claude Opus 4 — ELO 1365</div>
+        <div class="sidebar-item"><strong>#3</strong> Gemini Ultra 2 — ELO 1352</div>
+        <div class="sidebar-item"><strong>#4</strong> Llama 4 405B — ELO 1340</div>
+        <div class="sidebar-item"><strong>#5</strong> DeepSeek-V4 — ELO 1335</div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="modal-close" id="modalClose" aria-label="關閉">&times;</button>
+      <div class="card-meta" id="modalMeta"></div>
+      <div class="modal-title" id="modalTitle"></div>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="site-footer">
+  <p>AI Pulse | AI 科技新聞情報站</p>
+  <p>每日精選全球 AI 產業最新動態 · 技術突破 · 政策法規</p>
+  <p style="margin-top:8px; opacity:0.6;">&copy; 2026 AI Pulse</p>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
