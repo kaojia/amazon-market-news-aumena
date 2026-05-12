@@ -1,5 +1,118 @@
 var articles = [
   {
+    "date": "2026-05-12",
+    "priority": "high",
+    "tags": [
+      "政策",
+      "LLM"
+    ],
+    "title": "OpenAI 與美國國防部正式簽署 AI 部署協議，設立三大紅線禁止大規模監控與自主武器",
+    "summary": "OpenAI 於 5 月 11 日宣布與美國國防部（Department of War）達成正式協議，將在機密網路環境中部署先進 AI 系統。協議明確設立三大紅線：禁止用於大規模國內監控、禁止用於自主武器系統、禁止用於高風險自動化決策（如社會信用系統）。協議文本引用第四修正案與《國家安全法》，明確禁止追蹤美國公民，包括禁止使用商業取得的個人資訊。國防部將召集前沿 AI 實驗室與雲端供應商組成工作小組，OpenAI 表示此協議的防護措施比任何先前的機密 AI 部署協議都更嚴格。",
+    "insight": "這是 AI 產業從「拒絕軍方」到「有條件合作」的歷史性轉折。OpenAI 在 2023 年還明確禁止軍事用途，如今不僅簽約還主動公開協議細節，顯示產業共識已從「是否合作」轉向「如何設定邊界」。三大紅線的設計巧妙——它們禁止的是最具爭議的用途（監控、自主殺傷），但保留了情報分析、後勤優化等較不敏感的應用空間。這為其他 AI 公司提供了一個可參考的框架。",
+    "takeaway": "1. AI 軍事化已成定局——七家頂級 AI 公司（含 Google、Microsoft、NVIDIA）均已簽署類似協議 2. 「三大紅線」模式可能成為全球 AI 軍事應用的治理範本 3. OpenAI 主動公開協議細節是一種公關策略，試圖在輿論上取得主動 4. 對 AI 從業者而言，國防合約將成為重要的營收來源，但也帶來聲譽風險",
+    "sources": [
+      {
+        "name": "OpenAI Blog",
+        "url": "https://openai.com/index/our-agreement-with-the-department-of-war/"
+      },
+      {
+        "name": "Washington Post",
+        "url": "https://www.washingtonpost.com/technology/2026/05/01/pentagon-ai-deals-microsoft-amazon-google-classified-military/"
+      }
+    ],
+    "color": "#ef4444"
+  },
+  {
+    "date": "2026-05-12",
+    "priority": "high",
+    "tags": [
+      "政策"
+    ],
+    "title": "美國情報機構與商務部爭奪 AI 監管主導權，川普出訪中國前夕政策路線分裂",
+    "summary": "據 Washington Post 5 月 11 日報導，川普政府內部正就 AI 監管權歸屬產生嚴重分歧。一項尚未公開的提案建議賦予美國情報機構（而非商務部）更大的 AI 模型評估權力。此爭議發生在川普即將出訪中國參加峰會之際，使得 AI 政策的地緣政治意涵更加複雜。此前白宮已於 3 月發布國家 AI 政策框架，傾向以自願性協議取代強制性聯邦規則，並要求國會在年底前立法。",
+    "insight": "情報機構介入 AI 監管意味著國家安全考量正在壓過商業創新邏輯。如果情報機構獲得模型評估權，AI 公司可能面臨類似出口管制的審查流程，這將顯著增加合規成本和上市時間。在川普訪中背景下，這也暗示美國可能將 AI 能力評估與對中國的技術封鎖更緊密地結合。商務部 vs 情報機構的路線之爭，本質上是「促進創新」vs「國家安全優先」的根本矛盾。",
+    "takeaway": "1. AI 公司應開始準備應對可能的情報機構審查流程 2. 若情報機構主導監管，開源模型的發布可能面臨更嚴格的限制 3. 中美 AI 競爭正從技術層面擴展到監管制度層面 4. 政策不確定性短期內不會消除，企業需要建立靈活的合規架構",
+    "sources": [
+      {
+        "name": "Washington Post",
+        "url": "https://www.washingtonpost.com/politics/2026/05/11/trump-ai-regulation-commerce-intelligence/"
+      },
+      {
+        "name": "Tech Policy Press",
+        "url": "https://www.techpolicy.press/what-the-eu-ai-omnibus-deal-changes-for-the-ai-act-and-what-lies-ahead/"
+      }
+    ],
+    "color": "#ef4444"
+  },
+  {
+    "date": "2026-05-12",
+    "priority": "high",
+    "tags": [
+      "LLM",
+      "產品"
+    ],
+    "title": "Google I/O 2026 下週登場：Gemini Omni Video 模型與 Android 17 將成焦點",
+    "summary": "Google I/O 2026 開發者大會將於 5 月 20 日舉行，多方消息顯示這將是 Google AI 產品線的重大升級。除了已曝光的 7 個隱藏 Gemini Live 模型外，最受矚目的是可能發布的 Gemini Omni Video 模型——據報導這將是首個具備原生影片輸出能力的頂級全模態模型，可能統一圖像、影片與文字生成。此外，Android 17 預計將深度整合 Gemini AI 能力。Google 在 Cloud Next 已發布 Gemini 3.1 Pro，I/O 可能帶來消費端的對應升級。",
+    "insight": "Google 正在執行一個清晰的策略：Cloud Next 面向企業（Gemini 3.1 Pro + Enterprise），I/O 面向開發者和消費者（Omni Video + Android 17）。如果 Gemini Omni Video 確實能統一多模態生成，這將是對 OpenAI Sora 和 Runway 的直接挑戰。更重要的是，Android 17 的 Gemini 深度整合意味著 AI 將從「App 內功能」變成「作業系統層級能力」，這是 Google 相對於 OpenAI 的結構性優勢——它擁有觸及數十億用戶的分發管道。",
+    "takeaway": "1. 開發者應關注 5/20 I/O 的 Gemini API 更新，特別是影片生成和多模態能力 2. Omni Video 模型若成真，將重新定義 AI 影片生成的技術標準 3. Android 17 + Gemini 整合將為行動端 AI 應用開啟新的可能性 4. Google 的「雙大會策略」顯示其 AI 產品線已足夠成熟，可以分層推進",
+    "sources": [
+      {
+        "name": "Forbes",
+        "url": "https://www.forbes.com/sites/paulmonckton/2026/05/11/7-hidden-gemini-live-ai-models-revealed-ahead-of-google-io-2026/"
+      },
+      {
+        "name": "Yahoo Tech",
+        "url": "https://tech.yahoo.com/general/article/google-io-2026-what-to-expect-next-week-including-android-17-ai-announcements-and-more-131200995.html"
+      }
+    ],
+    "color": "#7c3aed"
+  },
+  {
+    "date": "2026-05-12",
+    "priority": "medium",
+    "tags": [
+      "LLM",
+      "產品"
+    ],
+    "title": "Anthropic 與 SpaceX 達成算力合作，獲超過 22 萬顆 NVIDIA GPU 容量緩解 Claude 瓶頸",
+    "summary": "Anthropic 宣布與 SpaceX 達成計算資源合作協議，獲得 SpaceX Colossus 1 資料中心超過 300 MW 的新容量，包含超過 22 萬顆 NVIDIA GPU（涵蓋 H100、H200 及次世代 GB200 加速器）。此舉直接回應了近期 Claude Pro 和 Claude Max 用戶遭遇的容量限制問題。Anthropic 同時宣布提高 Claude Code 的使用上限。此合作發生在 Anthropic CEO 透露公司 Q1 成長 80 倍的背景下，顯示需求遠超供給。",
+    "insight": "Anthropic 選擇 SpaceX 而非傳統雲端供應商（AWS、Azure、GCP）作為算力合作夥伴，這是一個值得關注的信號。SpaceX 的 Colossus 資料中心原本為 xAI 的 Grok 模型訓練而建，如今也向 Anthropic 開放，顯示 Elon Musk 的 AI 基礎設施正在走向平台化。22 萬顆 GPU 的規模相當於一個中型國家的 AI 算力總和，這筆交易也反映出 AI 算力市場正從「買 GPU」轉向「租容量」的模式轉變。",
+    "takeaway": "1. Claude 用戶短期內應能感受到容量改善，特別是 Claude Code 的使用體驗 2. SpaceX 進入 AI 算力租賃市場，為 AWS/Azure/GCP 帶來新的競爭壓力 3. 80 倍成長 + 22 萬 GPU 的組合顯示 AI 基礎設施需求仍遠未見頂 4. 「算力即服務」正成為 AI 產業的新商業模式",
+    "sources": [
+      {
+        "name": "Anthropic",
+        "url": "https://www.anthropic.com/news/higher-limits-spacex"
+      },
+      {
+        "name": "Ars Technica",
+        "url": "https://arstechnica.com/ai/2026/05/anthropic-raises-claude-code-usage-limits-credits-new-deal-with-spacex/"
+      }
+    ],
+    "color": "#7c3aed"
+  },
+  {
+    "date": "2026-05-12",
+    "priority": "medium",
+    "tags": [
+      "產品"
+    ],
+    "title": "Apple 同意支付 $2.5 億和解金，承認 iPhone AI 功能過度宣傳",
+    "summary": "Apple 同意支付 $2.5 億美元的集體訴訟和解金，解決消費者指控其在 AI 功能尚未就緒時就進行虛假廣告的訴訟。原告主張 Apple 在特定 iPhone 機型上宣傳了增強版 Siri AI 功能，但這些功能在銷售時並不存在。和解案已在加州聯邦法院提交。與此同時，iOS 26.5 已正式推送，但仍未包含先前承諾的 AI 升級。Apple 確認「更個人化的 Siri」將在今年稍後推出，預計在 6 月 8 日 WWDC 上公布細節。",
+    "insight": "$2.5 億的和解金對 Apple 而言微不足道（不到一天營收），但其象徵意義重大——這是首次有科技巨頭因 AI 功能的過度宣傳而付出法律代價。這為整個產業設立了一個先例：AI 功能的行銷承諾必須與實際交付能力匹配。Apple 在 AI 競賽中的保守策略（相比 Microsoft、Google 的激進投入）既是劣勢也是優勢——它避免了技術風險，但也因此面臨「承諾落差」的法律風險。",
+    "takeaway": "1. AI 產品的行銷團隊需要更謹慎——「即將推出」的功能不能作為現有產品的賣點 2. 這個先例可能引發更多針對 AI 功能虛假宣傳的訴訟 3. Apple 的 AI 策略仍在等待 WWDC 的 Siri 升級，6/8 將是關鍵日期 4. 消費者對 AI 功能的期望管理正成為產品策略的重要環節",
+    "sources": [
+      {
+        "name": "Top Class Actions",
+        "url": "https://topclassactions.com/lawsuit-settlements/lawsuit-news/apple-agrees-to-250m-settlement-over-claims-it-overhyped-iphone-ai-features/"
+      },
+      {
+        "name": "Yahoo Finance",
+        "url": "https://finance.yahoo.com/sectors/technology/articles/apple-delivers-surprise-win-big-162120540.html"
+      }
+    ],
+    "color": "#f97316"
+  },
+  {
     "date": "2026-05-11",
     "priority": "high",
     "tags": [
