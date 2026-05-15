@@ -1,0 +1,57 @@
+[
+  {
+    "date": "2026-05-15",
+    "priority": "high",
+    "tags": ["晶片", "新創"],
+    "title": "Cerebras 以 $185 定價上市首日暴漲 89%，市值衝破 $1000 億成為 2026 年最大 IPO",
+    "summary": "AI 晶片新創 Cerebras Systems 於 5 月 14 日在 Nasdaq 正式掛牌交易（代號 CBRS），IPO 定價 $185，遠超原始指導區間 $115-$125（後上調至 $150-$160）。開盤價 $350，首日漲幅達 89%，市值突破 $1000 億美元，成為 2026 年美國最大 IPO。公司共發行 3000 萬股 A 類普通股，募資 $55 億。據 Bloomberg 報導，投資人認購需求超過供給 20 倍以上。此次 IPO 也造就了兩位新的億萬富翁。Cerebras 的核心產品是 Wafer-Scale Engine（WSE），一顆晶片即佔據整片晶圓，專為大規模 AI 訓練與推論設計。",
+    "insight": "Cerebras 的 IPO 成功不僅是一家公司的里程碑，更是整個 AI 晶片產業的風向標。20 倍超額認購顯示市場對 NVIDIA 替代方案的渴望程度。在 Intel、AMD 今年股價已翻倍的背景下，Cerebras 的上市進一步確認了「AI 晶片多元化」的投資主題。值得注意的是，Cerebras 的客戶包括 Amazon 和 OpenAI，這意味著即使是 NVIDIA 的最大客戶也在積極尋找替代供應商。$1000 億市值意味著市場給予的估值已接近 AMD 的水準，這對一家尚未大規模量產的公司而言是極高的期望。",
+    "takeaway": "1. AI 晶片市場正式進入「後 NVIDIA 壟斷」時代，多元競爭格局確立 2. 2026 年 AI IPO 窗口已打開，預計將有更多 AI 公司跟進上市 3. Cerebras 的 Wafer-Scale 架構若能規模化，將對傳統 GPU 集群模式構成根本性挑戰 4. 投資人應關注 Cerebras 的實際營收與客戶部署進度，$1000 億估值需要強勁成長支撐",
+    "sources": [{"name": "TechCrunch", "url": "https://techcrunch.com/2026/05/14/cerebras-raises-5-5b-kicking-off-2026s-ipo-season-with-a-bang/"}, {"name": "CNBC", "url": "https://www.cnbc.com/2026/05/14/cerebras-cbrs-stock-trade-nasdaq-ipo.html"}],
+    "color": "#10b981"
+  },
+  {
+    "date": "2026-05-15",
+    "priority": "high",
+    "tags": ["LLM"],
+    "title": "OpenAI 發布 GPT-5.2 最新更新：在 GDPval 基準超越 44 種職業的人類專家",
+    "summary": "OpenAI 於 5 月 14 日發布 GPT-5.2 的重大更新公告，宣稱該模型在多項基準測試中創下新紀錄，特別是在 GDPval 評測中，GPT-5.2 在涵蓋 44 種職業的「明確定義知識工作任務」上超越了業界專業人士的表現。此前 GPT-5.2 已在理論物理領域取得突破——提出了一個膠子振幅公式，後經 OpenAI 內部模型證明並由研究者驗證。這是 GPT-5 系列的持續進化，該系列已包含 GPT-5.4（整合編碼與代理工作流）和 GPT-5.5（API 已於 4 月 24 日開放）。",
+    "insight": "GPT-5.2 在 GDPval 上超越 44 種職業的專業人士，這個數據點的意義在於：AI 不再只是「接近人類水準」，而是在結構化知識工作中已經系統性地超越人類。更值得關注的是物理學突破——AI 模型能夠提出新的數學公式並被人類驗證為正確，這標誌著 AI 從「知識檢索工具」向「知識創造工具」的質變。OpenAI 的模型迭代速度也令人驚嘆：從 GPT-5.2 到 5.5，半年內發布了四個主要版本，顯示前沿模型的進步正在加速而非放緩。",
+    "takeaway": "1. 知識工作者需要重新定位自身價值——AI 已在 44 種職業的標準化任務上超越人類 2. AI 輔助科學研究正從概念走向實踐，物理學突破是一個重要里程碑 3. OpenAI 的快速迭代策略（半年四版本）正在拉開與競爭者的距離 4. 企業應評估哪些知識工作流程可以立即受益於 GPT-5.2 級別的能力",
+    "sources": [{"name": "OpenAI", "url": "https://openai.com/index/introducing-gpt-5-2/"}, {"name": "BusinessWorld", "url": "https://www.businessworld.in/article/openai-launches-gpt-5-2-sharpening-its-pitch-to-developers-as-rivalry-with-google-intensifies-583330"}],
+    "color": "#7c3aed"
+  },
+  {
+    "date": "2026-05-15",
+    "priority": "high",
+    "tags": ["LLM", "新創"],
+    "title": "Anthropic 與蓋茲基金會簽署 $2 億四年合作協議，將 Claude 用於全球公衛與疫苗研發",
+    "summary": "Anthropic 於 5 月 13 日宣布與比爾及梅琳達·蓋茲基金會達成 $2 億美元的四年合作夥伴關係。根據協議，Anthropic 將與蓋茲基金會及其他合作方共同推進多項計畫，包括加速新疫苗與療法的開發，以及協助各國政府利用健康數據做出更快速、更明智的決策。這是 AI 公司在社會公益領域最大規模的單筆合作之一。此舉發生在 Anthropic 近期一系列擴張動作之後——包括與 SpaceX 的算力合作、華爾街金融服務推進，以及 Claude Code 使用量的爆發性成長。",
+    "insight": "這筆 $2 億合作的戰略意義遠超其金額本身。首先，它為 Anthropic 建立了「負責任 AI」的品牌敘事——在 OpenAI 簽署軍事合約的同時，Anthropic 選擇了全球公衛作為旗艦合作方向，形成鮮明對比。其次，蓋茲基金會的背書為 Anthropic 在政府和國際組織市場打開了大門。第三，公衛數據的處理需求（多語言、跨文化、高敏感度）恰好是 Claude 的強項所在。這是一個典型的「做好事也做好生意」的策略。",
+    "takeaway": "1. AI 公司的差異化競爭正從技術層面擴展到價值觀層面（軍事 vs 公衛） 2. 蓋茲基金會的合作為 AI 在全球健康領域的應用提供了重要的資金和信任基礎 3. 開發中國家的公衛系統可能成為 AI 大規模部署的下一個前沿 4. Anthropic 的多線擴張（算力、金融、公衛）顯示其正在快速從研究機構轉型為全方位 AI 平台",
+    "sources": [{"name": "Anthropic", "url": "https://anthropic.com/news/gates-foundation-partnership"}, {"name": "StartupHub", "url": "https://www.startuphub.ai/ai-news/artificial-intelligence/2026/anthropic-gates-foundation-ink-200m-ai-deal"}],
+    "color": "#7c3aed"
+  },
+  {
+    "date": "2026-05-15",
+    "priority": "high",
+    "tags": ["產品"],
+    "title": "Google 發布 Gemini Intelligence 品牌與 Android 17 AI 功能，搶在 Apple WWDC 前卡位",
+    "summary": "Google 於 5 月 14 日的 Android Show 上正式發布「Gemini Intelligence」品牌，將其最先進的 Gemini AI 功能打包為 Android 旗艦設備的核心體驗。Android 17 將搭載多項 AI 新功能，包括：生成式 AI Widget 創建工具、AI 驅動的語音轉文字模型（可自動去除口語贅詞）、以及更深度的 Gemini 系統級整合。Google 同時發布了全新的「Googlebook」筆電平台。此舉明確搶在 Apple 6 月 WWDC 之前，展示 Google 在行動端 AI 的領先地位。",
+    "insight": "Google 將 Gemini 功能品牌化為「Gemini Intelligence」是一個重要的產品策略信號——它不再只是一個 AI 助手 App，而是作業系統層級的智慧能力。這與 Apple Intelligence 形成直接對標。關鍵差異在於：Google 已經在出貨，而 Apple 仍在承諾。AI Widget 創建工具特別值得關注——它讓用戶可以用自然語言描述需求來生成自訂 Widget，這是「AI 即介面」理念的具體實現。在 Apple 因 AI 功能延遲而被訴訟的背景下，Google 的搶先發布策略顯得格外精明。",
+    "takeaway": "1. 行動端 AI 競爭已從「App 層」升級到「OS 層」，Google 暫時領先 Apple 2. 開發者應關注 Gemini Intelligence API，特別是 Widget 生成和語音處理能力 3. 「Googlebook」的發布暗示 Google 正在建立從手機到筆電的完整 AI 硬體生態 4. Apple 必須在 WWDC 上拿出實質性的 AI 升級，否則將面臨更大的市場壓力",
+    "sources": [{"name": "Google Blog", "url": "https://blog.google/products-and-platforms/platforms/android/gemini-intelligence/"}, {"name": "Wired", "url": "https://www.wired.com/story/android-17-gemini-top-new-features/"}],
+    "color": "#f97316"
+  },
+  {
+    "date": "2026-05-15",
+    "priority": "medium",
+    "tags": ["晶片"],
+    "title": "華爾街宣告 AI 晶片「換代」：記憶體晶片取代 GPU 成為新焦點，Intel/AMD 今年漲幅超越 NVIDIA",
+    "summary": "據 CNBC 5 月 14 日報導，華爾街分析師正在重新評估 AI 晶片投資邏輯，認為隨著 AI 軟體變得更加「代理化」（agentic），晶片需求的比重正從純 GPU 運算轉向記憶體與協調（orchestration）晶片。Intel 和 AMD 今年股價已實現三位數漲幅，而 NVIDIA 年初至今僅上漲 15%。VanEck 半導體 ETF 今年已上漲 58%。同時，中國本土 AI 晶片產業在 NVIDIA 缺席的情況下加速發展，但路透社報導 NVIDIA 已獲批向部分中國企業出貨 H200 晶片。",
+    "insight": "「AI 晶片換代」的敘事反映了一個深層技術趨勢：當 AI 從單純的模型訓練/推論轉向多步驟代理工作流時，瓶頸從「算力」轉向「記憶體頻寬」和「系統協調」。這解釋了為什麼 Micron（記憶體）和 Intel（CPU + 加速器整合）的表現開始超越純 GPU 玩家。NVIDIA 15% 的漲幅並非因為它變差了，而是因為市場正在重新定價整個 AI 基礎設施堆疊的價值分配。對中國市場的 H200 出貨許可則顯示美國政策正在微調——完全封鎖不現實，有限開放可能是新常態。",
+    "takeaway": "1. AI 投資邏輯正從「買 NVIDIA」轉向「買 AI 基礎設施全棧」 2. 記憶體晶片（HBM、DDR5）和互連技術將成為下一波 AI 硬體投資熱點 3. 代理式 AI 的興起正在改變晶片需求結構——協調能力比純算力更重要 4. 中國 AI 晶片自主化進程加速，但短期內仍依賴 NVIDIA 高端產品",
+    "sources": [{"name": "CNBC", "url": "https://www.cnbc.com/2026/05/14/orchestration-why-the-ai-bull-markets-obsession-shifted-away-from-nvidia-to-memory-chip-makers.html"}, {"name": "CNBC", "url": "https://www.cnbc.com/2026/05/14/china-ai-chips-nvidia.html"}],
+    "color": "#10b981"
+  }
+]
