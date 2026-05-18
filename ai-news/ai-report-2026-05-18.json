@@ -1,0 +1,46 @@
+[
+  {
+    "date": "2026-05-18",
+    "priority": "high",
+    "tags": ["產品", "LLM"],
+    "title": "Google I/O 2026 明日開幕：Gemini 新模型、Android XR 眼鏡、Aluminium OS 全面亮相",
+    "summary": "Google 年度開發者大會 I/O 2026 將於 5 月 19 日（週二）上午 10 點 PT 在 Mountain View 的 Shoreline Amphitheatre 開幕，為期兩天。根據已確認的議程，本次大會將發布新一代 Gemini 模型（目前落後於 Anthropic Mythos 和 OpenAI GPT-5.5）、Android 17 正式版、首款 Android XR 智慧眼鏡、全新桌面作業系統 Aluminium OS，以及上週預告的 Gemini Intelligence 深度整合。開發者主題演講將於下午 1 點 PT 接續，涵蓋 AI 代理工作流、多模態 API 等技術細節。",
+    "insight": "Google I/O 2026 的時機點極為關鍵。上週 Android Show 已預告了 Gemini Intelligence 和 Googlebook，但核心模型能力的更新尚未揭曉。目前 Gemini 在多項基準上落後於 Anthropic Mythos 和 GPT-5.5，Google 需要在 I/O 上展示足以縮小差距的新模型。Android XR 眼鏡的發布將是 Google 對 Meta Ray-Ban 的直接回應。而 Aluminium OS 作為完全基於 Android 的桌面系統，可能重新定義 Chrome OS 的未來。這場大會的成敗將決定 Google 在 2026 下半年的 AI 敘事。",
+    "takeaway": "1. 開發者應關注 Gemini 新模型的 API 定價與能力提升，特別是代理工作流支援 2. Android XR 眼鏡若正式發布，將開啟新的 AR/AI 應用開發機會 3. Aluminium OS 可能取代 Chrome OS 成為 Google 的桌面策略核心 4. 投資人應觀察 Google 能否在模型能力上縮小與 OpenAI/Anthropic 的差距",
+    "sources": [{"name": "TechTimes", "url": "https://www.techtimes.com/articles/316755/20260517/google-i-o-2026-keynote-opens-tuesday-new-gemini-lands-behind-mythos-gpt-55.htm"}, {"name": "Android Authority", "url": "https://www.androidauthority.com/what-to-expect-from-google-io-2026-3664979/"}],
+    "color": "#f97316"
+  },
+  {
+    "date": "2026-05-18",
+    "priority": "high",
+    "tags": ["新創", "研究"],
+    "title": "Recursive Superintelligence 以 $46.5 億估值融資 $6.5 億，目標打造「自我改進」AI 系統",
+    "summary": "由前 Salesforce AI 首席科學家 Richard Socher 創辦的新創公司 Recursive Superintelligence（RSI）於 5 月 13 日正式出場，宣布完成 $6.5 億美元融資，估值達 $46.5 億。本輪由 GV（Google Ventures）和 Greycroft 領投，AMD Ventures 和 NVIDIA 也參與投資。RSI 的核心目標是開發能夠「自主遞迴自我改進」的 AI 模型——即 AI 系統能在無需人類直接干預的情況下持續提升自身能力。創始團隊成員來自 Meta AI、Google DeepMind、OpenAI 和 Salesforce AI。",
+    "insight": "RSI 的出現標誌著 AI 產業正式進入「超級智慧競賽」階段。$46.5 億的出場估值在歷史上極為罕見——這意味著投資人正在為一個尚未有產品的「概念」下注。值得注意的是 NVIDIA 和 GV 同時參投，這暗示兩大巨頭都不想錯過「自我改進 AI」這個可能改變遊戲規則的方向。然而，自我改進 AI 也是 AI 安全領域最大的擔憂之一。RSI 的成功與否，將直接影響全球對 AI 治理的討論方向。Richard Socher 的學術背景（ImageNet 時代的重要貢獻者）為這家公司增添了技術可信度。",
+    "takeaway": "1. 「自我改進 AI」已從學術概念進入商業化階段，資本市場給予極高估值 2. NVIDIA + GV 的組合投資顯示產業巨頭正在對沖「下一代 AI 範式」的風險 3. AI 安全議題將因 RSI 等公司的出現而更加緊迫 4. 創業者注意：AI 新創的估值天花板仍在不斷被打破，但期望也隨之升高",
+    "sources": [{"name": "TechCrunch", "url": "https://techcrunch.com/2026/05/14/what-happens-when-ai-starts-building-itself/"}, {"name": "The Decoder", "url": "https://the-decoder.com/ai-startup-recursive-emerges-from-stealth-with-650-million-to-build-self-improving-ai/"}],
+    "color": "#ec4899"
+  },
+  {
+    "date": "2026-05-18",
+    "priority": "high",
+    "tags": ["政策", "LLM"],
+    "title": "馬爾他成為全球首個為全民提供免費 ChatGPT Plus 的國家，條件是先完成 AI 素養課程",
+    "summary": "OpenAI 於 5 月 16 日宣布與馬爾他政府簽署協議，將為所有馬爾他居民提供一年免費的 ChatGPT Plus 服務。唯一條件是居民必須先完成由馬爾他大學開發的 AI 素養課程。該計畫由馬爾他數位創新局（MDIA）管理，是 OpenAI「OpenAI for Countries」全球倡議的一部分（此前已與愛沙尼亞和希臘建立合作）。馬爾他成為全球第一個將付費 AI 工具作為公共服務提供給全體國民的國家。",
+    "insight": "馬爾他模式的創新之處在於「教育先行」——不是單純發放 AI 工具，而是要求國民先具備基本 AI 素養。這解決了 AI 普及化的兩大問題：使用門檻和濫用風險。對 OpenAI 而言，這是一個絕佳的品牌策略：用一個 50 萬人口的小國作為「AI 全民化」的實驗場，成本可控但宣傳效果巨大。更深層的意義在於，這可能開創「AI 即公共基礎設施」的先例——就像網路從奢侈品變成公用事業一樣。如果馬爾他實驗成功，更多國家可能跟進。",
+    "takeaway": "1. 「AI 素養 + 免費工具」模式可能成為各國 AI 普及化的範本 2. OpenAI 的「OpenAI for Countries」策略正在建立國家級客戶關係，這是 Google/Anthropic 尚未複製的優勢 3. 小國可能成為 AI 政策創新的試驗場，類似愛沙尼亞在數位政府領域的角色 4. 教育機構應關注 AI 素養課程的設計——這可能成為全球標準",
+    "sources": [{"name": "Reuters", "url": "https://www.reuters.com/business/openai-seals-deal-malta-give-all-maltese-access-chatgpt-plus-2026-05-16/"}, {"name": "The Next Web", "url": "https://thenextweb.com/news/openai-malta-chatgpt-plus-free-citizens"}],
+    "color": "#ef4444"
+  },
+  {
+    "date": "2026-05-18",
+    "priority": "medium",
+    "tags": ["政策"],
+    "title": "美國 AI 監管陷入三方角力：1,200 項州法案、聯邦框架與情報機構爭奪 AI 審查權",
+    "summary": "據 Fortune 5 月 15 日報導，美國目前有超過 1,200 項與 AI 相關的州級法案正在推進中，但缺乏統一的聯邦立法框架。與此同時，Washington Post 揭露白宮內部正就 AI 監管權歸屬產生激烈分歧：情報機構希望獲得比商務部更大的 AI 模型評估權力，這一提案尚未公開。川普政府 3 月發布的「國家 AI 政策框架」主張聯邦層級統一監管並限制各州自行立法，但國會尚未採取行動。德州的 TRAIGA 法案（禁止特定 AI 濫用並設立 36 個月監管沙盒）成為州級立法的代表案例。",
+    "insight": "美國 AI 監管的「三體問題」正在加劇：州政府搶先立法、聯邦政府試圖統一、情報機構爭奪審查權。這三股力量的拉扯創造了巨大的合規不確定性。情報機構介入 AI 評估尤其值得警惕——這意味著 AI 模型可能被視為「國家安全資產」而非純商業產品。對企業而言，1,200 項州法案意味著在美國部署 AI 的合規成本可能比歐盟 AI Act 更高，因為後者至少是統一的。2026 年中期選舉不會解決這個問題，反而可能加速分裂。",
+    "takeaway": "1. 在美國部署 AI 產品的企業需要同時追蹤聯邦和多州法規，合規成本將顯著上升 2. 情報機構爭奪 AI 審查權可能影響前沿模型的發布時程和開放程度 3. 德州 TRAIGA 的「監管沙盒」模式值得關注——可能成為其他州的參考 4. AI 公司應積極參與政策制定，否則將面臨被動適應碎片化法規的困境",
+    "sources": [{"name": "Fortune", "url": "http://fortune.com/2026/05/15/ai-policy-patchwork-state-federal-regulation-framework-sonnenfeld-marcus/"}, {"name": "Washington Post", "url": "https://www.washingtonpost.com/politics/2026/05/11/trump-ai-regulation-commerce-intelligence/"}],
+    "color": "#ef4444"
+  }
+]
