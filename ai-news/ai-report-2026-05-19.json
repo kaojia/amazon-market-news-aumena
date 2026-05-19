@@ -1,0 +1,46 @@
+[
+  {
+    "date": "2026-05-19",
+    "priority": "high",
+    "tags": ["晶片"],
+    "title": "美國批准 NVIDIA H200 對中銷售，但北京施壓致交易停滯——AI 晶片地緣博弈白熱化",
+    "summary": "據 Reuters 5 月 14 日獨家報導，美國政府已批准約 10 家中國科技公司（包括阿里巴巴、字節跳動等）購買 NVIDIA 第二強 AI 晶片 H200，每家最多可購 75,000 顆。然而至今無一顆晶片實際出貨。原因是北京方面施壓，要求企業優先採用國產晶片（如華為昇騰），並對進口進行更嚴格審查。NVIDIA CEO 黃仁勳隨川普訪華團前往北京，試圖推動突破。與此同時，中國本土 AI 晶片產能正加速擴張，DeepSeek 等公司已公開強調使用國產硬體。",
+    "insight": "這是一場「雙重封鎖」的罕見局面：美國批准了出口，但中國自己選擇不買。北京的策略很清晰——利用這個窗口期加速國產替代，避免再次陷入對 NVIDIA 的依賴。對 NVIDIA 而言，中國市場的流失已從「政策風險」變成「結構性損失」。即使出口管制放鬆，中國客戶可能已經不需要了。黃仁勳親赴北京的舉動顯示 NVIDIA 對中國市場的重視程度，但 75,000 顆的上限也暗示美國仍在控制規模。這場博弈的結果將決定全球 AI 算力供應鏈是否永久分裂為兩個生態系。",
+    "takeaway": "1. NVIDIA 面臨「兩頭受壓」困境：美國限制出口上限，中國客戶轉向國產替代 2. 中國 AI 晶片生態正加速成熟，華為昇騰和國產方案的市場份額將持續擴大 3. 全球 AI 基礎設施可能走向「雙軌制」——美系生態與中系生態各自獨立發展 4. 投資人應重新評估 NVIDIA 的中國營收預期，同時關注中國晶片概念股",
+    "sources": [{"name": "Reuters", "url": "https://www.reuters.com/technology/nvidia-h200-china-sales-approved-2026-05-14/"}, {"name": "TrendForce", "url": "https://www.trendforce.com/news/2026/05/14/news-u-s-reportedly-approves-nvidia-h200-sales-to-10-chinese-firms-including-alibaba-bytedance-but-deals-stall/"}],
+    "color": "#10b981"
+  },
+  {
+    "date": "2026-05-19",
+    "priority": "high",
+    "tags": ["LLM", "產品"],
+    "title": "Google I/O 2026 今日開幕：預期發布 Gemini 4、Android XR 眼鏡與 Aluminium OS",
+    "summary": "Google I/O 2026 於今日（5 月 19 日）上午 10 點 PT 在 Mountain View Shoreline Amphitheatre 正式開幕。根據已確認議程與多方報導，本次大會預計發布：新一代 Gemini 4 模型（需追趕 Anthropic Mythos 和 GPT-5.5）、Gemini Spark 輕量代理、Android 17 正式版、首款 Android XR 智慧眼鏡、基於 Android 的桌面系統 Aluminium OS 與 Googlebook 筆電、AI Mode 搜尋改進，以及可能的桌面代理（macOS）和 Omni 影片生成模型。開發者主題演講下午 1 點 PT 接續。",
+    "insight": "Google I/O 2026 是 Google 今年最關鍵的 AI 敘事時刻。過去數月 Anthropic 以 Mythos 系列和 $44B ARR 搶佔企業市場，OpenAI 則以 GPT-5.4/5.5 持續迭代。Google 需要在模型能力上展示實質突破，而非僅靠產品整合。Gemini 4 若能在推理和程式碼基準上追平或超越競爭對手，將重新確立 Google 在 AI 三強中的地位。Aluminium OS + Googlebook 的組合則是對 Chrome OS 的戰略重塑，直接挑戰 Apple 的硬體生態整合優勢。Android XR 眼鏡是對 Meta Ray-Ban 的正面回應。",
+    "takeaway": "1. 開發者應密切關注 Gemini 4 的 API 能力、定價與多模態支援更新 2. Aluminium OS 可能重新定義 Google 的桌面策略，Chrome OS 開發者需評估遷移路徑 3. Android XR 眼鏡若正式發布，AR/AI 應用開發將迎來新平台機會 4. 今日 keynote 後的模型基準對比將決定 Google 在 AI 競賽中的短期敘事",
+    "sources": [{"name": "TechTimes", "url": "https://www.techtimes.com/articles/316755/20260517/google-i-o-2026-keynote-opens-tuesday-new-gemini-lands-behind-mythos-gpt-55.htm"}, {"name": "PCMag", "url": "https://uk.pcmag.com/news/google-io-2026-everything-we-expect-and-how-to-watch-live"}],
+    "color": "#7c3aed"
+  },
+  {
+    "date": "2026-05-19",
+    "priority": "high",
+    "tags": ["政策"],
+    "title": "EU AI Act 重大修正：高風險 AI 合規期限延後 16 個月至 2027 年底，同時禁止「裸化」AI 應用",
+    "summary": "5 月 7 日，歐盟理事會與歐洲議會就「數位綜合法案 AI 篇」（Digital Omnibus on AI）達成臨時協議，這是 EU AI Act 自 2024 年通過以來的首次重大修正。核心變更：高風險 AI 系統（涵蓋生物辨識、關鍵基礎設施、就業、教育、執法等領域）的合規期限從原定 2026 年 8 月 2 日延後至 2027 年 12 月 2 日，延遲 16 個月。安全關鍵產品中的 AI 組件合規期限延至 2028 年 8 月。同時新增禁令：生成非自願性影像的 AI 應用（nudifier apps）將於 2026 年 12 月 2 日起被禁止。AI 生成內容的浮水印義務也延至 2026 年 12 月。",
+    "insight": "這次修正反映了歐盟在「監管雄心」與「產業現實」之間的妥協。16 個月的延期是對歐洲企業的重大讓步——此前業界普遍抱怨 2026 年 8 月的期限過於倉促。但延期不代表放鬆：實質義務未變，只是給了更多準備時間。值得注意的是「nudifier」禁令的加入——這是 AI Act 首次針對特定應用類型新增禁止條款，顯示歐盟對 AI 生成有害內容的零容忍態度。對全球企業而言，這個延期窗口是建立合規框架的黃金時期，因為 2027 年底的期限仍會到來。",
+    "takeaway": "1. 在歐盟部署高風險 AI 的企業獲得 16 個月額外準備時間，但不應鬆懈——實質要求未變 2. 「nudifier」禁令顯示歐盟將持續針對特定有害 AI 應用新增禁止條款 3. 美國 NIST 同步推進關鍵基礎設施 AI 信任框架，全球監管趨同方向明確 4. 合規團隊應利用延期窗口建立文件化治理、人類監督和風險管理機制",
+    "sources": [{"name": "European Parliament", "url": "https://www.europarl.europa.eu/news/en/press-room/20260427IPR42011/ai-act-deal-on-simplification-measures-ban-on-nudifier-apps"}, {"name": "Reuters", "url": "https://www.reuters.com/world/eu-countries-lawmakers-strike-provisional-deal-watered-down-ai-rules-2026-05-07/"}],
+    "color": "#ef4444"
+  },
+  {
+    "date": "2026-05-19",
+    "priority": "high",
+    "tags": ["新創", "LLM"],
+    "title": "OpenAI 完成史上最大融資 $1,220 億，估值 $8,520 億——同時宣布與美國國防部合作協議",
+    "summary": "OpenAI 於近期正式完成 $1,220 億美元融資，估值達 $8,520 億，創下矽谷史上最大單輪融資紀錄。本輪由 SoftBank 共同領投，Amazon、NVIDIA、Microsoft 等戰略夥伴參與，另有 $30 億來自散戶投資人。CFO Sarah Friar 表示未來仍可能繼續募資以應對 AI 算力需求爆炸。同時，OpenAI 宣布與美國國防部（Department of War）簽署合作協議，明確承諾：不用於自主武器系統、不用於高風險自動化決策（如社會信用系統）。此外，OpenAI 推出 GPT-5.4-Cyber 變體，專為防禦性網路安全用途微調。",
+    "insight": "OpenAI 的 $1,220 億融資不僅是金額的突破，更標誌著 AI 公司正式進入「國家級基礎設施」的資本規模。Amazon、NVIDIA、Microsoft 同時參投意味著這三大雲端/晶片巨頭都在確保自己不被排除在 OpenAI 生態之外。與國防部的合作協議則是 OpenAI 從「純民用」轉向「雙用途」的關鍵轉折——雖然設有紅線，但合作本身已改變了公司的定位。GPT-5.4-Cyber 的推出顯示 OpenAI 正在為政府和國防客戶打造專屬產品線。Anthropic 被五角大廈列入黑名單的背景下，OpenAI 正在搶佔政府 AI 市場。",
+    "takeaway": "1. AI 產業的資本門檻已達千億美元級別，中小型 AI 公司的獨立生存空間持續壓縮 2. OpenAI 與國防部合作標誌著 AI 軍民融合加速，但明確紅線設定值得其他公司參考 3. GPT-5.4-Cyber 開創了「垂直領域專用模型」的商業模式，預期更多行業版本將跟進 4. Anthropic 被國防部排除後，OpenAI 和 Google 正在瓜分政府 AI 合約",
+    "sources": [{"name": "OpenAI Blog", "url": "https://openai.com/index/accelerating-the-next-phase-ai/"}, {"name": "OpenAI Blog", "url": "https://openai.com/index/our-agreement-with-the-department-of-war/"}],
+    "color": "#ec4899"
+  }
+]
