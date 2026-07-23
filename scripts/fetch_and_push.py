@@ -373,19 +373,25 @@ def main():
         print("⚠️ 今日無新聞可推送")
         return
 
-    # 3. Filter top items
-    top_news = filter_top_news(all_news, max_items=2)
+    # 3. Filter items - top 2 for LINE, top 5 for dashboard
+    top_news_line = filter_top_news(all_news, max_items=2)
+    top_news_dashboard = filter_top_news(all_news, max_items=5)
 
-    # 4. Translate to Traditional Chinese
+    # 4. Translate all dashboard items to Traditional Chinese
     print("\n🌐 翻譯為繁體中文...")
-    top_news = translate_news_items(top_news)
-    print(f"\n🎯 篩選出 {len(top_news)} 則推送：")
-    for i, item in enumerate(top_news, 1):
-        print(f"  {i}. [{item['priority']}] [{item['category']}] {item['title']}")
+    top_news_dashboard = translate_news_items(top_news_dashboard)
 
-    # 5. Push to LINE
+    # LINE items are a subset of dashboard items (already translated)
+    top_news_line = top_news_dashboard[:2]
+
+    print(f"\n🎯 LINE 推播 {len(top_news_line)} 則 / Dashboard 存入 {len(top_news_dashboard)} 則：")
+    for i, item in enumerate(top_news_dashboard, 1):
+        marker = "📤" if i <= 2 else "📋"
+        print(f"  {marker} {i}. [{item['priority']}] [{item['category']}] {item['title']}")
+
+    # 5. Push to LINE (top 2 only)
     print("\n📤 推送到 LINE...")
-    success = push_to_line(top_news)
+    success = push_to_line(top_news_line)
 
     if success:
         print("\n✅ 推送完成！")
@@ -393,8 +399,8 @@ def main():
         print("\n❌ 推送失敗")
         sys.exit(1)
 
-    # 6. Save to daily report for dashboard (optional)
-    save_daily_report(top_news, now)
+    # 6. Save top 5 to daily report for dashboard
+    save_daily_report(top_news_dashboard, now)
 
 
 def save_daily_report(news_items, now):
