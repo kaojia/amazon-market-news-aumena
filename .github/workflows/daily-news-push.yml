@@ -1,0 +1,39 @@
+name: Daily News - 抓取 & LINE 推播
+
+on:
+  schedule:
+    # 每天台灣時間 8:30 AM (UTC+8) = UTC 00:30
+    - cron: '30 0 * * *'
+  workflow_dispatch:  # 允許手動觸發
+
+jobs:
+  fetch-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Fetch news and push to LINE
+        env:
+          RENDER_DEPLOY_URL: ${{ secrets.RENDER_DEPLOY_URL }}
+          PUSH_SECRET: ${{ secrets.PUSH_SECRET }}
+        run: python scripts/fetch_and_push.py
+
+      - name: Commit new daily report (if generated)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add daily-report-*.html
+          git diff --cached --quiet || git commit -m "Auto: daily news report $(date +%Y-%m-%d)"
+          git push || true
