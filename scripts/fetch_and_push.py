@@ -61,105 +61,32 @@ CATEGORY_RULES = {
 # ---------------------------------------------------------------------------
 
 def fetch_sc_announcements():
-    """Fetch Seller Central announcements from public-facing news pages."""
+    """Fetch Seller Central news via Google News RSS with SC-specific queries."""
     announcements = []
 
-    sc_news_feeds = [
-        ("AU", "https://sellercentral.amazon.com.au/help/hub/reference/external/G200386270"),
-        ("AE", "https://sellercentral.amazon.ae/help/hub/reference/external/G200386270"),
-        ("SA", "https://sellercentral.amazon.sa/help/hub/reference/external/G200386270"),
+    sc_queries = [
+        ("AU", "Amazon+Seller+Central+Australia+announcement"),
+        ("AU", "Amazon+FBA+Australia+fee+OR+policy+OR+update"),
+        ("AE", "Amazon+Seller+Central+UAE+announcement"),
+        ("AE", "Amazon+FBA+UAE+fee+OR+policy+OR+update"),
+        ("SA", "Amazon+Seller+Central+Saudi+announcement"),
+        ("SA", "Amazon+seller+MENA+policy+OR+fee+OR+FBA"),
     ]
 
-    # Also try the Seller Central news RSS/blog pages
-    sc_news_pages = [
-        ("AU", "https://sell.amazon.com.au/blog"),
-        ("AE", "https://sell.amazon.ae/blog"),
-        ("SA", "https://sell.amazon.sa/blog"),
-    ]
-
-    headers = {"User-Agent": "Mozilla/5.0 (compatible; NewsBot/1.0)"}
-
-    for mp, url in sc_news_pages:
+    for mp, query in sc_queries:
         try:
-            resp = requests.get(url, timeout=15, headers=headers)
+            url = f"https://news.google.com/rss/search?q={query}&hl=en&gl=AU&ceid=AU:en"
+            resp = requests.get(url, timeout=15)
             if resp.status_code == 200:
-                items = parse_sc_blog_page(resp.text, mp)
+                items = parse_rss_items(resp.text, limit=3)
+                for item in items:
+                    item["source_type"] = "seller_central"
+                    item["marketplace"] = mp
                 announcements.extend(items)
-            else:
-                print(f"  ⚠️ SC blog {mp}: HTTP {resp.status_code}")
         except Exception as e:
-            print(f"  ⚠️ SC blog {mp}: {e}")
-
-    for mp, url in sc_news_feeds:
-        try:
-            resp = requests.get(url, timeout=15, headers=headers)
-            if resp.status_code == 200:
-                items = parse_sc_help_page(resp.text, mp)
-                announcements.extend(items)
-            else:
-                print(f"  ⚠️ SC help {mp}: HTTP {resp.status_code}")
-        except Exception as e:
-            print(f"  ⚠️ SC help {mp}: {e}")
+            print(f"  ⚠️ SC News ({mp}): {e}")
 
     return announcements
-
-
-def parse_sc_blog_page(html_text, marketplace):
-    """Extract blog post titles from Amazon Sell blog pages."""
-    items = []
-    # Common patterns for blog cards/titles
-    patterns = [
-        r'<h[23][^>]*class="[^"]*blog[^"]*"[^>]*>(.*?)</h[23]>',
-        r'<a[^>]*href="(/blog/[^"]*)"[^>]*>(.*?)</a>',
-        r'<h[23][^>]*>(.*?)</h[23]>',
-    ]
-
-    for pattern in patterns:
-        matches = re.findall(pattern, html_text, re.DOTALL)
-        if matches:
-            for match in matches[:5]:
-                title = match[-1] if isinstance(match, tuple) else match
-                title = re.sub(r"<[^>]+>", "", title).strip()
-                if title and len(title) > 10 and len(title) < 200:
-                    items.append({
-                        "title": title,
-                        "summary": "",
-                        "source_url": "",
-                        "source_name": f"Amazon Sell {marketplace}",
-                        "source_type": "seller_central",
-                        "marketplace": marketplace,
-                    })
-            if items:
-                break
-
-    return items[:5]
-
-
-def parse_sc_help_page(html_text, marketplace):
-    """Extract announcement items from SC help/reference pages."""
-    items = []
-    # Look for list items or headings that look like announcements
-    patterns = [
-        r'<li[^>]*>(.*?)</li>',
-        r'<p[^>]*>(.*?)</p>',
-    ]
-
-    for pattern in patterns:
-        matches = re.findall(pattern, html_text, re.DOTALL)
-        for match in matches:
-            text = re.sub(r"<[^>]+>", "", match).strip()
-            if text and len(text) > 20 and len(text) < 300:
-                if any(kw in text.lower() for kw in ["seller", "fba", "fee", "policy", "update", "new", "change", "announce"]):
-                    items.append({
-                        "title": text[:100],
-                        "summary": text[100:] if len(text) > 100 else "",
-                        "source_url": "",
-                        "source_name": f"Seller Central {marketplace}",
-                        "source_type": "seller_central",
-                        "marketplace": marketplace,
-                    })
-
-    return items[:5]
 
 
 def fetch_external_news():
