@@ -284,6 +284,9 @@ def push_to_line(news_items):
         print("❌ RENDER_DEPLOY_URL not set, cannot push")
         return False
 
+    print(f"  DEBUG: PUSH_SECRET length={len(PUSH_SECRET)}, repr={repr(PUSH_SECRET)}")
+    print(f"  DEBUG: RENDER_DEPLOY_URL='{RENDER_DEPLOY_URL}'")
+
     payload = {
         "secret": PUSH_SECRET,
         "news": [
