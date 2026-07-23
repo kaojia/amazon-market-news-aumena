@@ -1,4 +1,4 @@
-name: Daily News - 抓取 & LINE 推播
+name: Daily News - 抓取 & LINE 推播 & 更新 Dashboard
 
 on:
   schedule:
@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pages: write
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -30,10 +32,24 @@ jobs:
           PUSH_SECRET: ${{ secrets.PUSH_SECRET }}
         run: python scripts/fetch_and_push.py
 
-      - name: Commit new daily report (if generated)
+      - name: Build index.html
+        run: python scripts/build.py
+
+      - name: Commit updates
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add daily-report-*.html
-          git diff --cached --quiet || git commit -m "Auto: daily news report $(date +%Y-%m-%d)"
+          git add daily-report-*.html index.html
+          git diff --cached --quiet || git commit -m "Auto: daily news $(date +%Y-%m-%d)"
           git push || true
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
