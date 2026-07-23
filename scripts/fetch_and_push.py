@@ -14,7 +14,6 @@ Optional:
 import json
 import os
 import re
-import subprocess
 import sys
 from datetime import datetime, timezone, timedelta
 
@@ -27,7 +26,6 @@ from deep_translator import GoogleTranslator
 
 RENDER_DEPLOY_URL = os.environ.get("RENDER_DEPLOY_URL", "")
 PUSH_SECRET = os.environ.get("PUSH_SECRET", "jenny-daily-push")
-AMZ_SC_PATH = os.environ.get("AMZ_SC_PATH", "amz-sc")
 
 MARKETPLACES = ["AU", "AE", "SA"]
 
@@ -63,34 +61,105 @@ CATEGORY_RULES = {
 # ---------------------------------------------------------------------------
 
 def fetch_sc_announcements():
-    """Fetch Seller Central announcements for AU/AE/SA using amz-sc CLI."""
+    """Fetch Seller Central announcements from public-facing news pages."""
     announcements = []
 
-    for mp in MARKETPLACES:
+    sc_news_feeds = [
+        ("AU", "https://sellercentral.amazon.com.au/help/hub/reference/external/G200386270"),
+        ("AE", "https://sellercentral.amazon.ae/help/hub/reference/external/G200386270"),
+        ("SA", "https://sellercentral.amazon.sa/help/hub/reference/external/G200386270"),
+    ]
+
+    # Also try the Seller Central news RSS/blog pages
+    sc_news_pages = [
+        ("AU", "https://sell.amazon.com.au/blog"),
+        ("AE", "https://sell.amazon.ae/blog"),
+        ("SA", "https://sell.amazon.sa/blog"),
+    ]
+
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; NewsBot/1.0)"}
+
+    for mp, url in sc_news_pages:
         try:
-            result = subprocess.run(
-                [AMZ_SC_PATH, "announcements", "--marketplace", mp, "--days", "1", "--format", "json"],
-                capture_output=True, text=True, timeout=60
-            )
-            if result.returncode == 0 and result.stdout.strip():
-                items = json.loads(result.stdout)
-                for item in items:
-                    item["marketplace"] = mp
-                    item["source_type"] = "seller_central"
+            resp = requests.get(url, timeout=15, headers=headers)
+            if resp.status_code == 200:
+                items = parse_sc_blog_page(resp.text, mp)
                 announcements.extend(items)
             else:
-                print(f"  ⚠️ amz-sc {mp}: no data or error (rc={result.returncode})")
-                if result.stderr:
-                    print(f"     stderr: {result.stderr[:200]}")
-        except FileNotFoundError:
-            print(f"  ⚠️ amz-sc not found at '{AMZ_SC_PATH}', skipping SC announcements")
-            break
-        except subprocess.TimeoutExpired:
-            print(f"  ⚠️ amz-sc {mp}: timeout")
+                print(f"  ⚠️ SC blog {mp}: HTTP {resp.status_code}")
         except Exception as e:
-            print(f"  ⚠️ amz-sc {mp}: {e}")
+            print(f"  ⚠️ SC blog {mp}: {e}")
+
+    for mp, url in sc_news_feeds:
+        try:
+            resp = requests.get(url, timeout=15, headers=headers)
+            if resp.status_code == 200:
+                items = parse_sc_help_page(resp.text, mp)
+                announcements.extend(items)
+            else:
+                print(f"  ⚠️ SC help {mp}: HTTP {resp.status_code}")
+        except Exception as e:
+            print(f"  ⚠️ SC help {mp}: {e}")
 
     return announcements
+
+
+def parse_sc_blog_page(html_text, marketplace):
+    """Extract blog post titles from Amazon Sell blog pages."""
+    items = []
+    # Common patterns for blog cards/titles
+    patterns = [
+        r'<h[23][^>]*class="[^"]*blog[^"]*"[^>]*>(.*?)</h[23]>',
+        r'<a[^>]*href="(/blog/[^"]*)"[^>]*>(.*?)</a>',
+        r'<h[23][^>]*>(.*?)</h[23]>',
+    ]
+
+    for pattern in patterns:
+        matches = re.findall(pattern, html_text, re.DOTALL)
+        if matches:
+            for match in matches[:5]:
+                title = match[-1] if isinstance(match, tuple) else match
+                title = re.sub(r"<[^>]+>", "", title).strip()
+                if title and len(title) > 10 and len(title) < 200:
+                    items.append({
+                        "title": title,
+                        "summary": "",
+                        "source_url": "",
+                        "source_name": f"Amazon Sell {marketplace}",
+                        "source_type": "seller_central",
+                        "marketplace": marketplace,
+                    })
+            if items:
+                break
+
+    return items[:5]
+
+
+def parse_sc_help_page(html_text, marketplace):
+    """Extract announcement items from SC help/reference pages."""
+    items = []
+    # Look for list items or headings that look like announcements
+    patterns = [
+        r'<li[^>]*>(.*?)</li>',
+        r'<p[^>]*>(.*?)</p>',
+    ]
+
+    for pattern in patterns:
+        matches = re.findall(pattern, html_text, re.DOTALL)
+        for match in matches:
+            text = re.sub(r"<[^>]+>", "", match).strip()
+            if text and len(text) > 20 and len(text) < 300:
+                if any(kw in text.lower() for kw in ["seller", "fba", "fee", "policy", "update", "new", "change", "announce"]):
+                    items.append({
+                        "title": text[:100],
+                        "summary": text[100:] if len(text) > 100 else "",
+                        "source_url": "",
+                        "source_name": f"Seller Central {marketplace}",
+                        "source_type": "seller_central",
+                        "marketplace": marketplace,
+                    })
+
+    return items[:5]
 
 
 def fetch_external_news():
