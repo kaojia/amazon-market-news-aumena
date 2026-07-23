@@ -272,6 +272,42 @@ def filter_top_news(all_items, max_items=2):
 
 
 # ---------------------------------------------------------------------------
+# Fetch article summaries
+# ---------------------------------------------------------------------------
+
+def generate_summary(item):
+    """Generate a brief summary based on title, category, and marketplace."""
+    title = item.get("title", "")
+    category = item.get("category", "")
+    marketplace = item.get("marketplace", "")
+    priority = item.get("priority", "low")
+
+    mp_names = {"AU": "澳洲", "AE": "阿聯酋", "SA": "沙烏地阿拉伯"}
+    mp_name = mp_names.get(marketplace, "AU/MENA")
+
+    templates = {
+        "FBA": f"與 Amazon {mp_name}站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
+        "費用": f"Amazon {mp_name}站費用結構異動，賣家應留意成本變化對利潤的影響。",
+        "政策": f"Amazon {mp_name}站平台政策更新，賣家需確認是否符合新規定以避免違規。",
+        "稅務": f"{mp_name}稅務法規變動，跨境賣家應注意合規要求與申報時程。",
+        "合規": f"{mp_name}市場合規要求更新，賣家需檢視商品與營運是否符合當地法規。",
+        "物流": f"{mp_name}物流與供應鏈相關動態，可能影響配送時效與成本。",
+        "廣告": f"Amazon {mp_name}站廣告與行銷工具更新，賣家可評估新功能對曝光的助益。",
+        "平台": f"Amazon {mp_name}站平台最新消息，賣家可關注對業務發展的潛在機會。",
+    }
+
+    return templates.get(category, f"Amazon {mp_name}站市場動態，建議賣家持續關注相關發展。")
+
+
+def enrich_summaries(news_items):
+    """Add summaries to items that don't have one."""
+    for item in news_items:
+        if not item.get("summary"):
+            item["summary"] = generate_summary(item)
+    return news_items
+
+
+# ---------------------------------------------------------------------------
 # Translation
 # ---------------------------------------------------------------------------
 
@@ -373,7 +409,11 @@ def main():
     top_news_line = filter_top_news(all_news, max_items=2)
     top_news_dashboard = filter_top_news(all_news, max_items=5)
 
-    # 4. Translate all dashboard items to Traditional Chinese
+    # 4. Fetch article summaries from source pages
+    print("\n📝 擷取文章摘要...")
+    top_news_dashboard = enrich_summaries(top_news_dashboard)
+
+    # 5. Translate all dashboard items to Traditional Chinese
     print("\n🌐 翻譯為繁體中文...")
     top_news_dashboard = translate_news_items(top_news_dashboard)
 
@@ -385,7 +425,7 @@ def main():
         marker = "📤" if i <= 2 else "📋"
         print(f"  {marker} {i}. [{item['priority']}] [{item['category']}] {item['title']}")
 
-    # 5. Push to LINE (top 2 only)
+    # 6. Push to LINE (top 2 only)
     print("\n📤 推送到 LINE...")
     success = push_to_line(top_news_line)
 
@@ -395,7 +435,7 @@ def main():
         print("\n❌ 推送失敗")
         sys.exit(1)
 
-    # 6. Save top 5 to daily report for dashboard
+    # 7. Save top 5 to daily report for dashboard
     save_daily_report(top_news_dashboard, now)
 
 
