@@ -19,6 +19,7 @@ import sys
 from datetime import datetime, timezone, timedelta
 
 import requests
+from deep_translator import GoogleTranslator
 
 # ---------------------------------------------------------------------------
 # Config
@@ -275,6 +276,33 @@ def filter_top_news(all_items, max_items=2):
 
 
 # ---------------------------------------------------------------------------
+# Translation
+# ---------------------------------------------------------------------------
+
+def translate_to_chinese(text):
+    """Translate text to Traditional Chinese if not already Chinese."""
+    if not text or not text.strip():
+        return text
+    # Skip if already mostly Chinese
+    chinese_chars = sum(1 for c in text if '一' <= c <= '鿿')
+    if chinese_chars / max(len(text), 1) > 0.3:
+        return text
+    try:
+        return GoogleTranslator(source='auto', target='zh-TW').translate(text)
+    except Exception as e:
+        print(f"  Translation failed: {e}")
+        return text
+
+
+def translate_news_items(news_items):
+    """Translate title and summary of each news item to Traditional Chinese."""
+    for item in news_items:
+        item["title"] = translate_to_chinese(item.get("title", ""))
+        item["summary"] = translate_to_chinese(item.get("summary", ""))
+    return news_items
+
+
+# ---------------------------------------------------------------------------
 # Push to LINE
 # ---------------------------------------------------------------------------
 
@@ -347,11 +375,15 @@ def main():
 
     # 3. Filter top items
     top_news = filter_top_news(all_news, max_items=2)
+
+    # 4. Translate to Traditional Chinese
+    print("\n🌐 翻譯為繁體中文...")
+    top_news = translate_news_items(top_news)
     print(f"\n🎯 篩選出 {len(top_news)} 則推送：")
     for i, item in enumerate(top_news, 1):
         print(f"  {i}. [{item['priority']}] [{item['category']}] {item['title']}")
 
-    # 4. Push to LINE
+    # 5. Push to LINE
     print("\n📤 推送到 LINE...")
     success = push_to_line(top_news)
 
@@ -361,7 +393,7 @@ def main():
         print("\n❌ 推送失敗")
         sys.exit(1)
 
-    # 5. Save to daily report for dashboard (optional)
+    # 6. Save to daily report for dashboard (optional)
     save_daily_report(top_news, now)
 
 
