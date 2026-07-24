@@ -158,6 +158,9 @@ def parse_rss_items(xml_text, limit=5):
         source = extract_xml_tag(block, "source")
 
         if title:
+            # Convert /rss/articles/ to /articles/ so browsers redirect to source
+            if link:
+                link = link.replace("/rss/articles/", "/articles/")
             items.append({
                 "title": title,
                 "summary": "",
