@@ -71,16 +71,16 @@ CATEGORY_RULES = {
 # ---------------------------------------------------------------------------
 
 def fetch_sc_announcements():
-    """Fetch Seller Central news via Google News RSS with SC-specific queries (past 3 days)."""
+    """Fetch Seller Central news via Google News RSS with SC-specific queries."""
     announcements = []
 
     sc_queries = [
-        ("AU", "Amazon+seller+central+Australia+announcement+when:3d", "AU"),
-        ("AU", "Amazon+FBA+Australia+fee+OR+policy+OR+update+when:3d", "AU"),
-        ("AE", "Amazon+Seller+Central+UAE+announcement+when:3d", "AE"),
-        ("AE", "Amazon+FBA+UAE+fee+OR+policy+OR+update+when:3d", "AE"),
-        ("SA", "Amazon+Seller+Central+Saudi+announcement+when:3d", "AE"),
-        ("SA", "Amazon+seller+MENA+policy+OR+fee+OR+FBA+when:3d", "AE"),
+        ("AU", "Amazon+seller+fee+OR+policy+OR+FBA+Australia+when:7d", "AU"),
+        ("AU", "Amazon+Australia+seller+announcement+OR+update+when:7d", "AU"),
+        ("AE", "Amazon+seller+UAE+fee+OR+policy+OR+FBA+when:7d", "AE"),
+        ("AE", "Amazon+UAE+ecommerce+regulation+OR+compliance+when:7d", "AE"),
+        ("SA", "Amazon+Saudi+seller+OR+ecommerce+policy+OR+VAT+when:7d", "AE"),
+        ("SA", "Saudi+ecommerce+regulation+OR+tax+OR+VAT+when:7d", "AE"),
     ]
 
     for mp, query, region in sc_queries:
