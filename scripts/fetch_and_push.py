@@ -61,21 +61,21 @@ CATEGORY_RULES = {
 # ---------------------------------------------------------------------------
 
 def fetch_sc_announcements():
-    """Fetch Seller Central news via Google News RSS with SC-specific queries."""
+    """Fetch Seller Central news via Google News RSS with SC-specific queries (past 3 days)."""
     announcements = []
 
     sc_queries = [
-        ("AU", "Amazon+Seller+Central+Australia+announcement"),
-        ("AU", "Amazon+FBA+Australia+fee+OR+policy+OR+update"),
-        ("AE", "Amazon+Seller+Central+UAE+announcement"),
-        ("AE", "Amazon+FBA+UAE+fee+OR+policy+OR+update"),
-        ("SA", "Amazon+Seller+Central+Saudi+announcement"),
-        ("SA", "Amazon+seller+MENA+policy+OR+fee+OR+FBA"),
+        ("AU", "Amazon+seller+central+Australia+announcement+when:3d", "AU"),
+        ("AU", "Amazon+FBA+Australia+fee+OR+policy+OR+update+when:3d", "AU"),
+        ("AE", "Amazon+Seller+Central+UAE+announcement+when:3d", "AE"),
+        ("AE", "Amazon+FBA+UAE+fee+OR+policy+OR+update+when:3d", "AE"),
+        ("SA", "Amazon+Seller+Central+Saudi+announcement+when:3d", "AE"),
+        ("SA", "Amazon+seller+MENA+policy+OR+fee+OR+FBA+when:3d", "AE"),
     ]
 
-    for mp, query in sc_queries:
+    for mp, query, region in sc_queries:
         try:
-            url = f"https://news.google.com/rss/search?q={query}&hl=en&gl=AU&ceid=AU:en"
+            url = f"https://news.google.com/rss/search?q={query}&hl=en&gl={region}&ceid={region}:en"
             resp = requests.get(url, timeout=15)
             if resp.status_code == 200:
                 items = parse_rss_items(resp.text, limit=3)
@@ -90,35 +90,30 @@ def fetch_sc_announcements():
 
 
 def fetch_external_news():
-    """Fetch external news from Google News RSS for Amazon marketplace keywords."""
+    """Fetch external news from Google News RSS for Amazon marketplace keywords (past 3 days)."""
     news = []
     queries = [
-        "Amazon+Australia+seller",
-        "Amazon+UAE+seller",
-        "Amazon+Saudi+seller",
-        "Amazon+MENA+ecommerce",
+        ("Amazon+Australia+seller+OR+marketplace+when:3d", "AU", "AU"),
+        ("Amazon+Australia+ecommerce+regulation+OR+logistics+when:3d", "AU", "AU"),
+        ("Amazon+UAE+seller+OR+ecommerce+when:3d", "AE", "AE"),
+        ("Amazon+Saudi+seller+OR+marketplace+when:3d", "AE", "AE"),
+        ("UAE+ecommerce+OR+online+retail+when:3d", "AE", "AE"),
+        ("Saudi+ecommerce+OR+online+retail+when:3d", "SA", "AE"),
+        ("Amazon+MENA+logistics+OR+delivery+when:3d", "AE", "AE"),
     ]
 
-    for query in queries:
+    for query, mp, region in queries:
         try:
-            url = f"https://news.google.com/rss/search?q={query}&hl=en&gl=AU&ceid=AU:en"
+            url = f"https://news.google.com/rss/search?q={query}&hl=en&gl={region}&ceid={region}:en"
             resp = requests.get(url, timeout=15)
             if resp.status_code == 200:
                 items = parse_rss_items(resp.text, limit=5)
                 for item in items:
                     item["source_type"] = "external"
-                    # Guess marketplace from query
-                    if "Australia" in query or "AU" in query:
-                        item["marketplace"] = "AU"
-                    elif "UAE" in query or "AE" in query:
-                        item["marketplace"] = "AE"
-                    elif "Saudi" in query or "SA" in query:
-                        item["marketplace"] = "SA"
-                    else:
-                        item["marketplace"] = ""
+                    item["marketplace"] = mp
                 news.extend(items)
         except Exception as e:
-            print(f"  ⚠️ Google News ({query}): {e}")
+            print(f"  ⚠️ Google News ({query[:40]}): {e}")
 
     return news
 
