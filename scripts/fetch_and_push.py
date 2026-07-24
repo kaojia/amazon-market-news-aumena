@@ -400,8 +400,7 @@ def main():
         print("⚠️ 今日無新聞可推送")
         return
 
-    # 3. Filter items - top 2 for LINE, top 5 for dashboard
-    top_news_line = filter_top_news(all_news, max_items=2)
+    # 3. Filter items - top 5 for both LINE and dashboard
     top_news_dashboard = filter_top_news(all_news, max_items=5)
 
     # 4. Fetch article summaries from source pages
@@ -412,17 +411,13 @@ def main():
     print("\n🌐 翻譯為繁體中文...")
     top_news_dashboard = translate_news_items(top_news_dashboard)
 
-    # LINE items are a subset of dashboard items (already translated)
-    top_news_line = top_news_dashboard[:2]
-
-    print(f"\n🎯 LINE 推播 {len(top_news_line)} 則 / Dashboard 存入 {len(top_news_dashboard)} 則：")
+    print(f"\n🎯 篩選出 {len(top_news_dashboard)} 則（LINE + Dashboard）：")
     for i, item in enumerate(top_news_dashboard, 1):
-        marker = "📤" if i <= 2 else "📋"
-        print(f"  {marker} {i}. [{item['priority']}] [{item['category']}] {item['title']}")
+        print(f"  📤 {i}. [{item['priority']}] [{item['category']}] {item['title']}")
 
-    # 6. Push to LINE (top 2 only)
+    # 6. Push to LINE (all 5)
     print("\n📤 推送到 LINE...")
-    success = push_to_line(top_news_line)
+    success = push_to_line(top_news_dashboard)
 
     if success:
         print("\n✅ 推送完成！")
