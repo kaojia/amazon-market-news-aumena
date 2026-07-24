@@ -438,8 +438,7 @@ def save_daily_report(news_items, now):
     filename = f"daily-report-{date_str}.html"
 
     if os.path.exists(filename):
-        print(f"  ℹ️ {filename} already exists, skipping")
-        return
+        print(f"  ℹ️ {filename} already exists, will overwrite with fresh data")
 
     priority_class = {"high": " high", "medium": " medium", "low": ""}
 
