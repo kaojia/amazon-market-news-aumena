@@ -410,7 +410,7 @@ function openModal(idx) {
     ${a.impact ? `<div class="impact"><strong>🎯 對 Amazon 經營的影響：</strong>${a.impact}</div>` : ''}
     ${a.action ? `<div class="action"><strong>✅ Action 建議：</strong>${a.action}</div>` : ''}
     <div class="source">
-      來源：${(a.sources || []).map(s => `<a href="${s.url}" target="_blank" rel="noopener">${s.name}</a>`).join(' | ')}
+      來源：${(a.sources || []).map(s => s.url ? `<a href="${s.url}" target="_blank" rel="noopener">${s.name}</a>` : s.name).join(' | ')}
     </div>`;
   document.getElementById('modal').classList.add('open');
   document.body.style.overflow = 'hidden';
