@@ -45,6 +45,16 @@ MEDIUM_PRIORITY_KEYWORDS = [
     "報告", "report", "dashboard",
 ]
 
+EXCLUDE_KEYWORDS = [
+    "best-selling book", "bestselling book", "暢銷書", "bestseller list",
+    "book launch", "new book", "author", "novel",
+    "stock price", "stock falling", "股價",
+    "celebrity", "movie", "film", "TV show", "streaming",
+    "recipe", "cookbook", "food blog",
+    "game", "gaming", "PlayStation", "Xbox",
+    "music", "album", "concert",
+]
+
 CATEGORY_RULES = {
     "政策": ["政策", "policy", "regulation", "合規", "compliance", "mandatory"],
     "費用": ["fee", "費用", "cost", "pricing", "收費"],
@@ -242,9 +252,18 @@ def classify_item(item):
     return item
 
 
-def filter_top_news(all_items, max_items=2):
+def is_excluded(item):
+    """Check if an item should be excluded based on irrelevant keywords."""
+    text = f"{item.get('title', '')} {item.get('summary', '')}".lower()
+    return any(kw.lower() in text for kw in EXCLUDE_KEYWORDS)
+
+
+def filter_top_news(all_items, max_items=5):
     """Filter and return top priority news items."""
-    classified = [classify_item(item) for item in all_items]
+    # Remove irrelevant news first
+    relevant = [item for item in all_items if not is_excluded(item)]
+    print(f"  過濾掉 {len(all_items) - len(relevant)} 則不相關新聞")
+    classified = [classify_item(item) for item in relevant]
 
     # Sort: high > medium > low, then by source_type preference (SC first)
     source_order = {"seller_central": 0, "external": 1, "forum": 2}
