@@ -165,10 +165,10 @@ class DailyReportParser(HTMLParser):
         if tag == "a" and self._in_source_a:
             self._in_source_a = False
             name = self._text_buf.strip()
-            if name and self._current_a_href:
+            if name:
                 self._current_card["sources"].append({
                     "name": name,
-                    "url": self._current_a_href,
+                    "url": self._current_a_href or "",
                 })
             self._text_buf = ""
             self._current_a_href = None
