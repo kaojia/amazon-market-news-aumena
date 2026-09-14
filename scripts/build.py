@@ -281,6 +281,13 @@ def build():
         print(f"  {filepath}: {len(parser.cards)} cards")
 
         for card in parser.cards:
+            # Skip cards scraped from a Google/upstream error page
+            # (title is the error page text, e.g. "Error 500 (Server Error)").
+            title = card["title"] or ""
+            if ("Error 500" in title or "That’s an error" in title
+                    or "That's an error" in title or "That’s all we know" in title):
+                print(f"    skipped error-page card: {title[:40]!r}")
+                continue
             tags = map_tags(card["region_text"])
             article = {
                 "date": date,
