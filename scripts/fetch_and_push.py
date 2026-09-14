@@ -29,6 +29,15 @@ PUSH_SECRET = os.environ.get("PUSH_SECRET", "jenny-daily-push")
 
 MARKETPLACES = ["AU", "AE", "SA"]
 
+# Daily dashboard/LINE item counts and source mix.
+# Of MAX_ITEMS, guarantee PLATFORM_QUOTA slots for seller-platform sources
+# (Seller Central announcements + seller forums); the rest go to external news.
+MAX_ITEMS = 5
+PLATFORM_QUOTA = 3   # seller-platform : external = 3 : 2
+
+# Source types treated as "seller platform" for the quota.
+PLATFORM_SOURCE_TYPES = {"seller_central", "forum"}
+
 # Keyword-based priority rules
 HIGH_PRIORITY_KEYWORDS = [
     "政策變更", "policy change", "fee change", "費用調整",
@@ -76,11 +85,12 @@ def fetch_sc_announcements():
 
     sc_queries = [
         ("AU", "Amazon+seller+fee+OR+policy+OR+FBA+Australia+when:7d", "AU"),
-        ("AU", "Amazon+Australia+seller+announcement+OR+update+when:7d", "AU"),
+        ("AU", "Amazon+Australia+seller+central+announcement+OR+update+when:7d", "AU"),
+        ("AU", "Amazon+Australia+seller+listing+OR+account+OR+advertising+policy+when:7d", "AU"),
         ("AE", "Amazon+seller+UAE+fee+OR+policy+OR+FBA+when:7d", "AE"),
-        ("AE", "Amazon+UAE+ecommerce+regulation+OR+compliance+when:7d", "AE"),
+        ("AE", "Amazon+UAE+seller+central+announcement+OR+compliance+when:7d", "AE"),
         ("SA", "Amazon+Saudi+seller+OR+ecommerce+policy+OR+VAT+when:7d", "AE"),
-        ("SA", "Saudi+ecommerce+regulation+OR+tax+OR+VAT+when:7d", "AE"),
+        ("SA", "Amazon+Saudi+seller+central+announcement+OR+FBA+when:7d", "AE"),
     ]
 
     for mp, query, region in sc_queries:
@@ -88,7 +98,7 @@ def fetch_sc_announcements():
             url = f"https://news.google.com/rss/search?q={query}&hl=en&gl={region}&ceid={region}:en"
             resp = requests.get(url, timeout=15)
             if resp.status_code == 200:
-                items = parse_rss_items(resp.text, limit=3)
+                items = parse_rss_items(resp.text, limit=4)
                 for item in items:
                     item["source_type"] = "seller_central"
                     item["marketplace"] = mp
@@ -102,14 +112,12 @@ def fetch_sc_announcements():
 def fetch_external_news():
     """Fetch external news from Google News RSS for Amazon marketplace keywords (past 3 days)."""
     news = []
+    # Trimmed to a small set of core external queries (seller-platform news is
+    # now the priority — see fetch_sc_announcements / fetch_seller_forums).
     queries = [
-        ("Amazon+Australia+seller+OR+marketplace+when:3d", "AU", "AU"),
         ("Amazon+Australia+ecommerce+regulation+OR+logistics+when:3d", "AU", "AU"),
-        ("Amazon+UAE+seller+OR+ecommerce+when:3d", "AE", "AE"),
-        ("Amazon+Saudi+seller+OR+marketplace+when:3d", "AE", "AE"),
-        ("UAE+ecommerce+OR+online+retail+when:3d", "AE", "AE"),
-        ("Saudi+ecommerce+OR+online+retail+when:3d", "SA", "AE"),
-        ("Amazon+MENA+logistics+OR+delivery+when:3d", "AE", "AE"),
+        ("UAE+ecommerce+OR+online+retail+regulation+when:3d", "AE", "AE"),
+        ("Saudi+ecommerce+OR+VAT+OR+regulation+when:3d", "SA", "AE"),
     ]
 
     for query, mp, region in queries:
@@ -117,7 +125,7 @@ def fetch_external_news():
             url = f"https://news.google.com/rss/search?q={query}&hl=en&gl={region}&ceid={region}:en"
             resp = requests.get(url, timeout=15)
             if resp.status_code == 200:
-                items = parse_rss_items(resp.text, limit=5)
+                items = parse_rss_items(resp.text, limit=3)
                 for item in items:
                     item["source_type"] = "external"
                     item["marketplace"] = mp
@@ -258,33 +266,51 @@ def is_excluded(item):
     return any(kw.lower() in text for kw in EXCLUDE_KEYWORDS)
 
 
-def filter_top_news(all_items, max_items=5):
-    """Filter and return top priority news items."""
+def filter_top_news(all_items, max_items=MAX_ITEMS, platform_quota=PLATFORM_QUOTA):
+    """Filter and return top items with a seller-platform : external quota.
+
+    Guarantees up to ``platform_quota`` seller-platform items (Seller Central
+    announcements + forums) and fills the rest with external news. If one pool
+    is short, the other backfills so we still return up to ``max_items``.
+    """
     # Remove irrelevant news first
     relevant = [item for item in all_items if not is_excluded(item)]
     print(f"  過濾掉 {len(all_items) - len(relevant)} 則不相關新聞")
     classified = [classify_item(item) for item in relevant]
 
-    # Sort: high > medium > low, then by source_type preference (SC first)
-    source_order = {"seller_central": 0, "external": 1, "forum": 2}
     priority_order = {"high": 0, "medium": 1, "low": 2}
 
-    classified.sort(key=lambda x: (
-        priority_order.get(x.get("priority"), 3),
-        source_order.get(x.get("source_type"), 3),
-    ))
+    def prio(x):
+        return priority_order.get(x.get("priority"), 3)
 
-    # Deduplicate by similar titles
+    def is_platform(x):
+        return x.get("source_type") in PLATFORM_SOURCE_TYPES
+
+    platform_pool = sorted([x for x in classified if is_platform(x)], key=prio)
+    external_pool = sorted([x for x in classified if not is_platform(x)], key=prio)
+
     seen_titles = set()
-    result = []
-    for item in classified:
-        title_key = re.sub(r"[^a-z0-9一-鿿]", "", item.get("title", "").lower())[:30]
-        if title_key not in seen_titles:
-            seen_titles.add(title_key)
-            result.append(item)
-        if len(result) >= max_items:
-            break
 
+    def take(pool, n):
+        """Take up to n de-duplicated items from pool."""
+        out = []
+        for item in pool:
+            if len(out) >= n:
+                break
+            title_key = re.sub(r"[^a-z0-9一-鿿]", "", item.get("title", "").lower())[:30]
+            if title_key and title_key not in seen_titles:
+                seen_titles.add(title_key)
+                out.append(item)
+        return out
+
+    result = take(platform_pool, platform_quota)
+    result += take(external_pool, max_items - len(result))
+    # Backfill from platform pool if external was short
+    if len(result) < max_items:
+        result += take(platform_pool, max_items - len(result))
+
+    n_platform = sum(1 for x in result if is_platform(x))
+    print(f"  來源比重：賣家平台 {n_platform} 則 / 外部 {len(result) - n_platform} 則")
     return result
 
 
