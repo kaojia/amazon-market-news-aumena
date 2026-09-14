@@ -154,7 +154,8 @@ body {
 .promo-footer { padding-top: 10px; font-size: 10px; color: #94a3b8; text-align: center; }
 .no-results { grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 15px; }
 .site-footer { text-align: center; padding: 32px 24px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); line-height: 1.8; }
-.pagination { display: flex; justify-content: center; gap: 8px; padding: 20px 0 40px; }
+.pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; padding: 20px 0 40px; }
+.page-ellipsis { padding: 8px 4px; color: var(--text-muted); font-size: 13px; }
 .page-btn { padding: 8px 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); font-size: 13px; cursor: pointer; transition: all 0.2s; font-family: inherit; }
 .page-btn:hover { border-color: var(--accent); color: var(--accent); }
 .page-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
@@ -389,8 +390,16 @@ function renderGrid() {
   const pag = document.getElementById('pagination');
   if (totalPages <= 1) { pag.innerHTML = ''; return; }
   let html = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹ 上一頁</button>`;
+  // Windowed pagination: first, last, and current ±2, with ellipses between gaps
+  const pages = [];
   for (let p = 1; p <= totalPages; p++) {
+    if (p === 1 || p === totalPages || (p >= currentPage - 2 && p <= currentPage + 2)) pages.push(p);
+  }
+  let prev = 0;
+  for (const p of pages) {
+    if (p - prev > 1) html += `<span class="page-ellipsis">…</span>`;
     html += `<button class="page-btn ${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`;
+    prev = p;
   }
   html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>下一頁 ›</button>`;
   pag.innerHTML = html;
