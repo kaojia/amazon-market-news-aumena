@@ -134,6 +134,66 @@ def convert_articles(articles: list[dict], s2t) -> None:
         a["summary"] = s2t(a.get("summary", ""))
 
 
+# --- external-title translation ----------------------------------------------
+# The CI job also translates titles (fetch_and_push.translate_news_items), but
+# its GoogleTranslator often gets rate-limited on the GitHub runner and silently
+# leaves English. We run locally as a safety net: any still-English <h3> outside
+# our official block gets translated (Google → MyMemory fallback).
+
+def _is_mostly_chinese(text: str) -> bool:
+    if not text:
+        return True
+    cn = sum(1 for c in text if "一" <= c <= "鿿")
+    return cn / max(len(text), 1) > 0.3
+
+
+def _translate_en(text: str) -> str:
+    """Translate to Traditional Chinese; try Google, fall back to MyMemory."""
+    for factory in (
+        lambda: __import__("deep_translator").GoogleTranslator(source="auto", target="zh-TW"),
+        lambda: __import__("deep_translator").MyMemoryTranslator(source="en-US", target="zh-TW"),
+    ):
+        try:
+            return factory().translate(text) or text
+        except Exception:
+            continue
+    return text
+
+
+def translate_external_titles(filepath: str) -> int:
+    """Translate English <h3> titles OUTSIDE the official marker block. Returns
+    the number of titles translated."""
+    with open(filepath, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    # Protect our official block: split it out, translate only the rest.
+    block_re = re.compile(re.escape(MARKER_START) + r".*?" + re.escape(MARKER_END),
+                          re.DOTALL)
+    m = block_re.search(content)
+    official = m.group(0) if m else ""
+    outer = block_re.sub("\x00BLOCK\x00", content) if m else content
+
+    count = 0
+
+    def _sub(mo: "re.Match") -> str:
+        nonlocal count
+        title = html.unescape(mo.group(1)).strip()
+        if not title or _is_mostly_chinese(title):
+            return mo.group(0)
+        zh = _translate_en(title)
+        if zh and zh != title:
+            count += 1
+            return f"<h3>{_esc(zh)}</h3>"
+        return mo.group(0)
+
+    outer = re.sub(r"<h3>(.*?)</h3>", _sub, outer, flags=re.DOTALL)
+    content = outer.replace("\x00BLOCK\x00", official) if m else outer
+
+    with open(filepath, "w", encoding="utf-8") as f:
+        f.write(content)
+    return count
+
+
 # --- card rendering ----------------------------------------------------------
 
 def _esc(s: str) -> str:
@@ -228,6 +288,8 @@ def main() -> None:
     ap.add_argument("--lang", default=DEFAULT_LANG,
                     help="Feed locale from Amazon (default zh-CN, then converted "
                          "to Traditional). Pass 'en' to keep English.")
+    ap.add_argument("--no-translate", action="store_true",
+                    help="Skip translating external (non-official) English titles.")
     ap.add_argument("--no-build", action="store_true",
                     help="Skip re-running build.py afterwards.")
     args = ap.parse_args()
@@ -256,6 +318,10 @@ def main() -> None:
     filepath = f"daily-report-{date}.html"
     inject(filepath, date, block)
     print(f"  📝 injected {len(articles)} official cards into {filepath}")
+
+    if not args.no_translate:
+        n = translate_external_titles(filepath)
+        print(f"  🌐 translated {n} external title(s) to Traditional Chinese")
 
     if not args.no_build:
         proc = subprocess.run([sys.executable, "scripts/build.py"],

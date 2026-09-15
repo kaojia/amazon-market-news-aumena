@@ -19,6 +19,10 @@ from html.parser import HTMLParser
 
 def map_tags(region_text):
     """Map region/topic keywords to category tags."""
+    # Official Seller Central announcements (injected by inject_sc_news.py) carry
+    # "官方公告" in their region text — tag them 賣家後台 so they're filterable.
+    if "官方公告" in region_text:
+        return ["賣家後台"]
     if any(kw in region_text for kw in ("供應鏈", "物流")):
         return ["物流", "地緣政治"]
     if any(kw in region_text for kw in ("總經", "利率", "消費")):
