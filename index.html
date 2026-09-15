@@ -435,7 +435,7 @@ function renderGrid() {
                <span class="prio-badge ${priorityOf(a).key}">${priorityOf(a).dot} ${priorityOf(a).label}</span>
                <span>🌏 ${marketName(a)}</span><span class="dot-sep">·</span><span>🗂 ${cardCategory(a)}</span>
              </div>
-             <div class="card-excerpt">${cardGuidance(a)}</div>`}
+             <div class="card-excerpt">${a.ai && a.summary ? a.summary : cardGuidance(a)}</div>`}
       </div>
       <div class="card-footer">
         <span class="card-read-more">CONTINUE READING →</span>
@@ -501,15 +501,27 @@ function openModal(idx) {
     const p = priorityOf(a);
     const src = (a.sources || [])[0];
     const srcName = src ? src.name : '';
-    body = `
+    const chips = `
     <div class="meta-chips">
       <span class="prio-badge ${p.key}">${p.dot} ${p.label}</span>
       <span class="meta-chip"><strong>🌏 市場</strong> ${marketName(a)}</span>
       <span class="meta-chip"><strong>🗂 分類</strong> ${cardCategory(a)}</span>
       ${srcName ? `<span class="meta-chip"><strong>📰 來源</strong> ${srcName}</span>` : ''}
-    </div>
+    </div>`;
+    const readLink = src ? `<a class="read-original" href="${srcHref(src.url, a.title)}" target="_blank" rel="noopener">🔗 閱讀原文報導 →</a>` : '';
+    if (a.ai && a.summary) {
+      // Real AI-generated summary/impact/action available.
+      body = `${chips}
+    <div class="summary">${a.summary}</div>
+    ${a.impact ? `<div class="impact"><strong>🎯 對賣家的影響：</strong>${a.impact}</div>` : ''}
+    ${a.action ? `<div class="action"><strong>✅ 建議行動：</strong>${a.action}</div>` : ''}
+    ${readLink}`;
+    } else {
+      // No article body available — show category guidance instead.
+      body = `${chips}
     <div class="why"><strong>💡 為何值得關注</strong>${cardGuidance(a)}</div>
-    ${src ? `<a class="read-original" href="${srcHref(src.url, a.title)}" target="_blank" rel="noopener">🔗 閱讀原文報導 →</a>` : ''}`;
+    ${readLink}`;
+    }
   }
   document.getElementById('modalBody').innerHTML = body;
   document.getElementById('modal').classList.add('open');
@@ -549,6 +561,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "賣家後台"
     ],
     "market": "AE",
+    "ai": false,
     "title": "針對賬戶狀況保障計劃推出“賣家質疑”",
     "summary": "如果您已加入賬戶狀況保障計劃，則在已使用所有標準申訴選項後，可以使用“賣家質疑”請求有關賬戶執行措施的更多詳細資訊。 “賣家質疑”讓您有機會對符合要求的商品政策決定申請複核，每 180 天可申請三次。這些複核申請將由我們訓練有素的團隊進行稽核，目標是在 48 小時內作出決定。 提交質疑時，您可以在問題單中提供其他證明檔案。如果我們認可您的質疑，則之前的決定將被推翻並重新啟售您的商品。每次質疑失敗將在六個月後重置，為您持續提供關閉複雜問題單的機會。 雖然這是一項可選權益，但使用…",
     "impact": "如果您已加入賬戶狀況保障計劃，則在已使用所有標準申訴選項後，可以使用“賣家質疑”請求有關賬戶執行措施的更多詳細資訊。 “賣家質疑”讓您有機會對符合要求的商品政策決定申請複核，每 180 天可申請三次。這些複核申請將由我們訓練有素的團隊進行稽核，目標是在 48 小時內作出決定。 提交質疑時，您可以在問題單中提供其他證明檔案。如果我們認可您的質疑，則之前的決定將被推翻並重新啟售您的商品。每次質疑失敗將在六個月後重置，為您持續提供關閉複雜問題單的機會。 雖然這是一項可選權益，但使用…",
@@ -567,6 +580,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "賣家後台"
     ],
     "market": "AE",
+    "ai": false,
     "title": "您的賬戶狀況評級現在會對優質的客戶服務提供獎勵",
     "summary": "現在，對於您直接負責處理客戶服務事宜的賣家自配送訂單的優質客戶服務表現，您在賬戶狀況評級 (AHR) 方面會獲得獎勵。 您現在可以根據以下三項客戶服務質量指標的表現，獲得最多 12 個賬戶狀況評級積分： 買家聯絡率低於 0.50% ： 因商品質量、配送或運輸問題（不含買家改變主意）而需要退款或換貨的買家聯絡次數除以已發貨商品數量。 平均聯絡回覆時間低於 12 小時 ： 回覆買家訊息所花時間除以收到的訊息總數。 買家不滿率低於 4.5% ： 針對問題“您對最近一次客戶服務體驗的…",
     "impact": "現在，對於您直接負責處理客戶服務事宜的賣家自配送訂單的優質客戶服務表現，您在賬戶狀況評級 (AHR) 方面會獲得獎勵。 您現在可以根據以下三項客戶服務質量指標的表現，獲得最多 12 個賬戶狀況評級積分： 買家聯絡率低於 0.50% ： 因商品質量、配送或運輸問題（不含買家改變主意）而需要退款或換貨的買家聯絡次數除以已發貨商品數量。 平均聯絡回覆時間低於 12 小時 ： 回覆買家訊息所花時間除以收到的訊息總數。 買家不滿率低於 4.5% ： 針對問題“您對最近一次客戶服務體驗的…",
@@ -585,6 +599,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "賣家後台"
     ],
     "market": "AE",
+    "ai": false,
     "title": "使用新工作流程查詢亞馬遜物流庫存貨件差異",
     "summary": "我們已簡化亞馬遜物流 (FBA) 貨件的貨件差異查詢流程，並會突出顯示您的入庫計劃中所列內容與我們的運營中心所收內容之間的任何差異。 如果您需要查詢亞馬遜物流貨件差異，請前往 貨件 ，然後按照以下步驟操作： 找到您的貨件，然後點選【追蹤貨件】。 在“貨件一覽”中，點選【物品資訊】選項卡。 檢視差異，並選擇相應狀態 - “商品漏發”或“調查缺失商品” 上傳檔案。 提供更多資訊。 預覽並提交申請。 只有當貨件狀態為“已完成”時，您才能查詢其差異。 在 貨件處理進度 中追蹤貨件狀態…",
     "impact": "我們已簡化亞馬遜物流 (FBA) 貨件的貨件差異查詢流程，並會突出顯示您的入庫計劃中所列內容與我們的運營中心所收內容之間的任何差異。 如果您需要查詢亞馬遜物流貨件差異，請前往 貨件 ，然後按照以下步驟操作： 找到您的貨件，然後點選【追蹤貨件】。 在“貨件一覽”中，點選【物品資訊】選項卡。 檢視差異，並選擇相應狀態 - “商品漏發”或“調查缺失商品” 上傳檔案。 提供更多資訊。 預覽並提交申請。 只有當貨件狀態為“已完成”時，您才能查詢其差異。 在 貨件處理進度 中追蹤貨件狀態…",
@@ -603,6 +618,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "賣家後台"
     ],
     "market": "AE",
+    "ai": false,
     "title": "為亞馬遜企業購買家建立專享促銷",
     "summary": "自 2026 年 8 月 31 日起，您可以透過亞馬遜企業購促銷為企業買家建立專享限時促銷。此功能現已在美國、加拿大、英國、德國、法國、義大利、西班牙、日本、墨西哥和澳大利亞推出。 透過亞馬遜企業購促銷，您可以提供僅面向企業對企業 (B2B) 買家的專享折扣，時長可為 1 小時至 30 天。選擇固定價格促銷或百分比折扣促銷。 在 Prime 會員大促、黑色星期五或其他活動等重大購物活動期間，截至 2026 年 12 月 31 日，您的促銷可透過專屬的電子郵件和推送通知活動獲得…",
     "impact": "自 2026 年 8 月 31 日起，您可以透過亞馬遜企業購促銷為企業買家建立專享限時促銷。此功能現已在美國、加拿大、英國、德國、法國、義大利、西班牙、日本、墨西哥和澳大利亞推出。 透過亞馬遜企業購促銷，您可以提供僅面向企業對企業 (B2B) 買家的專享折扣，時長可為 1 小時至 30 天。選擇固定價格促銷或百分比折扣促銷。 在 Prime 會員大促、黑色星期五或其他活動等重大購物活動期間，截至 2026 年 12 月 31 日，您的促銷可透過專屬的電子郵件和推送通知活動獲得…",
@@ -621,6 +637,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "賣家後台"
     ],
     "market": "AE",
+    "ai": false,
     "title": "更新稅務資訊，應對阿聯酋即將推行的電子發票要求",
     "summary": "自 2027 年 1 月 1 日起，阿聯酋將對企業-企業和企業-政府交易強制推行電子發票。 為確保合規，我們將使用您賬戶中的稅務和法律資訊確定您是否有資格接收賣家費用電子發票，並填寫發票資訊。 為應對此項要求，請在 2026 年 12 月 15 日前完成以下步驟： 前往 稅務設定 ，檢視並更新您的增值稅 (VAT) 登記號。 確保您在 身份資訊 中提供的營業執照、阿聯酋身份證和護照號碼有效。 確認您在 身份資訊 中的法定名稱與您在 聯邦稅務局 的記錄完全一致。 如果您的資訊不…",
     "impact": "自 2027 年 1 月 1 日起，阿聯酋將對企業-企業和企業-政府交易強制推行電子發票。 為確保合規，我們將使用您賬戶中的稅務和法律資訊確定您是否有資格接收賣家費用電子發票，並填寫發票資訊。 為應對此項要求，請在 2026 年 12 月 15 日前完成以下步驟： 前往 稅務設定 ，檢視並更新您的增值稅 (VAT) 登記號。 確保您在 身份資訊 中提供的營業執照、阿聯酋身份證和護照號碼有效。 確認您在 身份資訊 中的法定名稱與您在 聯邦稅務局 的記錄完全一致。 如果您的資訊不…",
@@ -639,6 +656,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "賣家後台"
     ],
     "market": "AE",
+    "ai": false,
     "title": "7 月 29 日後使用賬戶編號管理銷售角色",
     "summary": "為簡化品牌管理銷售角色的方式，自 2026 年 7 月 29 日起，品牌註冊管理員將使用賬戶編號，而不再使用賣家記號。藉助銷售角色，您可以享受品牌銷售權益（例如 A+ 商品描述、品牌旗艦店和 Vine），這些權益可幫助您最佳化商品資訊並提升銷量。 以下是您需要了解的事項： 如果您是品牌註冊管理員、已分配有銷售角色，或想透過銷售角色來享受品牌銷售權益，則此變更將對您產生影響。 品牌註冊管理員將使用賬戶編號分配或修改銷售角色。 賬戶編號提供一個全球通用的唯一標識碼，因此品牌管理員無…",
     "impact": "為簡化品牌管理銷售角色的方式，自 2026 年 7 月 29 日起，品牌註冊管理員將使用賬戶編號，而不再使用賣家記號。藉助銷售角色，您可以享受品牌銷售權益（例如 A+ 商品描述、品牌旗艦店和 Vine），這些權益可幫助您最佳化商品資訊並提升銷量。 以下是您需要了解的事項： 如果您是品牌註冊管理員、已分配有銷售角色，或想透過銷售角色來享受品牌銷售權益，則此變更將對您產生影響。 品牌註冊管理員將使用賬戶編號分配或修改銷售角色。 賬戶編號提供一個全球通用的唯一標識碼，因此品牌管理員無…",
@@ -657,6 +675,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "值得關注的黑色星期五優惠- News.com.au",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -675,6 +694,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AE",
+    "ai": false,
     "title": "阿聯酋增值稅的變化可能會使企業支付大筆現金的成本更高-海灣新聞",
     "summary": "阿聯酋稅務法規變動，跨境賣家應注意合規要求與申報時程。",
     "impact": "阿聯酋稅務法規變動，跨境賣家應注意合規要求與申報時程。",
@@ -694,6 +714,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜新增150個配送站，提升節日配送服務-印度零售商",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -712,6 +733,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AE",
+    "ai": false,
     "title": "SwipeLocal Launches Business Activation Platform to Help UAE Businesses Get Operational Faster - Issuewire.com",
     "summary": "阿聯酋稅務法規變動，跨境賣家應注意合規要求與申報時程。",
     "impact": "阿聯酋稅務法規變動，跨境賣家應注意合規要求與申報時程。",
@@ -730,6 +752,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "Vinted US, UK & Australia Terms Update Renames Buyer Protection Fee, Changes Counterfeit Rules - Value Added Resource",
     "summary": "Amazon 澳洲站費用結構異動，賣家應留意成本變化對利潤的影響。",
     "impact": "Amazon 澳洲站費用結構異動，賣家應留意成本變化對利潤的影響。",
@@ -748,6 +771,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "What to expect in Amazon’s Black Friday sale - news.com.au",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -766,6 +790,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AE",
+    "ai": false,
     "title": "SwipeLocal 推出業務啟動平台，幫助阿聯酋企業更快運作 - Issuewire.com",
     "summary": "阿聯酋稅務法規變動，跨境賣家應注意合規要求與申報時程。",
     "impact": "阿聯酋稅務法規變動，跨境賣家應注意合規要求與申報時程。",
@@ -784,6 +809,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "Vinted 美國、英國和澳洲條款更新重命名買家保護費，更改防偽規則 - 增值資源",
     "summary": "Amazon 澳洲站費用結構異動，賣家應留意成本變化對利潤的影響。",
     "impact": "Amazon 澳洲站費用結構異動，賣家應留意成本變化對利潤的影響。",
@@ -802,6 +828,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜黑色星期五促銷有哪些值得期待的事情 - News.com.au",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -821,6 +848,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "2026 年上半年亞太地區物流租金上漲 1.2% - Real Estate Asia",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -839,6 +867,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "蘋果 iPhone 18 杜拜發布日期：蘋果將推出 iPhone 18 Pro、iPhone 18 Pro Max 和 iPhone 18 Pro Max可折疊iPhone；查看預計預訂日期、阿聯酋發布日期、發佈時間、價格和價格最新洩漏更新 - 《星期日衛報》",
     "summary": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -857,6 +886,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜黑色星期五促銷有哪些值得期待的事情 - News.com.au",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -875,6 +905,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳洲 2026 年亞馬遜 Prime Day：為今年 10 月的另一次促銷做好準備 - techradar.com",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -893,6 +924,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "我可以在南亞從阿里巴巴購買並在亞馬遜上銷售嗎？ [2026服]第2026服[雙線] 新服",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -911,6 +943,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "報告：到 2030 年，印度電子商務市場規模將達到 3,450 億美元 - Menafn",
     "summary": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -929,6 +962,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳洲 2026 年亞馬遜 Prime Day：為今年 10 月的另一次促銷做好準備 - TechRadar",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -947,6 +981,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜為銷售熱潮提供巨大的就業機會 - News.com.au",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -965,6 +1000,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "2025 年澳洲最佳小型企業銀行帳戶首選 - WorldFirst",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -983,6 +1019,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜澳洲招聘 3000 名季節性工人迎接聖誕節高峰 - News.com.au",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -1001,6 +1038,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳洲最佳商業銀行帳戶 [2027] - WorldFirst",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -1019,6 +1057,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "亞馬遜瞄準 20 家阿聯酋創作者企業，為每位參與者提供超過 10 萬美元的支援 - entARABI",
     "summary": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -1037,6 +1076,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "EWD 2026：阿聯酋女性持有 ADX 390 億迪拉姆股票 - 海灣商業",
     "summary": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -1055,6 +1095,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "網路上銷售的「便宜又有吸引力」的燈未通過澳洲合規測試 - ABC News頭條新聞 – 澳洲廣播公司",
     "summary": "Amazon 澳洲站平台政策更新，賣家需確認是否符合新規定以避免違規。",
     "impact": "Amazon 澳洲站平台政策更新，賣家需確認是否符合新規定以避免違規。",
@@ -1073,6 +1114,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "亞馬遜瞄準 20 家阿聯酋創作者企業，為每位參與者提供超過 10 萬美元的支援 - entARABI",
     "summary": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -1091,6 +1133,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "網路上銷售的「便宜又有吸引力」的燈未通過澳洲合規測試頭條新聞 – 澳洲廣播公司",
     "summary": "Amazon 澳洲站平台政策更新，賣家需確認是否符合新規定以避免違規。",
     "impact": "Amazon 澳洲站平台政策更新，賣家需確認是否符合新規定以避免違規。",
@@ -1109,6 +1152,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "電子商務市場規模、份額及2035 年成長報告 | MRFR - 市場研究的未來",
     "summary": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -1127,6 +1171,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "網路上銷售的「便宜又有吸引力」的燈未通過澳洲合規測試頭條新聞 – 澳洲廣播公司",
     "summary": "Amazon 澳洲站平台政策更新，賣家需確認是否符合新規定以避免違規。",
     "impact": "Amazon 澳洲站平台政策更新，賣家需確認是否符合新規定以避免違規。",
@@ -1145,6 +1190,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "電子商務市場規模、份額及2035 年成長報告 | MRFR - 市場研究未來",
     "summary": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -1163,6 +1209,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AU",
+    "ai": false,
     "title": "在線銷售衣服或其他物品什麼時候是業餘愛好，什麼時候是生意？這些是稅收規則 - 對話",
     "summary": "澳洲稅務法規變動，跨境賣家應注意合規要求與申報時程。",
     "impact": "澳洲稅務法規變動，跨境賣家應注意合規要求與申報時程。",
@@ -1181,6 +1228,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "阿聯酋創作者現在可以在亞馬遜上發布產品 - 海灣商業",
     "summary": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -1199,6 +1247,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "SA",
+    "ai": false,
     "title": "Human Element 與 Zamp 合作，簡化不斷發展的電子商務業務的銷售稅合規流程 - EIN 新聞",
     "summary": "Amazon 沙烏地阿拉伯站平台政策更新，賣家需確認是否符合新規定以避免違規。",
     "impact": "Amazon 沙烏地阿拉伯站平台政策更新，賣家需確認是否符合新規定以避免違規。",
@@ -1217,6 +1266,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "SA",
+    "ai": false,
     "title": "城市公司Unicommerce 擴大與阿聯酋和沙烏地阿拉伯的電子商務合作夥伴關係 - Indian Television Dot Com",
     "summary": "Amazon 沙烏地阿拉伯站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 沙烏地阿拉伯站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -1235,6 +1285,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "Paragon Global Logistics 為電子商務品牌推出奧蘭多配送業務 - EIN Presswire",
     "summary": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
     "impact": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
@@ -1253,6 +1304,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "「辦公室是首要的」：房地產老闆為混合工作的結束辯護 - SMH.com.au",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -1272,6 +1324,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞太地區物流需求富彈性，注重品質 - Asset Publishing and Research Limited",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1290,6 +1343,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "Paragon Global Logistics 為電子商務品牌推出奧蘭多配送業務 - EIN Presswire",
     "summary": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
     "impact": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
@@ -1308,6 +1362,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "SA",
+    "ai": false,
     "title": "Human Element 與 Zamp 合作，簡化不斷發展的電子商務業務的銷售稅合規流程 - EIN 新聞",
     "summary": "Amazon 沙烏地阿拉伯站平台政策更新，賣家需確認是否符合新規定以避免違規。",
     "impact": "Amazon 沙烏地阿拉伯站平台政策更新，賣家需確認是否符合新規定以避免違規。",
@@ -1326,6 +1381,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "Paragon Global Logistics 為電子商務品牌推出奧蘭多配送業務 - EIN 新聞",
     "summary": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
     "impact": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
@@ -1345,6 +1401,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜澳洲為雪梨和墨爾本推出隔夜和當日送達窗口 - SMBtech",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1364,6 +1421,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "為澳洲各地更多亞馬遜客戶提供更快、更靈活的送貨服務 - 堪培拉時報",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1382,6 +1440,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "數位商務重塑阿聯酋零售市場：從露天市場到螢幕 - CEO Insights Asia",
     "summary": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -1401,6 +1460,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜推出新的 5 小時送貨窗口 - Retail World Magazine",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1420,6 +1480,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "為澳洲各地更多亞馬遜客戶提供更快、更靈活的送貨服務 - 堪培拉時報",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1438,6 +1499,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜：從一切商店到全球基礎設施平台 - TradingKey",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -1456,6 +1518,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "自主零售無人機送貨 - Trend Hunter",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -1475,6 +1538,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜推出新的 5 小時送貨窗口 - Retail World Magazine",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1494,6 +1558,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "為澳洲各地的更多亞馬遜客戶提供更快、更靈活的送貨服務 - 堪培拉時報",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1512,6 +1577,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "我背包環遊過世界各地，我剛剛找到了一款可與我的 630 美元版本相媲美的亞馬遜帳篷，只需 78 美元 - Travelandleisure.com",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -1530,6 +1596,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "2026 年澳洲十大線上市集 - Nubia 雜誌！",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -1549,6 +1616,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "eBay 聘請沃爾瑪、亞馬遜校友安德烈斯·岡薩雷斯 (Andres Gonzalez) 領導全球身份驗證和認證業務航運 - 增值資源",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1568,6 +1636,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "為澳洲各地的更多亞馬遜客戶提供更快、更靈活的送貨服務 - 堪培拉時報",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1587,6 +1656,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜澳洲為雪梨和墨爾本推出隔夜和當日送達窗口 - SMBtech",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1606,6 +1676,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜推出新的 5 小時送貨窗口 - Retail World Magazine",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1624,6 +1695,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "MyFBAPrep 連續第四年入選 2026 年 Inc. 5000 強名單，榮獲精英地位 - Morningstar",
     "summary": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
     "impact": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
@@ -1643,6 +1715,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "eBay 聘請沃爾瑪、亞馬遜校友安德烈斯·岡薩雷斯 (Andres Gonzalez) 領導全球身份驗證和認證業務航運 - 增值資源",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1662,6 +1735,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "泰熊物流收購Etomas，推動韓國跨境電商 - CHOSUNBIZ - Chosunbiz",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1681,6 +1755,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "為澳洲各地更多亞馬遜客戶提供更快、更靈活的送貨服務 - 堪培拉時報",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1700,6 +1775,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜澳洲為雪梨和墨爾本推出隔夜和當日送達窗口 - SMBtech",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1718,6 +1794,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "MyFBAPrep 連續第四年入選 2026 年 Inc. 5000 強名單，榮獲精英地位 - Morningstar",
     "summary": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
     "impact": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
@@ -1737,6 +1814,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "泰熊物流收購Etomas，推動韓國跨境電商 - CHOSUNBIZ - Chosunbiz",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1756,6 +1834,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "為澳洲各地的更多亞馬遜客戶提供更快、更靈活的送貨服務 - 堪培拉時報",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1775,6 +1854,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜澳洲為雪梨和墨爾本推出隔夜和當日送達窗口 - SMBtech",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1794,6 +1874,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜推出新的 5 小時送貨窗口 - Retail World Magazine",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1812,6 +1893,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "MyFBAPrep 連續第四年入選 2026 年 Inc. 5000 強名單，榮獲精英地位 - Morningstar",
     "summary": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
     "impact": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
@@ -1831,6 +1913,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "SA",
+    "ai": false,
     "title": "Spinneys 重建物流路線後利潤更高 - 阿拉伯灣商業洞察 |阿格比",
     "summary": "沙烏地阿拉伯物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "沙烏地阿拉伯物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1849,6 +1932,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "被演算法關閉：小企業遭受線上噩夢 - 時代報",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -1868,6 +1952,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜澳洲為雪梨和墨爾本推出隔夜和當日送達窗口 - SMBtech",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1887,6 +1972,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜澳洲為雪梨和墨爾本推出隔夜和當日送達窗口 - SMBtech",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1905,6 +1991,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜的新 Alexa 登陸澳洲 - 但有人說它「沒用」 - 《信使郵報》",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -1923,6 +2010,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "告別狙擊？ eBay 澳洲將擴展競價範圍擴大到所有拍賣 - 增值資源",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -1941,6 +2029,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "直播購物：什麼是直播銷售步驟 (2026) - Shopify",
     "summary": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -1959,6 +2048,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "如何在馬來西亞亞馬遜上銷售 [2026] - WorldFirst",
     "summary": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -1978,6 +2068,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "針對非洲企業的亞馬遜直銷指南 - WorldFirst",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -1996,6 +2087,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜的新 Alexa 登陸澳洲 - 但有人說它「沒用」 - 《信使郵報》",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2014,6 +2106,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "告別狙擊？ eBay 澳洲將擴展競價範圍擴大到所有拍賣 - 增值資源",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2032,6 +2125,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "直播購物：什麼是直播銷售步驟 (2026) - Shopify",
     "summary": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2050,6 +2144,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜的新 Alexa 登陸澳洲 - 但有人說它「沒用」 - 《信使郵報》",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2068,6 +2163,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "告別狙擊？ eBay 澳洲將擴展競價範圍擴大到所有拍賣 - 增值資源",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2086,6 +2182,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "直播購物：什麼是直播銷售步驟 (2026) - Shopify",
     "summary": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2105,6 +2202,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "針對非洲企業的亞馬遜直銷指南 - WorldFirst",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -2123,6 +2221,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜的新 Alexa 登陸澳洲 - 但有人說它「沒用」 - 《信使郵報》",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2141,6 +2240,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "告別狙擊？ eBay 澳洲將擴展競價範圍擴大到所有拍賣 - 增值資源",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2159,6 +2259,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "直播購物：什麼是直播銷售步驟 (2026) - Shopify",
     "summary": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2177,6 +2278,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "SA",
+    "ai": false,
     "title": "2026 年全球增值稅變化 - vatcalc.com",
     "summary": "沙烏地阿拉伯稅務法規變動，跨境賣家應注意合規要求與申報時程。",
     "impact": "沙烏地阿拉伯稅務法規變動，跨境賣家應注意合規要求與申報時程。",
@@ -2195,6 +2297,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AU",
+    "ai": false,
     "title": "凱馬特澳洲公司突襲亞馬遜，聘請蘇珊娜弗雷澤 (Suzanne Frazer) 擔任國家調查經理 - Retailtechinnovationhub.com",
     "summary": "澳洲稅務法規變動，跨境賣家應注意合規要求與申報時程。",
     "impact": "澳洲稅務法規變動，跨境賣家應注意合規要求與申報時程。",
@@ -2214,6 +2317,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "針對非洲企業的亞馬遜直銷指南 - WorldFirst",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -2232,6 +2336,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜努力讓澳洲與其最快的市場保持一致 - Inside Retail Australia",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2250,6 +2355,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "SA",
+    "ai": false,
     "title": "2026 年全球增值稅變化 - vatcalc.com",
     "summary": "沙烏地阿拉伯稅務法規變動，跨境賣家應注意合規要求與申報時程。",
     "impact": "沙烏地阿拉伯稅務法規變動，跨境賣家應注意合規要求與申報時程。",
@@ -2268,6 +2374,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AU",
+    "ai": false,
     "title": "凱馬特澳洲公司突襲亞馬遜，聘請蘇珊弗雷澤 (Suzanne Frazer) 擔任國家調查經理 - 零售技術創新中心",
     "summary": "澳洲稅務法規變動，跨境賣家應注意合規要求與申報時程。",
     "impact": "澳洲稅務法規變動，跨境賣家應注意合規要求與申報時程。",
@@ -2286,6 +2393,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AE",
+    "ai": false,
     "title": "阿聯酋遊客現可對符合條件的 Noon 網購商品申請增值稅退稅 - 阿拉伯商業",
     "summary": "阿聯酋稅務法規變動，跨境賣家應注意合規要求與申報時程。",
     "impact": "阿聯酋稅務法規變動，跨境賣家應注意合規要求與申報時程。",
@@ -2304,6 +2412,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "SA",
+    "ai": false,
     "title": "2026 年全球增值稅變化 - vatcalc.com",
     "summary": "沙烏地阿拉伯稅務法規變動，跨境賣家應注意合規要求與申報時程。",
     "impact": "沙烏地阿拉伯稅務法規變動，跨境賣家應注意合規要求與申報時程。",
@@ -2322,6 +2431,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AU",
+    "ai": false,
     "title": "凱馬特澳洲公司突襲亞馬遜，聘請蘇珊弗雷澤 (Suzanne Frazer) 擔任國家調查經理 - 零售技術創新中心",
     "summary": "澳洲稅務法規變動，跨境賣家應注意合規要求與申報時程。",
     "impact": "澳洲稅務法規變動，跨境賣家應注意合規要求與申報時程。",
@@ -2340,6 +2450,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "在亞馬遜上銷售需要付費嗎？ 2026 年英國賣家費用解釋 - WorldFirst",
     "summary": "Amazon 澳洲站費用結構異動，賣家應留意成本變化對利潤的影響。",
     "impact": "Amazon 澳洲站費用結構異動，賣家應留意成本變化對利潤的影響。",
@@ -2358,6 +2469,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "SA",
+    "ai": false,
     "title": "2026 年全球增值稅變化 - vatcalc.com",
     "summary": "沙烏地阿拉伯稅務法規變動，跨境賣家應注意合規要求與申報時程。",
     "impact": "沙烏地阿拉伯稅務法規變動，跨境賣家應注意合規要求與申報時程。",
@@ -2376,6 +2488,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "在亞馬遜上銷售需要付費嗎？ 2026 年英國賣家費用解釋 - WorldFirst",
     "summary": "Amazon 澳洲站費用結構異動，賣家應留意成本變化對利潤的影響。",
     "impact": "Amazon 澳洲站費用結構異動，賣家應留意成本變化對利潤的影響。",
@@ -2394,6 +2507,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "「絕對頂級」電視降價 1500 美元 - News.com.au",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2412,6 +2526,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "這些新的樂高 2026 年 8 月版本已暫時售罄並缺貨 - Jay's Brick 博客",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2430,6 +2545,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "社群媒體正在重塑澳洲人發現和購買產品的方式 - Inside FMCG",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2448,6 +2564,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜FBA賣家貨運代理：TRANSWORLD支援中國出口物流 - EIN News",
     "summary": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
     "impact": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
@@ -2466,6 +2583,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AE",
+    "ai": false,
     "title": "LOOOK.AI 和 Kiehl's 在英國、阿聯酋、新加坡和馬來西亞推出智慧鏡子安裝 - 零售技術創新中心",
     "summary": "阿聯酋稅務法規變動，跨境賣家應注意合規要求與申報時程。",
     "impact": "阿聯酋稅務法規變動，跨境賣家應注意合規要求與申報時程。",
@@ -2484,6 +2602,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜的 Alexa 和 Echo 終於在澳洲和紐西蘭推出 - Mashable",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2502,6 +2621,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "SA",
+    "ai": false,
     "title": "印度允許外資進入消費電子商務，亞馬遜獲勝 - FT.com",
     "summary": "Amazon 沙烏地阿拉伯站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 沙烏地阿拉伯站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2520,6 +2640,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜FBA賣家貨運代理：TRANSWORLD支援中國出口物流 - EIN News",
     "summary": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
     "impact": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
@@ -2538,6 +2659,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AE",
+    "ai": false,
     "title": "LOOOK.AI 和 Kiehl's 在英國、阿聯酋、新加坡和馬來西亞推出智慧鏡子安裝 - 零售技術創新中心",
     "summary": "阿聯酋稅務法規變動，跨境賣家應注意合規要求與申報時程。",
     "impact": "阿聯酋稅務法規變動，跨境賣家應注意合規要求與申報時程。",
@@ -2556,6 +2678,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "Gorilla ROI 現已推出最佳亞馬遜賣家工具報告 - cbs19news.com",
     "summary": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2574,6 +2697,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "從阿聯酋起飛？阿聯酋航空、阿提哈德航空和阿拉伯航空發布最新航班更新和取消資訊 - 海灣新聞",
     "summary": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2592,6 +2716,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "美國FBA海運代理與TRANSWORLD進行亞馬遜出口物流協調 - EIN News",
     "summary": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
     "impact": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
@@ -2610,6 +2735,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "阿布達比根據新政策為超市設定 2027 年最後期限：購物者需要了解什麼 - 海灣商業",
     "summary": "Amazon 阿聯酋站平台政策更新，賣家需確認是否符合新規定以避免違規。",
     "impact": "Amazon 阿聯酋站平台政策更新，賣家需確認是否符合新規定以避免違規。",
@@ -2628,6 +2754,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "Gorilla ROI 現已提供最佳亞馬遜賣家工具報告 - 諾福克每日新聞",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2646,6 +2773,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "2026 年亞馬遜 10 款最暢銷產品：南亞賣家的產品創意 - WorldFirst",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2664,6 +2792,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "美國FBA海運代理與TRANSWORLD進行亞馬遜出口物流協調 - EIN News",
     "summary": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
     "impact": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
@@ -2682,6 +2811,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "SA",
+    "ai": false,
     "title": "優惠券網站的隱藏經濟學：為什麼零售商比以往任何時候都更需要它們 - TheCable",
     "summary": "Amazon 沙烏地阿拉伯站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 沙烏地阿拉伯站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2700,6 +2830,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "2026 年亞馬遜 10 款最暢銷產品：南亞賣家的產品創意 - WorldFirst",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2718,6 +2849,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "Environics Analytics 任命 Cenker Ozhelvaci 為銷售主管 - 雅虎財經",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2736,6 +2868,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "Kogan 經營「克隆」網站，以更高的價格銷售相同產品 - ABC News頭條新聞 – 澳洲廣播公司",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2754,6 +2887,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "Environics Analytics 任命 Cenker Ozhelvaci 為銷售主管 - 雅虎財經",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2772,6 +2906,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜要求賣家在商品圖片中標記人工智慧生成的人物 - 福布斯",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2790,6 +2925,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "隨著線上購物的普及，DMart 與 Trent 重新制定 2026 財政年度廣告策略 - Storyboard18",
     "summary": "Amazon 阿聯酋站廣告與行銷工具更新，賣家可評估新功能對曝光的助益。",
     "impact": "Amazon 阿聯酋站廣告與行銷工具更新，賣家可評估新功能對曝光的助益。",
@@ -2808,6 +2944,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "Environics Analytics 任命 Cenker Ozhelvaci 為銷售主管 - 雅虎財經",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2826,6 +2963,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜新人工智慧規則迫使賣家在產品照片和影片中揭露假人 - 國際商業時報，新加坡版",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2844,6 +2982,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "隨著線上購物的普及，DMart 與 Trent 重新制定 2026 財政年度廣告策略 - Storyboard18",
     "summary": "Amazon 阿聯酋站廣告與行銷工具更新，賣家可評估新功能對曝光的助益。",
     "impact": "Amazon 阿聯酋站廣告與行銷工具更新，賣家可評估新功能對曝光的助益。",
@@ -2862,6 +3001,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜新人工智慧規則迫使賣家在產品照片和影片中揭露假人 - 國際商業時報，新加坡版",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2880,6 +3020,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "SA",
+    "ai": false,
     "title": "倫敦開盤：隨著投資者擺脫美國關稅，富時指數上漲 - Sharecast.com",
     "summary": "沙烏地阿拉伯稅務法規變動，跨境賣家應注意合規要求與申報時程。",
     "impact": "沙烏地阿拉伯稅務法規變動，跨境賣家應注意合規要求與申報時程。",
@@ -2898,6 +3039,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "烏克蘭對俄羅斯「亞馬遜」倉庫的襲擊讓戰爭離普通百姓更近了 - 英國《衛報》",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2916,6 +3058,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜英國 FBM 要求的 3 項更新 -channelx.world",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2934,6 +3077,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "MP 的紗麗、香料和手工藝品成為通往全球市場的電子商務入口網站 - 印度時報",
     "summary": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 阿聯酋站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -2953,6 +3097,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜擴大到中央海岸紐卡斯爾的當日送達服務 - 零售商業",
     "summary": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "澳洲物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -2971,6 +3116,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜嚴厲打擊賣家使用 AI 生成圖片，紐約州法律推動新規",
     "summary": "Amazon 要求賣家揭露 AI 生成的商品圖片，違規將面臨下架處分。AU/MENA 賣家需檢視 listing 圖片是否符合新規。",
     "impact": "使用 AI 工具生成商品圖的賣家需立即確認合規，避免 listing 被下架。",
@@ -2989,6 +3135,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜凍結 2026 年假期賣家費用，並縮短入庫時間窗口",
     "summary": "Amazon 宣布 2026 Q4 假期季不調漲賣家費用，但 FBA 入庫時間窗口將縮短，賣家需提前備貨。",
     "impact": "費用凍結是好消息，但入庫窗口縮短代表備貨時間壓力增大。",
@@ -3008,6 +3155,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜澳洲擴大當日送達服務至紐卡斯爾、中央海岸",
     "summary": "Amazon AU 將 same-day delivery 擴展至新南威爾斯州更多地區，提升買家體驗與賣家配送競爭力。",
     "impact": "服務範圍擴大有助於提升這些地區的轉換率，FBA 賣家受益最大。",
@@ -3026,6 +3174,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "UAE 電商逆勢成長：消費者購買次數減少但客單價提高",
     "summary": "阿聯酋電商市場在區域經濟放緩中仍保持成長，消費者行為轉向較少但較大筆的購買，顯示高單價商品需求穩健。",
     "impact": "AE 站賣家可考慮提升商品組合的平均單價，或推出套裝/高端選品。",
@@ -3044,6 +3193,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "Network International 擴大 UAE Jaywan 卡線上電商受理範圍",
     "summary": "UAE 本地支付卡 Jaywan 的線上電商受理商家擴增，更多消費者可使用本地支付方式網購。",
     "impact": "本地支付管道擴增可能帶動更多 UAE 消費者上線購物，有利於 AE 站流量成長。",
@@ -3062,6 +3212,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "SA",
+    "ai": false,
     "title": "沙烏地推出為期三個月的企業特別折扣計畫",
     "summary": "沙烏地阿拉伯政府推出商業折扣措施刺激消費，為電商賣家帶來潛在流量紅利。",
     "impact": "政府刺激消費措施可能帶動 SA 站整體訂單量成長。",
@@ -3081,6 +3232,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AE",
+    "ai": false,
     "title": "Talal Group 在杜拜投資 1.5 億迪拉姆興建物流配送中心",
     "summary": "杜拜物流基礎建設持續擴張，新配送中心有助於縮短中東地區電商配送時效。",
     "impact": "區域物流能力提升可能改善 AE 站的配送體驗與買家滿意度。",
@@ -3099,6 +3251,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "【SC公告】AI 生成圖片必須加標籤 — 含 AI 合成人物的 listing 圖片需加 IPTC metadata",
     "summary": "Seller Central 公告：所有含有 AI 生成之逼真人物的商品圖片，必須在 IPTC metadata 中加入「contains-synthetic-performer」標籤後才能上傳。違規圖片可能導致 listing 被移除。此規定適用於全球所有站點。",
     "impact": "使用 AI 生成人物圖片的賣家須立即修改 metadata，否則面臨 listing 下架風險。僅含實拍人物、非真人角色或無人物的圖片不受影響。",
@@ -3117,6 +3270,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜澳洲FBA：新賣家指南 - WorldFirst",
     "summary": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
     "impact": "與 Amazon 澳洲站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
@@ -3136,6 +3290,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AE",
+    "ai": false,
     "title": "亞馬遜向其他企業開放其物流網絡以推動新的成長 - 海灣商業",
     "summary": "阿聯酋物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "阿聯酋物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -3155,6 +3310,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AE",
+    "ai": false,
     "title": "由於伊朗戰爭推高能源價格，亞馬遜將向賣家增加 3.5% 的燃油和物流附加費 - CNBC",
     "summary": "阿聯酋物流與供應鏈相關動態，可能影響配送時效與成本。",
     "impact": "阿聯酋物流與供應鏈相關動態，可能影響配送時效與成本。",
@@ -3173,6 +3329,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "亞馬遜黃金日將於 7 月 7 日至 13 日回歸，為澳洲購物者帶來不容錯過的優惠 - amazonau.gcs-web.com",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -3191,6 +3348,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "透過亞馬遜澳洲獲得哈里斯農場市場雜貨當日送達 - 關於亞馬遜中國",
     "summary": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
     "impact": "Amazon 澳洲站平台最新消息，賣家可關注對業務發展的潛在機會。",
@@ -3209,6 +3367,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "【SC公告】新增變體到現有商品族群 — 可直接從 Add Products 頁面操作",
     "summary": "Seller Central 新功能：可從 Add Products 頁面下載完整變體族群資訊的預填表格，直接新增商品到現有變體族群，節省時間並減少錯誤。此功能將取代 Variation Wizard（8月底前退役）。",
     "impact": "簡化變體管理流程，賣家可更快速地擴充商品線。Variation Wizard 將於 8 月底退役，需儘快適應新流程。",
@@ -3227,6 +3386,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "【SC公告】促銷工具整合頁面上線 — Deals / Coupons / Price Discounts 統一管理",
     "summary": "新的 Promotions 頁面整合了所有促銷工具（Deals、Coupons、Price Discounts、Buy X Get Y），提供活動行事曆、教學資源，並可在同一頁面管理所有促銷活動。",
     "impact": "賣家可在單一頁面管理所有促銷工具，提升操作效率。活動行事曆有助於提前規劃促銷節奏。",
@@ -3245,6 +3405,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "【SC公告】Passkeys 支援次要使用者 — 團隊成員可各自設定安全登入",
     "summary": "Seller Central 推出 passkeys（通行密鑰）支援次要使用者功能。每位團隊成員可綁定自己的 passkey（指紋/臉部辨識/PIN），防止釣魚攻擊並加速登入。不再支援多人共用同一登入帳號。",
     "impact": "共用帳號的賣家必須為每位團隊成員建立次要使用者帳號，否則將無法使用 passkey 登入。提升帳號安全性但增加初始設定工作。",
@@ -3263,6 +3424,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AE",
+    "ai": false,
     "title": "【SC公告】Featured Offer 資格要求更新 — 取消賣家資格門檻",
     "summary": "自 2026 年 7 月起，Amazon 將逐步取消 Featured Offer（購物車）的賣家資格審核門檻。所有賣家的 offer 將自動被納入評估，直接依競爭力定價、配送速度與表現決定是否獲得 Featured Offer。預計 2026 年底前全球完成。",
     "impact": "重大利好！過去因資格門檻無法競爭 Buy Box 的新賣家或小賣家，現在有機會直接參與 Featured Offer 排名。對已有資格的賣家來說，競爭將更加激烈。",
@@ -3282,6 +3444,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "Trump 暫緩對伊攻擊、Brent 回落至 $109——但海峽仍僅 4% 通行量，伊朗「解除封鎖換開放」條件未變",
     "summary": "Brent 原油 5/19 回落至約 $109/桶（前一交易日 $111.23），因 Trump 宣布暫緩原定週二的對伊攻擊——據報沙烏地、卡達、UAE 領導人勸阻。但海峽實質狀態未改善：IMF PortWatch 數據顯示僅 4 艘船通過海峽（正常量的 4%），商業航運實質關閉。伊朗條件不變：要求美國解除海上封鎖、釋放凍結資金、放寬制裁後才恢復通行。The Guardian 5/15 報導伊朗外長 Araghchi 稱海峽為「伊朗-阿曼專屬水域」，正與阿曼協調未來管理機制。短期內全面恢復通行的可能性仍極低。",
     "impact": "油價短暫回落不改變結構性問題：(1) 海峽通行量僅正常的 4% = 商業航運仍實質中斷，AE/SA 站點的海運補貨路線持續受阻；(2) 伊朗堅持「解除封鎖換開放」= 即使停火，恢復正常通行仍需漫長談判；(3) Trump 暫緩攻擊 ≠ 和平——僅是延後，局勢隨時可能再度升溫推高油價；(4) 對 AU 賣家：亞洲-中東-歐洲航線持續繞行好望角，運費與時效壓力不減。唯一正面訊號：油價從 $111 回落至 $109，燃油附加費短期內不會再加碼。",
@@ -3308,6 +3471,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳洲消費信心微升但仍歷史低位：Westpac +3.5% 至 83、ANZ +2.3pts 至 66.4——經濟前景子指標續跌，衰退擔憂未散",
     "summary": "5/19 公布的兩大消費信心指標均小幅回升但仍處歷史低位：(1) Westpac-Melbourne Institute 消費者情緒指數 5 月升 3.5% 至 83（4 月暴跌 12.5% 至 80.1 後的技術性反彈），Reuters 報導「仍然陰鬱」；(2) ANZ-Roy Morgan 週度信心升 2.3pts 至 66.4，但仍比一年前低 22.4 點，為歷史第八低。Westpac 報告指出：家庭財務評估改善，但經濟前景子指標續跌——「未來一年經濟狀況」仍下滑 12.4% 至 75.3。失業擔憂雖略降但仍處高位。Ragtrader 指出信心比 2026 年均值低 5.2 點。整體而言：消費者對個人財務稍感寬慰（油價短暫回落+預算案減稅），但對經濟大方向仍極度悲觀。",
     "impact": "信心微升不改變消費疲軟大趨勢：(1) Westpac 83 仍遠低於 100 中性線 = 消費者持續延遲非必需品購買；(2) ANZ 66.4 為歷史第八低 = 零售環境仍處「危機模式」；(3) 經濟前景子指標續跌 = 消費者預期未來更差，傾向儲蓄而非消費；(4) 但「家庭財務」子指標改善 = 預算案減稅+油價短暫回落讓部分消費者感覺「沒那麼糟」——這可能轉化為 Prime Day 的脈衝式消費。對 AU 站點賣家：整體需求疲軟，但促銷活動的轉化率可能因「壓抑需求釋放」而優於預期。",
@@ -3334,6 +3498,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "",
+    "ai": false,
     "title": "Amazon Prime Day 2026 全球提前至 6 月（含 AE/SA）——但澳洲維持 7 月，跨站點賣家面臨分批備貨壓力",
     "summary": "Amazon 全球總部確認 Prime Day 2026 提前至 6 月舉行，涵蓋美國、UAE、沙烏地等 26 個站點。但 Amazon Australia 5/7 獨立宣布 AU 站 Prime Day 維持 7 月，並招聘 850 名季節性員工備戰。這是 Prime Day 歷史上首次出現「AE/SA 6 月、AU 7 月」的分裂時程。TechRadar 5/19 確認「美國 6 月的時程尚未確認適用於澳洲」。Variety 預估全球 Prime Day 落在 6/15-6/22 週間。對跨站點賣家而言，這意味著需要在 4-5 週內完成 AE/SA 備貨，同時為 AU 7 月場次準備第二波庫存。",
     "impact": "Prime Day 時程分裂對跨站點賣家構成顯著運營壓力：(1) AE/SA 6 月 Prime Day = 備貨截止日可能在 5 月底至 6 月初——在海峽危機下時間極為緊迫；(2) AU 7 月 Prime Day = 需要分批備貨，資金周轉壓力加大；(3) 好消息：AU 7 月時程與 7/1 關稅廢除完美銜接——部分品類可享受更低進口成本；(4) AE/SA 賣家注意：6 月 Prime Day 與 ZATCA 6/30 截止日重疊——合規與促銷準備需同步進行。Amazon AU 招聘 850 人（去年 600 人）顯示平台對 AU Prime Day 規模的信心。",
@@ -3360,6 +3525,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "SA",
+    "ai": false,
     "title": "ZATCA Wave 24 倒數 42 天：6/30 截止日與 Prime Day 撞期——SA 中小賣家面臨合規+促銷雙重壓力",
     "summary": "距離 ZATCA Wave 24 截止日（6/30）僅剩 42 天，且與 Amazon SA Prime Day（6 月）時程高度重疊。本波次要求年營收 SAR 375,000-750,000 的中小企業完成 ERP 系統與 Fatoora 平台整合。Vertex 5/11 更新了 ZATCA 技術規則文件，顯示整合要求持續細化。同時，罰款豁免計畫也將於 6/30 截止——企業可在不受罰的情況下修正過去發票錯誤，逾期後首次違規罰款 SAR 5,000 起。對同時需要準備 Prime Day 促銷的 SA 賣家而言，接下來 6 週將是極高壓的「雙線作戰」期。",
     "impact": "ZATCA 截止日與 Prime Day 撞期放大了 SA 賣家的運營壓力：(1) 42 天內需同時完成系統整合+Prime Day 備貨+促銷設定——資源分配是關鍵挑戰；(2) 若因忙於 Prime Day 而忽略合規，6/30 後每筆不合規發票都可能被罰 SAR 5,000；(3) Prime Day 期間的大量訂單 = 大量發票——若系統未整合完成，違規數量將倍增；(4) 罰款豁免期同步截止 = 過去的錯誤必須在 Prime Day 前修正。建議：合規優先於促銷——沒有合規基礎的銷售增長是不可持續的。",
@@ -3386,6 +3552,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "貿易"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳歐 FTA 正式簽署後進入批准程序——99% 關稅取消將降低歐洲品牌進入 AU 成本，對本地賣家構成中期競爭壓力",
     "summary": "澳洲與歐盟 3/24 正式簽署自由貿易協定（歷時 8 年談判），目前進入各國議會批准程序。協定核心：取消 99% 以上雙邊貿易關稅，涵蓋汽車、機械、食品飲料、化妝品等品類。DW 報導每年為歐盟企業節省 €10 億關稅。CBA 分析指出「變化不會立即生效」——需完成批准程序後才正式實施，預計 2027 年初。對 Amazon AU 賣家的影響：歐洲品牌進入澳洲市場的成本將大幅降低，中期內將加劇平台上的品牌競爭。同時，7/1 起 497 項「擾民關稅」廢除已確認——兩項政策疊加將重塑 AU 進口成本結構。",
     "impact": "澳歐 FTA 對 AU 站點賣家是「雙面刃」：(1) 若你銷售歐洲品牌商品——進口成本將在 FTA 生效後顯著降低，利潤空間改善；(2) 若你與歐洲品牌競爭——更多歐洲品牌將以更低成本進入 AU 市場，競爭加劇；(3) 短期內（2026）影響有限——批准程序需時，預計 2027 年初才生效；(4) 與 7/1 擾民關稅廢除疊加——2026 下半年至 2027 年，AU 進口成本結構將經歷系統性重塑。品類影響最大：汽車零件、機械、化妝品、食品飲料、服飾。",
@@ -3413,6 +3580,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "伊朗正式化荷姆茲海峽收費機制：船舶須取得通行許可並繳費——Trump 警告「時鐘在滴答」，Brent 原油飆至 $111/桶",
     "summary": "伊朗國會國安委員會主席 Ebrahim Azizi 5/16 宣布，伊朗已準備好一套「專業機制」管理海峽交通，將於近日公布。該機制要求船舶取得通行授權並繳納費用，據報部分船舶已被收取高達 200 萬美元通行費。與美國「Project Freedom」護航行動相關的船舶將被排除在外。Trump 5/17 在 Truth Social 警告伊朗「時鐘在滴答，最好快點行動」。伊朗外長 Araghchi 在印度表示「完全無法信任美國人」，停火搖搖欲墜。Brent 原油週一跳漲至 $111.42/桶（+2%），自戰爭開始以來已上漲約 50%。和談陷入僵局，海峽短期內全面開放的可能性極低。",
     "impact": "伊朗將海峽收費「制度化」意味著即使停火達成，未來通行成本也將永久增加——這不再是臨時附加費，而是結構性成本上升。對 AE/SA 站點賣家：(1) 海運補貨成本將因通行費而進一步上升，船公司必然轉嫁給貨主；(2) 與 Project Freedom 相關的船舶被排除 = 使用美系/西方船公司的風險更高；(3) 油價 $111 = 燃油附加費持續攀升。對 AU 賣家：亞洲-歐洲-中東航線持續受阻，經海峽的貨物成本與時效均惡化。整體而言，物流成本壓力在 2026 下半年不會緩解。",
@@ -3439,6 +3607,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳洲衰退警報升溫：GDP 成長預測降至 1.25%、消費信心歷史第四低 64.1——RBA 預期長期維持 4.35% 不動",
     "summary": "多項數據顯示澳洲經濟正快速惡化：(1) Treasury 預算案預測若中東戰爭持續，GDP 成長將從 2.6% 降至 1.25%（比基準情境低 0.5%）；(2) ANZ-Roy Morgan 消費者信心 5/12 公布為 64.1（歷史第四低），RBA 升息至 4.35% 後所有子指標全面下滑；(3) Westpac 消費者情緒指數 4 月暴跌 12.5% 至 80.1，為 2022-23 生活成本危機以來最低；(4) RBA 自身預測經濟成長將在年底觸底 1.3% 並維持至 2027 年中。ANZ Research 預期 RBA 將在 4.35% 長期暫停，但不排除經濟進一步惡化的風險。紐西蘭 Newsroom 5/18 以「澳洲正走向 35 年來首次衰退」為題報導。",
     "impact": "澳洲經濟環境對 Amazon AU 站點賣家構成多重壓力：(1) 消費信心歷史低位 = 消費者延遲購買、等促銷、減少非必需品支出；(2) GDP 成長 1.25-1.3% = 整體零售市場萎縮風險，電商也難以獨善其身；(3) 利率 4.35% 長期不動 = 房貸壓力持續，可支配收入被壓縮；(4) 但衰退環境下消費者更傾向線上比價 = Amazon 作為「性價比平台」可能相對受益。對賣家策略：高單價品類（家電、電子）需求將持續疲軟，中低價日用品相對抗跌。7 月 Prime Day 將是消費者「等促銷」心態的集中釋放點。",
@@ -3465,6 +3634,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AE",
+    "ai": false,
     "title": "UAE 電子發票 ASP 指定截止日延至 10 月 30 日——7 月 1 日 Pilot 照常啟動，年營收 >AED 5,000 萬企業首批強制上線 2027/1/1",
     "summary": "UAE 財政部 5/11 宣布修訂電子發票相關部長令：年營收超過 AED 5,000 萬的大型企業指定 ASP（認證服務提供商）的截止日從原定 7/31 延至 10/30/2026。但整體時程不變——7/1 Pilot 階段照常啟動，2027/1/1 強制上線。同時放寬 ASP 認證規則：允許白標模式、外包及與第三方 PSP 技術合作，但合規責任仍由 ASP 承擔。Peppol 認證仍為強制要求，PSP 方案須具備至少 2 年電子發票運營經驗。Khaleej Times 5/11 報導，FTA 官員確認 Pilot 將從 7/1 開始，首批對象為年營收 >AED 5,000 萬企業。",
     "impact": "對 Amazon AE 站點賣家的影響取決於營收規模：(1) 年營收 >AED 5,000 萬的大型賣家：ASP 指定截止日延至 10/30 是好消息，多了 3 個月準備時間，但 2027/1/1 強制上線不變——不可鬆懈；(2) 中小型賣家（<AED 5,000 萬）：目前不在首批範圍，但 2027 年後續波次將逐步納入——應開始評估系統準備度；(3) 7/1 Pilot 啟動意味著 UAE 電子發票生態系統正式運轉——ASP 選擇將在 Q3 變得更清晰。與 SA ZATCA 6/30 截止日相比，AE 時程較寬鬆，但跨站點賣家應同步規劃。",
@@ -3491,6 +3661,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "SA",
+    "ai": false,
     "title": "ZATCA Wave 24 倒數 43 天：SAR 37.5 萬-75 萬營收 SME 須在 6/30 前完成 Fatoora 整合——罰款豁免期同步截止",
     "summary": "沙烏地 ZATCA Wave 24（Phase 2 電子發票最大規模擴展）6/30 截止日逼近，距今僅剩 43 天。本波次首次將年營收 SAR 375,000-750,000 的中小企業納入強制整合範圍。Alvarez & Marsal 及多家稅務顧問公司近期發布提醒，強調受影響納稅人必須在截止日前完成 ERP 系統與 Fatoora 平台的整合。ZATCA 罰款結構為首次違規 SAR 5,000 起，重複違規可達 SAR 50,000。同時，「罰款豁免與免除計畫」也將於 6/30 同步截止——企業可在不受標準罰款的情況下修正過去的發票錯誤，逾期後將恢復正常罰則。",
     "impact": "對 Amazon SA 站點中小型賣家是緊迫的合規截止日：(1) 年營收 SAR 37.5 萬-75 萬的賣家若未在 6/30 前完成整合，將面臨 SAR 5,000 起的罰款；(2) 罰款豁免期同步截止 = 過去的發票錯誤必須在 6/30 前修正，否則將被追溯處罰；(3) 43 天的時間對尚未開始整合的賣家而言非常緊迫——ERP 對接 Fatoora 平台通常需要 4-6 週；(4) 對跨站點賣家：SA 6/30 截止日早於 AE ASP 指定截止日 10/30——應優先全力處理 SA。",
@@ -3517,6 +3688,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "貿易"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳洲預算案確認 7/1 起廢除 497 項「擾民關稅」+ 擴大 Trusted Trader——每年省 $1.57 億合規成本，Prime Day 備貨通關可望加速",
     "summary": "Baker McKenzie 5/14 分析澳洲 2026-27 預算案貿易措施：政府將從 7/1 起廢除額外 497 項「nuisance tariffs」，加上 2024 年 7 月已廢除的 457 項，累計約 1,000 項。涵蓋品類包括酒杯、輪胎、空調、人造奶油等，旨在簡化約 AUD $230 億的貿易流程。同時撥款 $760 萬擴大 Australian Trusted Trader Program，簡化邊境通關。Treasury 估計每年為企業節省 $1.57 億合規成本。此外，Approved Exporter Scheme 將免除原產地證書需求（適用 ASEAN-ANZFTA 及 RCEP）。",
     "impact": "對 AU 站點賣家是直接利好：(1) 部分進口商品從 7/1 起關稅降低——若品類在清單中，進口成本直接改善 2-5%；(2) Trusted Trader 擴大 = 通關速度加快，對 7 月 Prime Day 備貨特別有利——在海峽危機導致船期不穩的環境下，通關效率提升格外重要；(3) 這些關稅雖單品金額不大（稱為「nuisance」），但對大量進口的賣家累積效應顯著。時機上與 Prime Day 7 月完美銜接——7/1 生效的關稅減免可直接降低 Prime Day 備貨成本。",
@@ -3536,6 +3708,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "荷姆茲海峽再爆衝突：一艘船在 UAE 外海遭扣押駛向伊朗、印度貨船遭攻擊沉沒——Trump-Xi 同意海峽須開放但伊朗不買帳",
     "summary": "AP 5/14 報導，一艘停泊在 UAE Fujairah 港外的船舶遭「未經授權人員」登船扣押，目前正駛向伊朗水域。同日，印度籍貨船在阿曼外海遭攻擊起火後沉沒（船員已獲救）。伊朗宣稱海峽「自古屬於伊朗，不惜任何代價都不會放棄」。與此同時，Trump 與習近平在北京會談後發表聲明，雙方同意「荷姆茲海峽必須保持開放」，中國船舶已在伊朗新協議下開始通行——但這是「有條件通行」而非自由通行，僅限中國船舶。Brent 原油收盤 $105.72/桶。約 2,000 艘船仍滯留海峽兩側。",
     "impact": "Fujairah 是 AE/SA 站點賣家海運補貨的關鍵中轉點。船舶在 Fujairah 外海遭扣押意味著即使「停泊等待」也不安全——保險費率將再次飆升。印度貨船沉沒事件將進一步嚇退商船進入海峽區域。中國船舶有條件通行是正面信號，但對非中國船舶無幫助。對 AE/SA 賣家：海運補貨風險持續升高，戰爭風險附加費（War Risk Surcharge）可能再度上調。對 AU 賣家：亞洲-中東航線持續受阻，經由海峽的貨物延誤風險極高。油價 $105 = 物流成本壓力不減。",
@@ -3562,6 +3735,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳洲消費者信心跌至歷史第四低 64.1——RBA 第三次升息後信心崩潰，53% 民眾認為「現在不是買大件商品的時候」",
     "summary": "ANZ-Roy Morgan 5/14 公布最新數據：澳洲消費者信心指數本週暴跌 3.1 點至 64.1，為有紀錄以來第四低。較去年同期低 20.3 點，較 2026 年週均值 72.3 低 5.1 點。ANZ 經濟學家 Sophia Angala 指出，RBA 將利率升至 4.35% 後，所有子指標全面下滑——個人財務信心領跌。僅 14% 澳洲人認為家庭財務比去年好（56% 認為更差）；僅 4% 預期未來一年經濟好轉（48% 預期壞時光）。最關鍵的是：僅 13% 認為現在是購買大件商品的好時機，53% 認為是壞時機。ANZ Research 預期 RBA 將在 4.35% 暫停一段時間。",
     "impact": "消費信心歷史第四低直接衝擊 Amazon AU 站點的銷售前景：(1) 53% 認為「不是買大件的時候」= 家電、電子產品、家具等高單價品類需求將受壓；(2) 個人財務信心領跌 = 消費者將更傾向比價、等促銷、減少衝動購買；(3) 但 ANZ 預期 RBA 暫停升息 = 信心可能已觸底，7 月 Prime Day 前有望小幅回升。對賣家策略的影響：高單價商品需要更強的促銷力度才能轉化，低單價日用品相對抗跌。Prime Day 7 月的折扣深度可能需要加大才能刺激消費。",
@@ -3588,6 +3762,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "貿易"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳洲預算案確認 7/1 起廢除 497 項「擾民關稅」+ 擴大 Trusted Trader 計畫——每年為企業省下 $1.57 億合規成本",
     "summary": "Baker McKenzie 5/14 分析澳洲 2026-27 預算案貿易措施：政府將從 2026 年 7 月 1 日起廢除額外 497 項「nuisance tariffs」（擾民關稅），加上 2024 年 7 月已廢除的 457 項，累計約 1,000 項。此舉旨在「簡化約 AUD $230 億的貿易流程」，涵蓋品類包括酒杯、輪胎、空調、人造奶油等。同時撥款 $760 萬擴大 Australian Trusted Trader Program，簡化邊境通關流程，並推出 Approved Exporter Scheme 免除原產地證書需求（適用 ASEAN-ANZFTA 及 RCEP）。Treasury 估計每年為企業節省 $1.57 億合規成本。",
     "impact": "對 AU 站點賣家是直接利好：(1) 廢除 497 項關稅意味著部分進口商品（輪胎、空調、酒杯等）從 7/1 起進口成本直接降低——若你的品類在清單中，利潤率將改善；(2) Trusted Trader 擴大 = 通關速度加快，對 Prime Day 7 月備貨特別有利；(3) Approved Exporter Scheme 免除原產地證書 = 出口至 ASEAN/RCEP 國家的行政成本降低。但需注意：這些關稅本身金額不大（稱為「nuisance」），單品影響可能僅 2-5%，但累積效應顯著。",
@@ -3606,6 +3781,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "SA",
+    "ai": false,
     "title": "ZATCA Wave 24 倒數 46 天：SAR 37.5 萬-75 萬營收 SME 須在 6/30 前完成 Fatoora 平台整合——罰款豁免期同步截止",
     "summary": "沙烏地阿拉伯 ZATCA Wave 24（Phase 2 電子發票最大規模擴展）將於 6 月 30 日截止，首次將年營收 SAR 375,000-750,000 的中小企業納入強制整合範圍。ZATCA 自 4/1 起陸續通知受影響納稅人。同時，「罰款豁免與免除計畫」（允許企業在不受標準罰款的情況下修正過去錯誤）也將於 6/30 同步截止。Wave 24 完成後，沙烏地將實現 Vision 2030 目標中 SME 對 GDP 貢獻從 20% 提升至 35% 的關鍵里程碑。",
     "impact": "對 Amazon SA 站點賣家（特別是年營收 SAR 37.5 萬-75 萬的中小賣家）是緊迫的合規截止日。若你在 SA 站點的年營收落在此區間且尚未收到 ZATCA 通知，應主動確認狀態。未在 6/30 前完成 Fatoora 平台整合將面臨罰款（首次違規 SAR 5,000 起）。罰款豁免期同步截止意味著過去的發票錯誤必須在 6/30 前修正。對跨站點賣家（SA + AE）：SA 截止日 6/30 早於 AE ASP 指定截止日 10/30——應優先處理 SA 合規。",
@@ -3628,6 +3804,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "Amazon AU 宣布招聘 850 名季節性員工備戰 7 月 Prime Day——全澳 FC 擴容，同步開放 Flex 配送夥伴",
     "summary": "Amazon Australia 官方 5/12 宣布將在全澳物流中心及配送站點招聘 850 名季節性員工，為 7 月 Prime Day 做準備。職位覆蓋 NSW、VIC、QLD、SA、WA，無需經驗。APAC Prime 總監 Arno Lenior 表示：「Prime Day 7 月回歸，會員將能享受大量商品的超值優惠。在澳洲人希望每一分錢都花得值的時候，Prime 提供前所未有的價值。」同時開放 Amazon Flex 配送夥伴申請。此舉顯示 Amazon AU 對 Prime Day 銷量有信心，正在擴大物流產能以應對訂單高峰。",
     "impact": "Amazon AU 大規模招聘 850 人是 Prime Day 規模擴大的強烈信號：(1) 物流產能擴充 = Amazon 預期 Prime Day 訂單量將創新高——賣家應確保庫存充足；(2) 全澳 5 州覆蓋 = 配送速度將進一步提升，Prime 會員體驗改善有助於轉化率；(3) 官方強調「每一分錢花得值」= Prime Day 將主打性價比，與消費信心低迷的大環境呼應——折扣力度可能是歷年最大。對賣家的機會：Prime Day 是消費者「等促銷再買」心態的最佳釋放點，備貨充足的賣家將受益。",
@@ -3651,6 +3828,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "伊朗正式成立「波斯灣海峽管理局」(PGSA) 收取荷姆茲海峽通行費——單船費用高達 $200 萬美元，40 項資料申報始可通行",
     "summary": "Lloyd's List 5/12 報導，伊朗已正式成立 Persian Gulf Strait Authority (PGSA)，要求所有通過荷姆茲海峽的船舶必須事先取得通行許可並繳納通行費。船舶須填寫超過 40 項資料的「Vessel Information Declaration」表格，包括船東、保險、船員國籍、貨物明細及航線等。伊朗議員 Boroujerdi 證實部分船舶已支付高達 $200 萬美元的通行費，以人民幣結算。目前印度、巴基斯坦已與德黑蘭談判取得通行權，但美國及以色列相關船舶仍被完全禁止通行。Trump 稱此收費「非法」，但 UNCLOS 缺乏強制執行機制。此舉將海峽從「自由通行」轉變為「收費站」模式，對全球航運成本產生結構性影響。",
     "impact": "PGSA 通行費制度化意味著即使海峽「恢復通行」，運費也不會回到戰前水平——$200 萬/船的費用將直接轉嫁至運費。以 14,000 TEU 貨櫃船計算，每 TEU 增加約 $140-150 的通行費成本。對 AE/SA 站點賣家：海運補貨成本將永久性上升，即使停火達成也無法完全恢復。對 AU 賣家：經由海峽的亞洲-中東-歐洲航線成本結構性改變，繞行好望角可能反而成為長期更經濟的選擇。油價方面，通行費制度化將支撐 Brent 維持 $95+ 水平，持續推升全球物流成本。",
@@ -3677,6 +3855,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳洲聯邦預算案今晚公布：負扣稅限縮（僅限新建物業）、CGT 折扣改為通膨指數化、每人最高退稅 $300——燃油消費稅減半不延長",
     "summary": "Treasurer Jim Chalmers 今晚（5/12）將公布 2026-27 聯邦預算案，已確認的重大措施包括：(1) 負扣稅（negative gearing）限縮至新建物業，現有投資物業有一年過渡期至 2027/7/1；(2) 資本利得稅（CGT）50% 折扣將改為 1999 年前的通膨指數化模型（indexation），同樣設一年過渡期；(3) 每位納稅人最高 $300 稅務抵免；(4) 國防支出十年增加 $530 億；(5) NDIS 改革節省 $370 億。Guardian 報導預算底線四年改善 $450 億。關鍵缺席：燃油消費稅減半（26.3c/L）確認不延長，7 月起恢復全額 52.6c/L。Chalmers 稱這是「最具改革野心的預算」。",
     "impact": "對 AU 站點賣家的多重影響：(1) $300 稅務抵免為小額消費刺激，但不足以抵消利率上升的壓力——對非必需品銷售幫助有限；(2) 負扣稅改革短期可能壓抑房市投資信心，房東型消費者可支配收入下降，影響中高價位商品需求；(3) 燃油消費稅 7/1 恢復全額 = 油價再漲 26c/L，物流成本將在 Australia Post 19.5% 附加費基礎上再次攀升；(4) 預算無明確消費刺激大禮包，EOFY 後消費環境預計更加嚴峻。正面因素：$450 億底線改善顯示財政紀律，長期有助穩定利率預期。",
@@ -3703,6 +3882,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AE",
+    "ai": false,
     "title": "UAE 財政部延長電子發票 ASP 指定截止日至 10 月 30 日——ASP 認證規則放寬允許白標模式，2027/1/1 強制上線不變",
     "summary": "UAE 財政部 5/11 宣布修訂 Ministerial Decision No. 244/2025，將大型企業（年營收 > AED 5,000 萬）指定 ASP 的截止日從原定 7/31 延長至 2026 年 10 月 30 日。延期原因為市場準備度不足、定價問題及供應商可用性。同時修訂 ASP 認證框架（MD No. 64/2025）：允許 ASP 使用第三方 PSP 白標方案、外包技術活動、組建本地-國際合作夥伴關係。但合規責任仍由 ASP 承擔。新增要求：PSP 技術須具備至少 2 年電子發票運營經驗。Peppol 認證仍為強制要求。2027/1/1 全面強制上線時程不變。",
     "impact": "對 AE 站點賣家是好消息——ASP 指定截止日從 7/31 延長至 10/30，多出整整 3 個月準備時間。上期日報建議「本週開始評估 ASP」的緊迫性降低，但不代表可以拖延：2027/1/1 強制上線不變，10 月底指定 ASP 後仍需 2 個月整合測試。ASP 認證放寬（白標、外包）意味著市場上將有更多供應商選擇，價格競爭可能降低成本。對跨站點賣家（AE + SA）：SA 的 ZATCA Wave 24 截止日仍為 6/30 不變，兩邊時程已錯開——可先集中資源完成 SA 整合，再處理 AE ASP 選擇。",
@@ -3725,6 +3905,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "ANZ-Roy Morgan 消費者信心指數暴跌至 64.1——史上第四低，較去年同期崩跌 20.3 點；僅 13% 認為現在適合購買大型商品",
     "summary": "ANZ-Roy Morgan 5/12 公布最新消費者信心指數，在 RBA 5/5 升息至 4.35% 後，指數暴跌 3.1 點至 64.1，為 1973 年有紀錄以來第四低。較去年同期（87.5）大幅下跌 20.3 點，遠低於 2026 年週均 72.3。所有分項指標全面下滑：僅 14% 認為家庭財務比去年好（56% 認為更差）；僅 13% 認為現在是購買大型家用品的好時機（53% 認為是壞時機）；僅 4% 預期未來一年經濟好轉。ANZ 經濟學家 Sophia Angala 表示：「信心處於歷史低位，預示消費需求將進一步疲軟。」Westpac 消費者面板同步顯示 Q1 實質消費增長僅 0.6%，扣除燃油後更低。",
     "impact": "消費者信心史上第四低 + 僅 13% 認為適合買大型商品 = AU 站點非必需品類（電子產品、家具、時尚）面臨嚴峻需求壓力。RBA 連續三次升息至 4.35% 直接壓縮家庭可支配收入——以 $500K 房貸計算，月供較年初增加約 $400。對賣家的具體影響：(1) 高單價商品轉化率將持續下降；(2) 消費者更傾向等待促銷/折扣才購買；(3) 必需品類（日用品、食品、嬰兒用品）相對抗跌。Westpac 數據顯示燃油支出擠壓其他消費——Q1 燃油支出暴增但整體消費僅微增 0.6%。",
@@ -3751,6 +3932,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "Amazon AU 正式宣布 Prime Day 7 月舉辦——招聘 850 名季節性員工，全國 FC 及物流站點擴編備戰",
     "summary": "Amazon Australia 5/12 透過官方新聞稿正式宣布將在 7 月舉辦 Prime Day，並已啟動全國 850 名季節性員工招聘。職位分布在 Sydney、Melbourne、Perth、Brisbane、Adelaide 等地的 Fulfilment Centre 與物流站點，主要負責揀貨、包裝與出貨。職位無需經驗或學歷要求。此舉結合先前宣布的 Queensland $7.5 億機器人 FC 投資，顯示 Amazon AU 對下半年銷售前景保持信心。9News 與 About Amazon AU 同步報導。",
     "impact": "Prime Day 7 月確認 = 第三方賣家最重要的上半年促銷節點已定。850 人招聘規模與去年相當，顯示 Amazon 預期 Prime Day 銷售不會因消費信心低迷而大幅縮水——平台可能透過更大折扣力度吸引「等促銷才買」的消費者。對賣家的時程意義：距 Prime Day 約 7-8 週，考慮 Australia Post 6/1 燃油附加費漲價 + 7/1 燃油消費稅恢復，6 月中前完成入倉是最佳時機。FBA 入倉截止日預計在 Prime Day 前 2-3 週公布。",
@@ -3774,6 +3956,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "Trump 斥伊朗和平回覆「完全不可接受」——荷姆茲海峽 Project Freedom 暫停、僅 2 艘船通過，海峽封鎖恐長期化",
     "summary": "5/10 伊朗透過巴基斯坦向美方遞交和平提案回覆，要求解除所有制裁並在所有戰線停火。Trump 當日在 Truth Social 發文稱回覆「totally unacceptable」，未說明下一步。此前 5/5 Trump 宣布暫停 Project Freedom（護航商船通過海峽的行動），僅在 48 小時內護送 2 艘船通過。Al Jazeera 報導沙烏地阿拉伯因不滿美方行動風險，暫停美軍使用其基地與領空，迫使 Trump 叫停。目前海峽仍處於「美方封鎖伊朗港口 + 伊朗封鎖商船」的雙重封鎖狀態。CBS 確認停火名義上仍在，但雙方持續交火——5/5 伊朗快艇攻擊美軍護航艦隊，美方擊沉數艘伊朗小艇。Netanyahu 5/10 警告「戰爭尚未結束」。",
     "impact": "談判破裂意味著海峽短期內不會恢復正常通行——Project Freedom 暫停後僅 2 艘船成功通過，數千艘仍滯留。AE/SA 站點賣家的海運補貨路線實質上仍然中斷。沙烏地暫停美軍基地使用權更增添區域不確定性。油價將因談判失敗維持高位（Brent 預計維持 $95-105），直接推升空運與陸運成本。對 AU 賣家，繞行好望角的額外成本（+$2,000-3,000/TEU）將持續至少到 Q3。最壞情況：若停火正式破裂，海峽可能再次完全封閉，AE/SA 站點面臨嚴重斷貨風險。",
@@ -3801,6 +3984,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "AU",
+    "ai": false,
     "title": "Australia Post 燃油附加費 6/1 起暴漲至 19.5%（StarTrack Express 30.2%）+ 聯邦預算案明日公布：負扣稅改革、CGT 調整確認入案",
     "summary": "Australia Post 宣布自 6 月 1 日起，國內包裹燃油附加費從 12% 大幅調升至 19.5%，StarTrack Express/Premium 從 22.7% 升至 30.2%。SMH 5/11 報導這是自中東燃油危機以來最大幅度調整，附加費從 4 月初的 4.8% 在兩個月內飆升至 19.5%。同時，聯邦預算案將於明日（5/12）公布，已確認包含：(1) 負扣稅（negative gearing）限縮、(2) 資本利得稅（CGT）折扣調整、(3) 信託稅務新規。Treasurer Chalmers 警告「經濟被全球動盪綁架」，預算將包含 $640 億重新分配與節約措施。燃油消費稅減半（26.3c/L）預計不會延長。住房方面投入 $20 億基礎設施資金。",
     "impact": "19.5% 燃油附加費直接衝擊 AU 站點所有使用 Australia Post/StarTrack 配送的賣家——以平均 $10 運費計算，附加費從 $1.20 升至 $1.95（+62.5%）。FBA 賣家雖由 Amazon 吸收部分成本，但預計 Amazon 將在 Q3 調整 FBA 費率轉嫁。FBM 賣家立即受影響。預算案方面：負扣稅改革可能短期壓抑房市信心但長期改善住房可負擔性；燃油消費稅減半不延長意味著 7 月起油價將再漲 26c/L，進一步推升物流成本。無明確消費刺激措施 = EOFY 後消費環境可能更加嚴峻。",
@@ -3831,6 +4015,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "平台"
     ],
     "market": "AU",
+    "ai": false,
     "title": "Amazon AU 宣布招聘 850 名季節性員工備戰 Prime Day 7 月——年營收逼近 $50 億 AUD，廣告與訂閱收入首超商品銷售",
     "summary": "9News 5/11 報導 Amazon Australia 宣布將在全國招聘 850 名季節性員工，為 7 月 Prime Day 做準備。職位分布在 Sydney、Melbourne、Perth、Brisbane、Adelaide 等地的 FC 與物流站點，無需經驗或學歷。同時 SMH 4/27 報導 Amazon AU 2025 年營收逼近 $50 億 AUD，其中廣告、訂閱（Prime）與賣家服務費收入首次超過自營商品銷售——顯示 Amazon AU 正加速轉型為「平台收租」模式。此前 Amazon 已宣布投資 $7.5 億 AUD 在 Queensland 建設機器人 FC，預計容納 1,500 萬件小型商品。",
     "impact": "850 人招聘 + Queensland 新 FC 投資 = Amazon AU 對 Prime Day 及下半年銷售有信心，即使宏觀環境惡化。對第三方賣家的啟示：(1) Prime Day 7 月確認舉辦，需提前 4-6 週備貨入倉；(2) 廣告收入超越商品銷售意味著 Amazon 將持續推高廣告競價——賣家的 ACOS 壓力將增加；(3) Queensland 新 FC 上線後將改善 QLD/北部配送時效，但也意味著更多庫存分倉需求。營收 $50 億顯示 AU 站點規模已足夠大，值得持續投入。",
@@ -3857,6 +4042,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AE",
+    "ai": false,
     "title": "UAE 電子發票 4-Corner 模型 4/21 正式上線——7/1 試點啟動、大型企業 7/31 前須指定 ASP，違規罰款 AED 5,000/月",
     "summary": "UAE 財政部 4/21 正式啟動 Peppol 架構的 4-Corner 電子發票交換模型，企業現可透過 EmaraTax 平台選擇認證服務提供商（ASP）並開始 B2B 電子發票交換。ClearTax 確認時程：7/1 試點正式啟動（自願參與）、年營收 ≥ AED 5,000 萬的大型企業須於 7/31 前完成 ASP 指定、2027/1/1 起全面強制（覆蓋所有在 UAE 營業者，含非 VAT 登記）。目前 18 家 ASP 已在平台上線。Grant Thornton 確認所有相關立法已完成，VAT 法與規則已修訂。Ministerial Decision No. 243/2025 為法律基礎。違規罰款 AED 5,000/月。",
     "impact": "4-Corner 模型上線意味著 UAE 電子發票不再是「未來式」而是「現在進行式」。對 AE 站點賣家：(1) 年營收 > AED 5,000 萬的大型賣家距 ASP 指定截止僅剩 81 天（7/31）；(2) 2027/1/1 全面強制覆蓋所有營業者（含非 VAT 登記），中小型賣家也需準備；(3) 發票格式為 Peppol PINT AE（XML 結構化），與 SA 的 ZATCA XML 不同——跨站點賣家需同時支援兩套標準；(4) 在 AWS ME 區域仍不穩定的背景下，選擇 ASP 時需確認其基礎設施不依賴受影響的數據中心。",
@@ -3883,6 +4069,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "SA",
+    "ai": false,
     "title": "ZATCA Wave 24 整合截止倒數 50 天（6/30）：年營收 > SAR 375K 賣家須完成 Fatoora 平台對接，罰款取消倡議同步到期",
     "summary": "Alvarez & Marsal 確認 ZATCA Phase 2 第 24 波整合截止日為 2026 年 6 月 30 日，距今僅剩 50 天。年應稅營收超過 SAR 375,000（約 USD 100K）的 VAT 登記企業須完成 ERP/發票系統與 Fatoora 平台的 API 整合，實現 B2B 發票即時清算（clearance）與 B2C 發票報告。Wafeq 確認違規罰款結構：首次 SAR 5,000，12 個月內重複最高 SAR 50,000。ZATCA 同步推行的「罰款取消倡議」（Cancellation of Fines Initiative）亦於 6 月底到期——此前有違規紀錄的企業可在期限前修正以免除歷史罰款。Wave 23（1/1-3/31）已完成，Wave 24 為當前最新一波。",
     "impact": "SAR 375K（約 USD 100K）門檻覆蓋 SA 站點大多數活躍第三方賣家。系統整合通常需要 4-6 週（含測試），50 天的剩餘時間幾乎沒有緩衝。未合規後果：(1) 持續性罰款 SAR 5,000 起；(2) 無法開立合規發票可能影響 B2B 訂單；(3) 罰款取消倡議到期後，歷史違規將無法豁免。對於同時經營 AE 站點的賣家，需注意 SA（ZATCA XML）與 AE（Peppol PINT AE）是兩套完全不同的技術標準，不能共用同一套整合方案。",
@@ -3910,6 +4097,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "荷姆茲海峽突破：卡達 LNG 油輪 5/10 首次成功通過海峽駛往巴基斯坦——但停火極度脆弱，美伊仍在交火",
     "summary": "CNBC 5/10 報導，一艘卡達天然氣油輪週日成功通過荷姆茲海峽駛往巴基斯坦，為自 2 月底伊朗封鎖以來首艘非美軍護航的商船通過。此前 5/7 Maersk 一艘美國旗車輛運輸船在美國海軍護航下成功通過。然而停火極度脆弱：5/8 美軍攻擊兩艘試圖突破美方封鎖的伊朗油輪，伊朗革命衛隊威脅若再攻擊伊朗船隻將「重擊美國在區域的設施」。5/10 UAE 攔截兩架來自伊朗的無人機。英國國會報告確認海峽船流量仍僅為衝突前的 5%，全球約 20% 石油與 LNG 貿易受影響。美方仍在等待伊朗對和平提案的正式回覆。",
     "impact": "卡達油輪通過是積極信號，但海峽實質上仍處於「半封鎖」狀態——船流量僅恢復 5%。對 AE/SA 站點賣家而言，海運補貨仍不可靠，空運替代路線仍是主要選項。油價因持續不確定性維持高位，物流成本短期內不會顯著下降。若美伊談判破裂（伊朗革命衛隊威脅升級），海峽可能再次完全封閉，屆時 AE/SA 站點將面臨更嚴重的斷貨風險。對 AU 賣家，繞行好望角的額外成本（+$2,000-3,000/TEU）仍將持續。",
@@ -3936,6 +4124,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "RBA 連續第三次升息至 4.35%：通膨 4.6%、消費者信心 67.2 歷史低位——AU 站點 Q2 消費環境全面惡化",
     "summary": "RBA 5/5 以 8:1 票數決議升息 25 個基點至 4.35%，為 2026 年第三次連續升息。CPI 年增率達 4.6%（3 月數據），RBA 行長 Bullock 警告中東石油危機可能進一步推升通膨預期。ANZ-Roy Morgan 消費者信心指數 67.2（升息前採集），接近 1973 年有紀錄以來最低。四大銀行已跟進調升房貸利率。CBA 經濟學家認為 RBA 可能在 6 月暫停升息，但前提是通膨數據改善。聯邦預算案 5/12 公布，市場預期將包含消費刺激措施。Bullock 直言「澳洲人變窮了，沒有出路」，暗示經濟面臨滯脹風險。",
     "impact": "4.35% 利率 + 4.6% 通膨 + 67.2 信心指數 = AU 站點面臨近年來最惡劣的消費環境。房貸壓力加劇（平均每月多付 $150-200 AUD），消費者可支配收入進一步壓縮。非必需品類（電子、時尚、家居裝飾）將首當其衝。EOFY 促銷季（6 月）可能是上半年最後的銷售窗口——消費者會集中在折扣期購買。5/12 預算案若有稅務抵免（傳聞 $300/人），可能帶來短暫刺激但幅度有限。",
@@ -3963,6 +4152,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "UAE 5/10 再攔截伊朗無人機、Amazon 中東數據中心仍需數月修復——AE/SA 站點營運風險持續",
     "summary": "The National 5/10 報導 UAE 防空系統攔截兩架來自伊朗的無人機，無人員傷亡。自 2 月 28 日以來，UAE 已累計攔截 551 枚彈道飛彈、29 枚巡弋飛彈與 2,265 架無人機。CBS 報導停火持續受到考驗——卡達、科威特也報告無人機進入領空。同時 Ars Technica 5/1 報導 Amazon 數據中心（AWS ME 區域）在 3 月遭無人機攻擊後，完全修復仍需數月。Amazon 此前已暫停 Abu Dhabi 倉儲營運，第三方賣家物流通道受到嚴重影響。雖然停火名義上仍在，但實質安全威脅未消除。",
     "impact": "UAE 持續面臨安全威脅，Amazon AE 站點營運環境不穩定。AWS ME 區域修復需數月，依賴該區域雲端服務的賣家（ERP、庫存管理系統）可能持續面臨中斷。Abu Dhabi 倉儲暫停意味著 FBA 賣家的配送時效與覆蓋範圍受限。2,265 架無人機的累計數字顯示威脅是持續性的，非一次性事件。SA 站點雖未直接受攻擊，但區域物流網絡互相依賴，AE 中斷會連帶影響 SA 配送。",
@@ -3989,6 +4179,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "",
+    "ai": false,
     "title": "合規雙倒數：ZATCA Wave 24 電子發票整合剩 51 天（6/30）、UAE 大型企業 ASP 指定剩 82 天（7/31）——賣家整合窗口急速收窄",
     "summary": "SA 站點：ZATCA Phase 2 第 24 波整合截止日 6/30 距今僅 51 天。年應稅營收超過 SAR 375,000（約 USD 100K）的 VAT 登記企業須完成與 Fatoora 平台的系統整合。HalSimplify 確認此為最新一波，違規罰款 SAR 5,000 起跳，12 個月內重複最高 SAR 50,000。ZATCA「罰款取消倡議」同步於 6 月底到期。AE 站點：UAE 電子發票系統（EIS）要求年營收 ≥ AED 5,000 萬的大型企業須於 7/31 前指定認證服務提供商（ASP）。VATfaqs 確認 2027/1/1 起強制電子發票，覆蓋所有在 UAE 營業者（含非 VAT 登記）。目前 18 家 ASP 已在 EmaraTax 平台上線。違規罰款 AED 5,000/月。",
     "impact": "SA 站點：SAR 375K 門檻覆蓋大多數活躍賣家，系統整合通常需 4-6 週——剩餘 51 天幾乎沒有緩衝。未合規將面臨持續性罰款且無法開立合規發票。AE 站點：雖然全面強制要到 2027/1/1，但大型賣家 7/31 前須完成 ASP 選擇。在 AWS ME 區域不穩定的背景下，依賴雲端 ERP 的賣家整合工作可能受阻。兩個市場同時推進電子發票，跨站點賣家需要同時應對兩套不同的技術標準（ZATCA XML vs Peppol PINT AE）。",
@@ -4015,6 +4206,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "貿易"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳洲對中國熱軋鋼捲課徵 82% 反傾銷稅生效：倉儲基礎設施與金屬製品成本面臨上行壓力",
     "summary": "工業部長 Tim Ayres 5/6 簽署對中國熱軋鋼捲（HRC）課徵最高 82% 反傾銷與反補貼稅的最終裁定。AFR 報導反傾銷委員會認定中國出口商獲得不公平政府補貼並以低於成本價傾銷。稅率範圍 38%-82%，為近年來澳洲對中國鋼鐵最大規模關稅行動。此前已對中國鋼筋（24%）、螺栓等產品課稅。同時反傾銷委員會 4/30 另啟動對越南與韓國鍍鋅鋼的調查。中國已警告此舉將損害雙邊關係，市場關注是否引發報復措施。",
     "impact": "間接但廣泛的影響：(1) 熱軋鋼是倉儲貨架、物流設備的基礎原料，82% 關稅將推升 3PL 與倉儲服務的長期成本；(2) 金屬製品類賣家（家具、工具、戶外設備、廚具）若供應商使用中國 HRC，將面臨成本轉嫁；(3) 建築成本上升加劇住房短缺，進一步壓縮消費者可支配收入（疊加 RBA 升息效應）。若中國採取報復措施，可能影響從中國進口其他品類的通關速度或成本。",
@@ -4042,6 +4234,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "伊朗革命衛隊宣布荷姆茲海峽將在「新程序」下恢復安全通行；Trump 警告若協議未簽將恢復轟炸——海峽重開出現曙光但條件仍不明",
     "summary": "伊朗革命衛隊海軍 5/6 發表聲明，表示「隨著侵略者威脅的結束，在新程序下，海峽將恢復安全且可持續的通行」，但未說明具體條件與時程。這是自 2 月底海峽封鎖以來，伊朗首次正式表態將允許商船通行。Trump 隨即在社群媒體回應：若伊朗同意已談妥的條件，封鎖將解除、海峽對所有人開放（包括伊朗）；若不同意，「轟炸將以更高強度恢復」。伊朗外交部發言人確認已收到美方提案，正在審議中，將透過巴基斯坦轉達回覆。目前超過 1,500 艘商船與 20,000 名船員仍滯留海峽附近。CNA 報導革命衛隊同時感謝「遵守伊朗規定通過海峽的船長與船東」，暗示未來通行可能需要向伊朗申請許可。",
     "impact": "這是自封鎖以來最正面的信號——海峽可能在數天至數週內有條件重開。但「新程序」的具體內容不明，可能包括向伊朗申請通行許可、繳納通行費、或限制特定國籍船隻。即使海峽重開，1,500+ 艘滯留船隻同時湧入將造成嚴重港口擁堵，AE/SA 港口卸貨延遲可能持續 2-4 週。對 AU 賣家而言，遠東經中東至歐洲的航線恢復將降低繞行成本，但短期內運費可能因需求激增而維持高位。油價若因海峽重開預期而回落，將有助於降低物流成本。",
@@ -4068,6 +4261,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "貿易"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳洲對中國熱軋鋼捲課徵最高 82% 反傾銷稅：建築成本恐上升，賣家物流包材與倉儲設備成本面臨間接壓力",
     "summary": "澳洲工業部長 Tim Ayres 5/6 簽署對中國熱軋鋼捲（HRC）課徵最高 82% 反傾銷與反補貼稅的最終裁定，為近年來澳洲對中國鋼鐵產品最大規模的關稅行動。反傾銷委員會認定中國出口商獲得不公平政府補貼，並以低於成本價格傾銷至澳洲市場。此舉是 Albanese 政府保護本地製造業系列措施的一部分——此前已對中國鋼筋（24%）、螺栓、角珠等產品課徵反傾銷稅。Global Trade Alert 確認稅率範圍為 38%-82%。AFR 報導中國已警告此舉將損害雙邊關係。同時，澳洲反傾銷委員會 4/30 另啟動對越南與韓國鍍鋅鋼的反傾銷調查。",
     "impact": "熱軋鋼捲是建築、倉儲設備、貨架系統的基礎原料。82% 關稅將推升澳洲國內鋼材價格，間接影響：(1) 倉儲與物流基礎設施建設成本上升，可能反映在 3PL 費率調整；(2) 金屬製品類賣家（家具、工具、戶外設備）的採購成本上升；(3) 建築成本上升加劇住房短缺，進一步壓縮消費者可支配收入。對於從中國採購金屬製品的 AU 站點賣家，需評估供應商是否使用受影響鋼材，以及是否面臨成本轉嫁。此舉也可能引發中國報復性措施，影響中澳貿易環境。",
@@ -4090,6 +4284,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳洲消費者信心持續低迷：ANZ-Roy Morgan 指數 67.2（接近 1973 年以來最低），RBA 升息後市場預期消費將進一步萎縮",
     "summary": "ANZ-Roy Morgan 5/5 公布的消費者信心指數為 67.2，較前週微跌 0.6 點，維持在歷史低位附近（1973 年有紀錄以來最低為 63.1，4 月中旬錄得）。此數據在 RBA 5/5 第三次升息前採集，意味著升息後的實際信心可能更低。Westpac 4 月調查顯示信心暴跌 12.5% 至 80.1（Covid 以來最大單月跌幅），近期預期回落至 2022-23 年生活成本危機水準。ABC 報導 RBA 行長 Bullock 警告「企業需要漲價或裁員」，暗示經濟面臨滯脹風險。聯邦預算案將於 5/12 公布，PM Albanese 未排除為勞工提供最高 $300 的稅務抵免。",
     "impact": "消費者信心指數 67.2 為歷史性低位，且 RBA 升息後預計將進一步惡化。這意味著 AU 站點 Q2-Q3 的消費環境將極度疲軟——非必需品類面臨嚴峻挑戰。Bullock「漲價或裁員」的警告暗示企業利潤空間被壓縮，賣家面臨「成本上升但無法提價」的困境。5/12 預算案若包含稅務抵免，可能帶來短期消費刺激，但幅度有限（$300/人）。EOFY 促銷季（6 月）的表現將是關鍵指標——若消費者連折扣都不買單，下半年策略需要根本性調整。",
@@ -4116,6 +4311,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "SA",
+    "ai": false,
     "title": "ZATCA 第 24 波電子發票整合倒數 54 天：年營收 SAR 375K+ 企業 6/30 截止，整合窗口已進入最後階段",
     "summary": "ZATCA Phase 2 電子發票第 24 波整合截止日 6/30 距今僅剩 54 天。此波覆蓋 2022-2024 年間年應稅營收超過 SAR 375,000（約 USD 100,000）的 VAT 登記企業，須將電子發票系統與 ZATCA Fatoora 平台完成整合。Wafeq 最新指南強調違規罰款採累進制：首次 SAR 5,000，12 個月內重複違規最高 SAR 50,000。Alvarez & Marsal 確認整合期為 4/1-6/30，技術要求包括 XML/PDF-A3 格式、TLV 編碼 QR Code、CSID 註冊、與 Fatoora API 即時連接。ZATCA 官方確認「罰款取消倡議」延長至 6 月底——企業可修正過往違規並豁免歷史罰款，這是最後機會。尚未開始整合的企業，考慮到系統對接與測試通常需要 4-6 週，時間已極為緊迫。",
     "impact": "SAR 375K 年營收門檻（約 USD 100K）覆蓋大多數活躍的 Amazon SA 站點賣家。距截止日僅 54 天，而系統整合通常需要 4-6 週——這意味著尚未開始的賣家幾乎沒有緩衝時間。未合規將面臨 SAR 5,000 起跳的罰款，且重複違規快速累加至 SAR 50,000。罰款取消倡議 6 月底同步到期，是修正過往 VAT 違規的最後窗口。在荷姆茲海峽可能重開的背景下，SA 站點業務量可能回升，合規壓力將更加緊迫。",
@@ -4142,6 +4338,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AE",
+    "ai": false,
     "title": "UAE 電子發票 7/31 大型企業 ASP 指定截止倒數 85 天：Peppol 四角模型確認，覆蓋所有在 UAE 營業的企業（含非 VAT 登記者）",
     "summary": "UAE 電子發票系統（EIS）持續推進。VATupdate 最新播客確認 e-invoicing 為「全面性要求，覆蓋 UAE 境內幾乎所有商業交易」，包含 VAT 登記與非登記企業。大型企業（年營收 ≥ AED 5,000 萬）須於 7/31 前指定認證服務提供商（ASP），2027/1/1 起強制電子發票；VAT 登記中小企業須於 2027/7/1 前合規。ClearTax 確認 B2B 與 B2G 交易須以結構化 XML 格式透過 ASP 傳輸。iQuasar 報導 ERP 升級、主資料清理與 Peppol 整合通常需要數月準備。Grant Thornton 確認 18 家 ASP 已在 EmaraTax 平台上線。在 UAE 持續面臨安全威脅的背景下，FTA 目前未宣布延期。",
     "impact": "7/31 為大型企業指定 ASP 的截止日，距今 85 天。雖然全面強制要到 2027/1/1，但較大規模的 AE 站點賣家需要在未來 2-3 個月內完成 ASP 選擇與初步對接。覆蓋範圍擴大至非 VAT 登記者，意味著所有在 UAE 營業的賣家最終都需要合規。Peppol 四角模型要求發票透過認證中介傳輸，現有直接發票流程將需要調整。在 AWS ME 區域仍未完全恢復的背景下，依賴雲端 ERP 的賣家可能面臨整合困難。",
@@ -4169,6 +4366,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "Trump 暫停「Project Freedom」護航行動，稱美伊談判有「重大進展」；但伊朗連續第二天攻擊 UAE，海峽封鎖維持不變",
     "summary": "Trump 總統 5/5 晚間宣布暫停前一天才啟動的「Project Freedom」荷姆茲海峽護航行動，稱在巴基斯坦斡旋下美伊談判取得「重大進展」，雙方同意在封鎖維持的前提下暫停護航，以觀察協議能否最終簽署。國防部長 Hegseth 稍早表示停火「仍然有效」，護航任務本就是臨時性質。然而同日 UAE 國防部確認遭受伊朗連續第二天的飛彈與無人機攻擊——繼 5/4 攔截 15 枚飛彈與 4 架無人機後，5/5 再度啟動防空系統攔截新一波攻擊。伊朗否認發動攻擊。Reuters 報導 Trump 在白宮對記者表示伊朗軍力已被削弱至「只能發射玩具槍」，德黑蘭想要和平。但海峽封鎖仍維持「完全有效」，商船通行仍未恢復常態。Brent 原油維持在 $110+ 高位。",
     "impact": "護航行動暫停意味著荷姆茲海峽短期內不會恢復正常通行——封鎖明確維持。AE/SA 站點賣家的海運補貨時程仍無法預測。雖然美伊談判釋放正面信號，但 UAE 連續兩天遭攻擊顯示局勢遠未穩定。即使最終達成協議，海峽全面恢復通行仍需數週至數月。油價維持 $110+ 意味著空運與陸運成本持續高企。對 AU 賣家而言，遠東至中東航線的繞行成本與延誤將持續，經蘇伊士運河的歐洲線路同樣受影響。",
@@ -4199,6 +4397,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "RBA 確認升息至 4.35%：第三次連續加息完全逆轉 2025 年降息，四大銀行 5/15 起調升房貸利率，家庭年增 $3,200 還款壓力",
     "summary": "RBA 5/5 以 8:1 投票決定升息 25 個基點至 4.35%，為今年第三次連續加息，完全逆轉 2025 年的三次降息，回到 2024 年 12 月高點。Governor Bullock 記者會表示「我們變窮了，而且沒有出路」，警告若中東衝突持續將推升全球能源價格並影響通膨預期。四大銀行已確認 5/15 起調升浮動房貸利率，$600,000 房貸月供增加近 $100，自 2 月以來累計增加近 $300/月（年增約 $3,200）。CPI 年增率 4.6%（3 月）為 2023 年以來最高，主要受燃油價格 33% 月漲幅驅動。CBA 經濟學家認為 RBA 有空間在 6 月暫停，但 Bullock 未排除進一步升息可能。SMH 報導約 10 萬房貸戶面臨斷供風險。",
     "impact": "三次連續升息累計 75 個基點，澳洲家庭可支配收入遭受嚴重壓縮。$600K 房貸年增 $3,200 還款直接擠壓消費預算，非必需品類（電子產品、家具、時尚）銷售環境將持續惡化。10 萬戶斷供風險意味著部分消費者將完全停止非必需消費。然而 Bullock 暗示 6 月可能暫停的信號，若成真可能帶來短期消費信心反彈。CPI 4.6% 顯示賣家面臨「成本上升 + 需求下降」雙重夾擊——物流成本因油價飆升而上漲，但提價空間因消費者價格敏感度提高而受限。",
@@ -4229,6 +4428,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "SA",
+    "ai": false,
     "title": "ZATCA 第 24 波電子發票整合倒數 55 天：年營收 SAR 375,000+ 企業須於 6/30 前完成 Fatoora 平台對接，罰款 SAR 5,000-50,000",
     "summary": "ZATCA Phase 2 電子發票第 24 波整合截止日 6/30 迫近，距今僅剩約 55 天。此波覆蓋年營收超過 SAR 375,000（約 USD 100,000）的 VAT 登記企業，須將電子發票系統與 ZATCA Fatoora 平台完成整合，實現 B2B 發票即時清算（clearance）與 B2C 發票即時報告。Wafeq 最新分析指出，違規罰款採累進制：首次 SAR 5,000，12 個月內重複違規最高 SAR 50,000。ZATCA 同時延長「罰款取消倡議」至 6 月底，允許企業修正過往違規並豁免歷史罰款。EY、KPMG、Comarch 等多家顧問機構均發布提醒，強調合規窗口正在快速關閉。技術要求包括：XML/PDF-A3 格式、TLV 編碼 QR Code、CSID 註冊、與 Fatoora API 即時連接。",
     "impact": "SAR 375,000 年營收門檻（約 USD 100K）意味著大多數活躍的 Amazon SA 站點賣家都在此波覆蓋範圍內。未在 6/30 前完成整合的賣家將面臨 SAR 5,000 起跳的罰款，且重複違規罰款快速累加。對於使用第三方會計軟體的賣家，需確認軟體是否已支援 Fatoora API 對接——部分中小型軟體可能尚未完成認證。Amazon SA 平台本身的發票處理機制是否已符合 Phase 2 要求，賣家需向 Seller Support 確認。罰款取消倡議 6 月底到期，是修正過往違規的最後機會。",
@@ -4260,6 +4460,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "AWS 中東資料中心修復仍需數月，UAE 連續遭攻擊使時程更加不確定；Amazon Abu Dhabi 倉庫持續關閉",
     "summary": "AWS 確認 UAE（ME-CENTRAL-1）與 Bahrain（ME-SOUTH-1）兩個雲端區域因 3 月伊朗無人機襲擊造成的損壞，修復「預計需要數月」。AWS 已暫停受影響區域計費，估計損失約 $1.5 億美元，並「強烈建議」客戶將資源遷移至其他區域。Business Insider 報導 Amazon Abu Dhabi 物流中心自 3 月起持續關閉，第三方賣家物流通道受阻。9News 確認 AWS 多項服務在 UAE 與 Bahrain 仍處中斷狀態。5/4-5/5 伊朗連續兩天攻擊 UAE，使資料中心修復時程面臨更大不確定性——原本「數月」的預估可能進一步延長。Amazon 員工被要求遠端工作，UAE 辦公室暫時關閉。",
     "impact": "Abu Dhabi 倉庫關閉直接影響 AE 站點 FBA 賣家的庫存補充與配送能力。依賴 AWS ME 區域的第三方工具（ERP、庫存管理、定價引擎）若未完成遷移將持續面臨服務中斷。UAE 連續遭攻擊意味著 Amazon 恢復正常營運的時間表完全不可預測。SA 站點雖未直接遭受攻擊，但 AWS Bahrain 區域同樣停擺，依賴該區域的 SA 賣家工具同樣受影響。Amazon 員工遠端工作可能影響 Seller Support 回應速度與品質。",
@@ -4286,6 +4487,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AE",
+    "ai": false,
     "title": "UAE 電子發票 7/31 強制啟動倒數 86 天：Peppol 四角模型確認，大型企業須先指定 ASP，2027/1/1 起全面強制",
     "summary": "UAE 電子發票系統（EIS）進入最終準備階段。VATfaqs 確認 UAE 採用 Peppol 四角模型（4-corner model），大型企業須於 7/31 前指定認證服務提供商（ASP）並開始對接，2027/1/1 起全面強制電子發票。ClearTax 更新指出 B2B 與 B2G 交易須以結構化 XML 格式透過 ASP 傳輸，覆蓋範圍包含非 VAT 登記企業。Grant Thornton 確認 18 家 ASP 已在 EmaraTax 平台上線。Meydan Free Zone 指出此規定適用所有行業，包括科技、零售、服務與製造業。Innovatrix 報導 2026 年 1 月起 UAE 已取消反向收費自開發票機制，VAT 抵扣有效期限為 5 年。",
     "impact": "7/31 為大型企業指定 ASP 的截止日，雖然全面強制要到 2027/1/1，但 AE 站點較大規模的賣家需要在未來 86 天內完成 ASP 選擇與初步對接。Peppol 四角模型意味著發票需透過認證中介傳輸，賣家現有的直接發票流程將需要調整。覆蓋範圍擴大至非 VAT 登記者，小型賣家也不能忽視。在 UAE 持續遭受軍事攻擊的背景下，合規準備工作可能因營運中斷而延遲，但 FTA 目前未宣布延期。",
@@ -4317,6 +4519,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "美軍「Project Freedom」護航行動首日爆發衝突：伊朗無人機襲擊 UAE Fujairah 油設施、攔截 12 枚彈道飛彈，Brent 原油飆至 $114，停火瀕臨崩潰",
     "summary": "Trump 總統 5/3 宣布「Project Freedom」行動，由美軍護航「中立國」商船通過荷姆茲海峽。5/4 行動首日即爆發激烈衝突：美軍擊沉 6-7 艘伊朗快艇並攔截巡弋飛彈與無人機，兩艘商船在護航下成功通過海峽。然而伊朗隨即對 UAE 發動報復攻擊——Fujairah 油品工業區遭無人機襲擊引發大火，3 名印度籍工人受傷；UAE 防空系統攔截 12 枚彈道飛彈、3 枚巡弋飛彈與 4 架無人機。UAE 國防部譴責此為「危險升級」並保留回應權利，全國學校與大學轉為線上教學。這是自 4/8 停火以來 UAE 首次遭受直接攻擊。Brent 原油 5/5 早盤飆漲 5.8% 至 $114.44/桶。IMF 總裁警告若衝突延續至 2027 年且油價觸及 $125，全球經濟將面臨「更糟糕的結果」。CBS News 報導美軍否認伊朗聲稱擊中美艦的說法。",
     "impact": "UAE 本土遭受直接軍事攻擊，AE 站點營運風險從「供應鏈中斷」升級為「營運安全」層級。Fujairah 為 UAE 最大油品儲存與轉運港，遭襲將影響區域燃料供應與物流成本。學校停課轉線上顯示社會運作已受衝擊，可能影響消費行為與配送作業。油價飆至 $114 將進一步推升全球運費——遠東至中東航線成本恐再漲 20-30%。AWS 中東資料中心仍未修復，疊加新一輪攻擊，AE/SA 站點賣家面臨物流、營運、技術三重風險。雖然兩艘商船成功通過海峽，但伊朗的報復行動顯示「護航通行」遠非安全，船東觀望態度恐持續。",
@@ -4347,6 +4550,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "RBA 今日（5/5）利率決策：四大銀行一致預測第三次連續升息至 4.35%，CPI 飆至 4.6% 創兩年半新高，10 萬房貸戶面臨斷供風險",
     "summary": "RBA 將於今日下午 2:30 AEST 公布利率決策，市場定價升息機率達 86%，四大銀行一致預測將升息 25 個基點至 4.35%——這將完全逆轉 2025 年的三次降息，回到 2011 年 11 月以來最高水準。ABS 上週公布 3 月 CPI 年增率飆至 4.6%（2 月為 3.7%），主要受燃油價格 33% 月漲幅驅動。ABC 分析指出，RBA 偏好的核心通膨（trimmed mean）維持 3.3%，仍高於 2-3% 目標區間。Yahoo Finance 報導約 10 萬澳洲房貸戶面臨斷供風險，四大銀行浮動利率將升至 7% 以上。Guardian 以「The Hormuz Hike」為題分析，指出這是一次由地緣政治驅動的升息——RBA 面臨「衰退或通膨」的兩難抉擇。部分經濟學家（9News 報導）認為升息是「錯誤決定」，因為貨幣政策無法解決供給面衝擊。RSM 分析指出 RBA 上次會議以 5:4 微弱多數通過升息，本次投票結果同樣值得關注。",
     "impact": "若升息至 4.35%，澳洲家庭可支配收入將進一步壓縮，非必需品類銷售環境持續惡化。10 萬戶斷供風險意味著消費者將極度保守，大額消費（電子產品、家具、家電）首當其衝。CPI 4.6% 顯示成本壓力正從燃油擴散至食品與服務業，賣家面臨「成本上升 + 需求下降」的雙重夾擊。然而 ABS 數據顯示家庭支出量仍在增長（連續第六季），顯示消費並未崩潰——這反而可能促使 RBA 維持鷹派立場更久。Governor Bullock 3:30 記者會的前瞻指引將決定 6 月是否繼續升息。",
@@ -4377,6 +4581,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "ABS 今日公布：3 月家庭支出月增 1.6%（運輸成本飆升 5.1%），食品囤貨潮浮現，消費者行為模式正在質變",
     "summary": "ABS 今日（5/5）公布 3 月家庭支出指標，月增 1.6%（1 月 +0.2%、2 月 +0.3%），年增 6.3%。ABS 統計主管 Tom Lay 指出，增長主要由運輸成本飆升 5.1% 驅動——燃油價格在 3 月第一週急漲並於月底觸頂，消費者改為「少量多次」加油模式。公共運輸支出同步上升，反映部分家庭因油價過高而轉向大眾運輸。食品支出月增 1.7%，ABS 明確指出「反映部分家庭因擔憂全球供應鏈進一步中斷而進行預防性囤貨」。ABS 首次發布實驗性月度燃油消費量估計：儘管名目支出大增，實際燃油購買量反而下降 1.3%（因價格月漲 32.8%）。季度消費量指標連續第六季增長（+0.7%），年增 2.8% 為 2023 年 6 月以來最強。非自由裁量支出（健康 +1.5%、食品 +0.8%）為主要驅動力。",
     "impact": "消費者行為出現三大質變：(1) 支出從自由裁量品轉向必需品——健康與食品類增長最強，非必需品類持續承壓；(2) 囤貨行為浮現——食品與日用品類可能出現短期需求脈衝，但後續可能面臨「囤貨後消費真空」；(3) 消費者對價格極度敏感——燃油量跌 1.3% 但支出漲 5.1%，顯示消費者正積極減量。年增 6.3% 的名目支出增長主要反映通膨而非真實需求擴張，賣家不應被名目數字誤導。運輸成本飆升將直接推高 last-mile 配送成本，壓縮賣家利潤。",
@@ -4400,6 +4605,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "AWS 中東資料中心修復仍需「數月」：ME-CENTRAL-1（UAE）與 ME-SOUTH-1（Bahrain）持續停擺，Amazon 暫停計費估損 $1.5 億",
     "summary": "Ars Technica 5/1 報導，AWS 4/30 更新服務狀態頁面，確認 UAE（ME-CENTRAL-1）與 Bahrain（ME-SOUTH-1）兩個雲端區域因「中東衝突造成的損壞」仍無法支援客戶應用程式，修復「預計需要數月時間」。AWS 自 3 月伊朗無人機襲擊三座資料中心以來，已暫停受影響區域的所有計費，估計成本約 $1.5 億美元。AWS「強烈建議」客戶將資源遷移至其他雲端區域，並依賴遠端備份恢復「無法存取的資源」。部分客戶如杜拜超級應用 Careem 已完成一夜遷移至其他區域伺服器並恢復上線。然而今日（5/4）伊朗再度攻擊 UAE，使資料中心修復時程面臨更大不確定性。",
     "impact": "AWS 中東區域停擺直接影響依賴雲端服務的 AE/SA 站點賣家——使用 AWS 託管的 ERP 系統、庫存管理工具、定價引擎或客服系統的賣家，若未完成遷移將持續面臨服務中斷。Amazon 自身的 AE/SA 站點基礎設施雖有冗餘設計，但區域雲端不可用仍可能影響部分功能的延遲與穩定性。今日 UAE 再遭攻擊使修復時程更加不確定——原本「數月」的預估可能進一步延長。對於使用第三方 SaaS 工具（如會計軟體、物流追蹤系統）的賣家，需確認其服務商是否已完成區域遷移。",
@@ -4418,6 +4624,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AE",
+    "ai": false,
     "title": "UAE 電子發票 7 月強制啟動倒數：18 家 ASP 已上線、MoF 發布最終操作指引，所有在 UAE 營業的企業（含非 VAT 登記者）均須合規",
     "summary": "UAE 電子發票強制令進入最後準備階段。Grant Thornton UAE 報告指出，截至目前所有相關立法已定案、VAT 法規已修訂、18 家認證服務提供商（ASP）已在 EmaraTax 平台上線並可接受企業對接。ClearTax 更新指出，電子發票系統（EIS UAE）將於 7/31 起強制要求所有在 UAE 從事 B2B 與 B2G 交易的企業——無論是否已登記 VAT——以結構化 XML 格式透過 ASP 發送發票。Reyson Auditing 引述內閣第 106/2025 號決議，確認 7 月起所有 VAT 登記企業必須發行結構化電子發票並傳輸至 FTA。VATupdate 4/25 播客分析指出，此強制令的覆蓋範圍為「在 UAE 營業的任何人」，是「涵蓋幾乎所有商業交易的全面性要求」。BDO Global 分析指出 MoF 2/23 發布的詳細指引提供了企業等待已久的操作與技術澄清。The Accntnt 提醒企業需在 7 月前完成 ASP 選擇、系統整合測試與資料清理。",
     "impact": "距離 7/31 強制期限僅剩不到 3 個月，AE 站點賣家面臨緊迫的合規壓力。關鍵變化：覆蓋範圍擴大至「非 VAT 登記者」，意味著即使年營收未達 VAT 強制登記門檻的小型賣家也可能需要合規。18 家 ASP 已上線代表技術基礎設施就緒，企業無法再以「系統未準備好」為由延遲。電商交易被列為特殊業務情境，平台賣家的發票格式可能有額外要求。在 UAE 遭受軍事攻擊的背景下，合規準備工作可能因營運中斷而延遲，但 FTA 目前未宣布延期——賣家不應假設期限會推遲。",
@@ -4449,6 +4656,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "伊朗 5/3 攻擊海峽貨船、宣稱荷姆茲「永不回到戰前狀態」：Trump 啟動 Operation Epic Fury 護送滯留船舶，和談陷入僵局",
     "summary": "荷姆茲海峽局勢在週末急劇升溫。New York Post 5/3 報導，伊朗軍方攻擊一艘正北行進入波斯灣的貨船，伊朗副議長公開宣稱「不會在海峽問題上退讓，海峽不會回到戰前狀態」。AP 5/3 報導，Trump 總統宣布美國將於週一啟動行動，「引導」滯留在海峽的「中立與無辜國家」船舶安全通過，但未提供具體細節。伊朗隨即譴責此舉違反停火協議。Lloyd's List 估計仍有數百艘船舶與約 20,000 名船員滯留波斯灣。AFP 統計，自 2/28 開戰以來共 27 艘商船（含 13 艘油輪）遭攻擊或通報事件，46% 的通行船舶為受美歐英制裁船舶。伊朗透過巴基斯坦提交 14 點和平方案，要求美國解除制裁、結束封鎖、撤軍，但 Trump 對達成協議表示懷疑。Fortune 分析指出，海峽僵局已成為美中「冷戰」全球航運棋局的一部分，影響從巴拿馬運河到麻六甲海峽的全球貿易格局。",
     "impact": "伊朗攻擊貨船與「海峽永不回到戰前」的宣示，意味著 AE/SA 站點供應鏈中斷已從「暫時性危機」升級為「新常態」。Trump 護送行動若啟動，可能短期內疏散部分滯留船舶，但也可能引發伊朗進一步報復，加劇海峽通行風險。和談僵局使海運恢復時間表完全不可預測。遠東至中東運費持續高位，油價（Tapis 原油 $125/桶）推升全球物流成本。AE/SA 賣家的備貨策略需從「等待恢復」轉向「適應新常態」，將替代路線（好望角繞行、Salalah/Jeddah 替代港口）視為長期方案而非臨時措施。",
@@ -4479,6 +4687,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "RBA 明日（5/5）利率決策：74% 專家預測升息至 4.35%，CPI 飆至 4.6%，Westpac 警告年底前恐再升三次至 4.85%",
     "summary": "RBA 將於明日（5/5）下午 2:30 AEST 公布利率決策，Finder 調查顯示 74% 經濟學家預測將再升息 25 個基點至 4.35%，為 2026 年第三次連續升息。Canstar 分析指出，ABS 最新數據顯示 3 月 CPI 月增 1.10%、年增率飆至 4.6%（2 月為 3.7%），季度 trimmed mean 升至 3.5%，連續第三季上升，均遠超 RBA 目標區間 2-3%。CBA 預測升息但強調「並非板上釘釘」，中東戰爭對經濟成長與通膨的影響方向相反，使政策制定極為困難。Westpac 最為鷹派，預測 6 月與 8 月將繼續升息，年底前現金利率可能推升至 4.85%。ABC 5/4 分析指出七大關鍵因素：通膨仍過高、就業市場強勁、消費者信心處歷史低位、油價衝擊、GDP 成長 2.6% 但近期數據放緩、全球不確定性、以及衰退風險上升。Janus Henderson 5 月報告指出，10 年期公債殖利率升至 5.06%，反映市場對通膨持續的擔憂。Switzer 評論認為在油價飆升與衰退風險下升息是「錯誤決策」，AMP 首席經濟學家 Shane Oliver 警告伊朗戰爭可能將澳洲推入衰退。",
     "impact": "若 RBA 如預期升息至 4.35%，將是 2023 年 11 月以來最高利率，Canstar 計算 60 萬澳元房貸月供將較 2 月前增加 $272。消費者信心已處歷史低位，再升息將進一步壓縮家庭可支配收入。CPI 4.6% 意味著物價壓力全面擴散，賣家面臨「成本上升但消費者不願買單」的雙重夾擊。Westpac 預測年底前利率可能達 4.85%，若成真將是 2008 年以來最高水準，AU 站點非必需品類銷售恐面臨結構性下滑。然而，部分經濟學家認為 RBA 可能暫停升息以觀察油價衝擊的影響，若出現意外暫停，市場信心可能短暫回升。",
@@ -4513,6 +4722,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AE",
+    "ai": false,
     "title": "UAE 電子發票 4-Corner 模型 4/21 正式上線：28 家 ASP 已可透過 EmaraTax 選擇，7/31 大型企業指定期限進入倒數 88 天",
     "summary": "UAE 電子發票制度取得重大進展。ClearTax 報導，UAE 財政部於 4/21 正式啟動 Peppol 基礎的 4-Corner 電子發票交換模型，企業現可透過 EmaraTax 平台選擇認證服務提供商（ASP），開始進行供應商（Corner 1）與客戶（Corner 4）之間的即時電子發票交換。The Invoicing Hub 4/28 分析指出，目前已有 28 家 ASP 獲得 FTA 認證，涵蓋 SAP、Oracle 等大型 ERP 廠商與區域性稅務科技公司。Gulf News 報導，FTA 董事會成員 Mariam Al Matroushi 確認 7 月試點階段將啟動，Phase 1 企業（年營收 > AED 5,000 萬）須於 7/31 前完成 ASP 指定，2027/1/1 起強制以 PINT-AE XML 格式開立電子發票。Innovate Tax 分析指出，目前 4-Corner 模型為自願參與階段，稅務資料向 FTA 的報告（Corner 5）將在 7 月試點前啟動。Wafeq 警告，未在期限前指定 ASP 的企業將面臨每月 AED 5,000 罰款，自 8/1 起累計，至 12 月底可能累積 AED 25,000 罰款。51 項必填資料欄位要求企業 ERP 系統必須支援結構化 XML 輸出。",
     "impact": "4-Corner 模型正式上線標誌著 UAE 電子發票從「規劃階段」進入「執行階段」。AE 站點年營收超過 AED 5,000 萬的大型賣家距 7/31 ASP 指定期限僅剩 88 天，時間緊迫。28 家認證 ASP 的公布為賣家提供了明確的選擇範圍，但 ASP 評估、系統整合與測試仍需數週時間。51 項必填欄位意味著賣家的 ERP/會計系統必須進行升級，TRN、法定名稱、地址等主資料必須與 FTA 記錄完全一致。中小型賣家（< AED 5,000 萬）雖強制期限為 2027/7/1，但自願參與試點可提前發現問題。電商交易作為 16 種特殊業務情境之一，可能有額外的發票格式要求。",
@@ -4547,6 +4757,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "平台"
     ],
     "market": "AU",
+    "ai": false,
     "title": "Pattern 報告：Amazon AU 廣告營收暴增 62%、市佔率達 7.5%，員工數年增 30%，預測 2035 年佔澳洲線上零售五分之一",
     "summary": "Pattern 4/30 發布最新分析報告，揭示 Amazon 在澳洲市場的加速擴張。eCommerce News AU 報導，Amazon AU 2025 年本地廣告營收達 USD 3.92 億，年增 62%，增速超越 TikTok、Meta 與 Google，成為澳洲成長最快的線上廣告平台。Amazon AU 目前佔澳洲線上零售市場 7.5%，Pattern 預測若此趨勢持續，2035 年將佔澳洲每 5 元線上消費中的 1 元。Ground News 引述企業申報資料指出，Amazon 澳洲營運總營收已達 119 億澳元（年增近 50%），其中數據中心業務受 AI 投資驅動增長最為強勁。Amazon AU 員工數從 2024 年的 3,700 人增至約 4,785 人，年增約 30%。Pattern 分析師 McGregor 指出：「Amazon 已達到一個規模，其體量正在改變消費者發現、比較與購買產品的方式，這創造了競爭對手極難匹敵的複合效應。」此外，Amazon 全球 Q1 2026 財報顯示總營收成長 17% 至 1,815 億美元，國際業務成長 19%，淨利暴增 77%。",
     "impact": "Amazon AU 廣告營收暴增 62% 意味著平台廣告生態系統日趨成熟，賣家的廣告投放選項與競爭強度同步提升。市佔率 7.5% 雖仍低於歐美市場，但成長軌跡陡峭，為跨境賣家提供持續擴大的流量池。員工數年增 30% 反映 Amazon 對澳洲市場的長期投入，物流基礎設施與服務能力持續強化。然而，廣告成本隨競爭加劇而上升，賣家需更精準的廣告策略以維持 ROAS。全球 Q1 財報的強勁表現（國際業務 +19%）顯示 Amazon 全球擴張動能不減，AU 站點作為成長型市場將持續獲得資源投入。",
@@ -4573,6 +4784,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "",
+    "ai": false,
     "title": "澳洲燃油危機加劇：Tapis 原油飆至 $125/桶創戰時新高，政府面臨延長燃油消費稅減半壓力，專家警告「最壞的還沒來」",
     "summary": "SMH 5/2 報導，澳洲區域基準油價 Tapis 原油上週五觸及 US$125/桶，為 2022 年俄烏戰爭以來最高水準，較澳洲政府年中預算更新所依據的 US$65 基準價幾乎翻倍。美伊停火後油價曾短暫回落，但隨著一系列和談破裂，油價重新攀升至衝突以來最高點。財長 Chalmers 強調政府 4 月實施的燃油消費稅減半措施（每升減 26 分）已發揮作用，但總理 Albanese 未排除在 6/30 到期後延長該措施。7News 引述國防與國安顧問 John Blackburn 警告，澳洲燃油危機「最壞的還沒來」，柴油將首當其衝，影響整條供應鏈。澳洲進口約 80% 的汽油與柴油需求，政府此前表示燃油儲備約可維持一個月。CNN 分析指出，全球石油市場出現「詭異」現象：海峽關閉使每日 1,400 萬桶供應離線，但油價僅約 $110（低於分析師預期的 $150-200），原因是需求同步暴跌——JPMorgan 估計全球石油需求已減少 430 萬桶/日，超過 2009 年金融危機時的需求萎縮幅度。Al Jazeera 報導，澳洲 EV 銷售因油價飆升而激增，二手 EV 價格上漲 10-20%。",
     "impact": "Tapis 原油 $125/桶直接推升澳洲境內物流配送成本，影響 FBA 與自配送賣家的利潤空間。燃油消費稅減半措施若 6/30 到期未延長，油價將進一步跳升，物流成本壓力加劇。柴油短缺風險尤為嚴峻——柴油是卡車運輸的核心燃料，若供應受限將直接影響 Amazon 倉庫至消費者的最後一哩配送。全球石油需求暴跌 430 萬桶/日反映經濟活動正在收縮，與 AU 消費者信心處歷史低位相互印證，非必需品類銷售前景更加黯淡。EV 銷售激增顯示消費者支出正從傳統消費轉向「避險性」大額購買，可能進一步壓縮日常消費預算。",
@@ -4604,6 +4816,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "荷姆茲海峽危機再升級：伊朗扣押兩艘貨船、美伊和談再度破裂，每日僅 5-19 艘船通行，Reuters 稱「開放的海峽也不安全」",
     "summary": "荷姆茲海峽局勢在上週末急劇惡化。Reuters 4/24 報導，24 小時內僅 5 艘船舶通過海峽，遠低於戰前日均 135 艘。伊朗 4/22 扣押兩艘試圖通過海峽的貨船並開火射擊第三艘，Xeneta 首席分析師 Peter Sand 警告：「即使是『開放的』海峽，對船員、船舶和貨物而言也不安全。」BIMCO 安全長 Jakob Larsen 表示，航運公司需要穩定的停火與雙方安全保證才會恢復通行。Windward 4/26 海事情報顯示，4/25 有 19 艘船舶通過海峽（5 艘入境、14 艘出境），全部開啟 AIS，但波斯灣暗船活動升至 123 起。CNBC 4/26 報導，Trump 總統週六取消派遣特使赴伊斯蘭堡和談的計畫，Brent 原油應聲跳漲 2% 至 $107.56/桶。gCaptain 引述 Bloomberg 分析指出，船東表示恢復正常航運至少需數月時間。美國 CENTCOM 已攔截 33 艘伊朗關聯船舶，伊朗則反扣押外國船舶作為報復。Lloyd's List 數據顯示波斯灣船舶總數回升至 892 艘，但多數仍處滯留狀態。",
     "impact": "和談再度破裂使海峽恢復正常通行的時間表進一步推遲，AE/SA 站點供應鏈中斷已成為長期結構性問題。伊朗扣押貨船的行動使所有船東的風險評估進一步惡化——即使理論上可通行，保險費率與戰爭險附加費將持續飆升。Brent 原油突破 $107 意味著運費與物流成本將繼續攀升。Goldman Sachs 4/26 將 Q4 Brent 預測上調至 $90，並估計全球石油庫存正以每日 1,100-1,200 萬桶的歷史性速度消耗。AE/SA 賣家的備貨週期需進一步延長，空運成為高毛利商品的唯一可靠選項。",
@@ -4634,6 +4847,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳洲「關鍵兩週」倒數：週三 CPI 預期飆至 4.8%、5/5 RBA 升息機率逾 90%、5/12 聯邦預算案，CBA 警告通膨將再升近一個百分點",
     "summary": "澳洲家庭正面臨 2026 年最關鍵的兩週半。news.com.au 4/25 報導，CPI 數據（4/29 週三公布）、RBA 利率決策（5/5）與聯邦預算案（5/12）將在短短 17 天內接連落地。Capital Brief 指出，市場預期 3 月 CPI 年增率將飆升至 4.8%（前值 3.7%），trimmed mean 升至 3.4%，這將是首份完整反映美伊戰爭能源衝擊的通膨數據。CBA 經濟學家警告，伊朗戰爭將推動通膨再升近一個百分點。centralbank.watch 數據顯示，市場定價 5/5 升息機率高達 91.1%，RBA 現行利率已升至 4.35%。AMP 首席經濟學家 Shane Oliver 預測 2026 年至少還有一次升息（5 月），可能第二次在 8 月。AFR 4/23 以「澳洲通膨定時炸彈」為題，指出經濟面臨過熱、高能源溢價與薪資-物價螺旋三重打擊。Barrenjoey 首席經濟學家 Jo Masters 向客戶展示了自戰爭以來各大企業的漲價清單：塑膠管材漲 36%、油漆漲 10%、牛奶漲 20%。Compare the Market 經濟總監 David Koch 則呼籲 RBA「守住防線」暫停升息，警告家庭與企業信心已急劇惡化。",
     "impact": "若 CPI 如預期飆至 4.8%，RBA 5/5 升息至 4.60% 幾成定局，將是 2008 年以來最高利率水準。Canstar 追蹤顯示過去一週已有 5 家銀行上調浮動利率平均 0.23 個百分點，$60 萬房貸月供增加 $91 澳元。消費者通膨預期已跳升至 5.9%（2022 年底以來最高），意味著消費者正主動縮減非必需品支出。企業端的成本轉嫁潮（管材 +36%、油漆 +10%、牛奶 +20%）將進一步壓縮賣家利潤空間。5/12 聯邦預算案是否包含消費刺激措施成為 Q2 銷售預期的關鍵變數。AU 站點賣家需為消費環境持續惡化做好準備。",
@@ -4665,6 +4879,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "Goldman Sachs 上調油價預測、Brent 突破 $107：全球石油庫存以每日 1,100 萬桶歷史性速度消耗，煉油產品短缺風險浮現",
     "summary": "Goldman Sachs 4/26 發布報告，第四度上調油價預測，將 Q4 Brent 預測設定為 $90/桶、WTI 為 $83/桶。GS 分析師 Daan Struyven 團隊指出，「經濟風險遠大於原油基準情境所暗示的，因為油價存在淨上行風險、煉油產品價格異常高企、產品短缺風險存在，且衝擊規模史無前例。」GS 估計中東原油產量損失達每日 1,450 萬桶，推動全球石油庫存以每日 1,100-1,200 萬桶的歷史性速度消耗。GS 預測全球石油市場將從 2025 年每日 180 萬桶的過剩，轉為 Q2 2026 每日 960 萬桶的赤字。Reuters 4/24 報導，Brent 原油週五收於 $106.3/桶，週漲幅逾 3%，週日和談破裂後進一步跳漲至 $107.56。Fortune 數據顯示 Brent 較一年前上漲約 59%。GS 假設海峽出口將在 6 月底前正常化（較先前預估的 5 月中推遲），且海灣產量恢復將更為緩慢。GS 警告：「因為極端的庫存消耗不可持續，若供應衝擊持續更久，可能需要更劇烈的需求下降。」",
     "impact": "油價持續高位對 AU/AE/SA 三站點賣家形成全方位成本壓力。Brent $107+ 意味著：(1) 海運燃油附加費持續攀升，遠東至中東航線運費較戰前漲幅已達 50-80%；(2) 澳洲油價維持在 $2.40+/升，直接推高 last-mile 配送成本；(3) 塑膠、化工等石化衍生品原料成本上升，影響包裝材料與多數消費品製造成本。GS 警告的「煉油產品短缺風險」意味著柴油等運輸燃料可能出現供應緊張，進一步推高物流成本。GS 將海峽正常化時間推遲至 6 月底，意味著至少未來兩個月的高成本環境已成定局。賣家需將油價因素納入 Q2-Q3 定價策略。",
@@ -4695,6 +4910,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "",
+    "ai": false,
     "title": "UAE/SA 電子發票合規進入倒數：Billtrust Q2 報告警告「100% 合規是營運必要條件」，UAE 大型企業 ASP 指定期限僅剩 95 天",
     "summary": "Billtrust 4 月發布 Q2 2026 全球電子發票合規更新報告，將 UAE 與 SA 列為中東非洲地區最關鍵的兩個合規市場。報告強調：在 SA，ZATCA 可拒絕未經 FATOORA 平台加密整合的發票的進項稅額抵扣，直接造成買方現金流風險；在 UAE，未透過認證 ASP 傳輸發票的企業面臨每張 AED 100 罰款與系統停用風險。VATupdate 4/25 發布 UAE 電子發票深度分析，確認關鍵時程：7/1 試點啟動、7/31 大型企業（年營收 ≥ AED 5,000 萬）須指定 ASP、2027/1/1 強制實施。WORLDEF 4/23 報導，Deloitte 指出 2026 年將是全球電子發票從自願轉向強制的關鍵年。Aiverix 4 月研究報告以 SA FATOORA 三年實施經驗為鑑，警告 UAE 企業：「等到截止日才行動的企業，付出的代價遠高於提前準備者」——SA 經驗顯示，倉促整合導致發票被退回、現金流凍結與罰款曝險。ZATCA Wave 24 要求 2022-2024 年應稅銷售額超過 SAR 375,000 的 SA 企業須在 6/30 前完成 FATOORA 整合。",
     "impact": "AE 站點大型賣家（年營收 ≥ AED 5,000 萬）距 ASP 指定期限僅剩約 95 天（7/31），時間極為緊迫。Billtrust 報告明確指出「100% 合規是營運必要條件，而非可選項」——未合規的發票將被即時退回，直接影響交易結算與現金流。SA 站點賣家面臨 ZATCA Wave 24 的 6/30 整合期限，距今僅 64 天。SA 的 FATOORA 經驗顯示，ERP 整合通常需要 3-6 個月，意味著尚未啟動的賣家已面臨嚴重的時間風險。電商交易被 UAE 列為 16 種特殊業務情境之一，平台賣家可能面臨額外的發票格式要求。跨 AE/SA 雙站點賣家需同時應對兩套不同的電子發票系統（UAE Peppol vs SA FATOORA）。",
@@ -4725,6 +4941,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "SA",
+    "ai": false,
     "title": "Vision 2030 十週年報告：沙烏地經濟突破 $1 兆美元、非石油佔比升至 55%，但戰爭衝擊 Q1 FDI 恐暴跌 60-70%",
     "summary": "沙烏地發布 Vision 2030 年度報告，Asharq Al-Awsat 4/26 報導，沙烏地經濟規模首次突破 $1 兆美元大關，較 2016 年啟動 Vision 2030 以來增長 80%。非石油活動佔 GDP 比重從 2016 年的 45% 升至 55%，非石油政府收入增長逾 170% 至 SAR 5,050 億。私營部門 GDP 貢獻突破 51%（目標 47%），投資佔比從 60% 升至 76%。中小企業數量超過 170 萬家，僱用約 888 萬人。然而 House of Saud 深度分析指出，2025 年 FDI 達創紀錄的 $355 億，但一家投行估計 Q1 2026 FDI 可能較去年同期暴跌 60-70%，年化後僅 $100-140 億，遠低於 2030 年 $1,000 億目標。EnterpriseAM 4/27 報導，戰爭使多項投資協議陷入停滯，海灣投資者正重新評估風險。Tadawul 數據顯示 3 月底外資持股仍達 SAR 4,621 億（$1,232 億），機構投資者尚未大規模撤離，但 Q2 走向仍存不確定性。",
     "impact": "Vision 2030 的結構性成果（非石油佔比 55%、私營部門 GDP 貢獻 51%、電子支付佔比 85%）為 SA 站點的長期增長提供堅實基礎。中小企業數量突破 170 萬家意味著 B2B 電商需求持續擴大。然而，戰爭導致的 FDI 暴跌與投資協議停滯可能在短期內抑制商業信心與企業支出。SA 經濟的非石油轉型使其對海峽封鎖的抵禦能力優於純石油經濟體，但油價波動仍透過政府財政收入間接影響消費環境。外資持股未大規模撤離是正面信號，顯示機構投資者仍看好 SA 中長期前景。賣家應區分短期戰爭衝擊與長期結構性機會。",
@@ -4756,6 +4973,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "伊朗扣押兩艘貨輪升級海峽對峙：美伊「雙重封鎖」持續，五角大廈警告水雷清除需六個月，油價維持 $100/桶",
     "summary": "Trump 總統於 4/22 宣布無限期延長對伊朗停火，但荷姆茲海峽局勢不降反升。Reuters 4/23 報導，伊朗革命衛隊於停火延長後 24 小時內扣押兩艘貨輪（賴比瑞亞籍 Epaminondas 與巴拿馬籍 MSC Francesca），指控其未取得通行許可並竄改導航系統。CNN 播出伊朗國家電視台畫面，顯示蒙面武裝人員登船過程。Al Jazeera 分析指出，美伊雙方已形成「雙重封鎖」格局——美國海軍控制海峽入口（阿拉伯海至波斯灣方向），伊朗革命衛隊控制出口（波斯灣至阿曼灣方向），船舶需同時獲得雙方許可方可通行。CNBC 報導，停火延長首日僅 8 艘船舶通過海峽（含 3 艘油輪），伊朗國會議長 Ghalibaf 明確表示「只要美國封鎖持續，重新開放海峽不可能」。Guardian 引述五角大廈向國會簡報內容，警告清除海峽水雷可能需長達六個月。全球油價維持在約 $100/桶。NPR 報導，美國財政部長 Bessent 表示將持續封鎖伊朗港口，「數日內 Kharg 島儲油設施將滿載，脆弱的伊朗油井將被迫關閉」。和談陷入僵局，巴基斯坦持續斡旋但未設新的停火截止日期。",
     "impact": "「雙重封鎖」格局意味著海峽通行已從「受限」升級為「實質癱瘓」，AE/SA 站點供應鏈中斷已無短期解決方案。五角大廈水雷清除需六個月的評估意味著，即使達成和平協議，海峽全面恢復通行仍需漫長時間。油價維持 $100/桶持續推升全球運費與物流成本。伊朗扣押 MSC Francesca（地中海航運旗下）顯示主要船公司船舶也面臨直接風險，將進一步強化船東拒絕通行的立場。AE/SA 站點賣家必須將供應鏈規劃從「等待恢復」轉向「長期替代方案」思維。",
@@ -4786,6 +5004,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳洲 Q1 CPI 下週三（4/29）公布：市場預期 headline 飆至 4.8%，NAB 預測 RBA 5 月升息後暫停，AFR 警告「通膨定時炸彈」",
     "summary": "澳洲統計局（ABS）將於下週三（4/29）上午 11:30 AEST 公布 2026 年 3 月 CPI 數據，這將是首份完整反映中東衝突能源衝擊的通膨報告。IG Markets 4/24 分析預測，headline CPI 年增率將從 2 月的 3.7% 飆升至 4.8%，trimmed mean 預計升至 3.4%，季度 trimmed mean 預計從 3.4% 升至 3.5%——三項指標均遠高於 RBA 目標區間 2-3%。Fenro 分析指出，3 月數據首次完整捕捉油價衝擊影響，澳洲零售油價在一個月內從約 $1.69/L 跳漲至 $2.19/L（漲幅約 50 分），汽車燃料佔 CPI 籃子約 3%。NAB 4/24 發布《Forward View Australia》報告，將 2026 年 GDP 成長預測下調，預測實質家庭消費成長僅約 1%（2025 年為 2.4%），並預期 RBA 將於 5 月升息 25 個基點後暫停觀察。AFR 4/23 以「通膨定時炸彈」為題報導，Barrenjoey 首席經濟學家 Jo Masters 列舉自伊朗戰爭以來的一系列企業漲價：Reece 塑膠管漲 36%、Wattyl 油漆漲 10%、Boral 加收燃料附加費、Coles 牛奶每升漲 20%。Westpac 首席經濟學家 Luci Ellis 預測 RBA 將在 5、6、8 月連續三次升息。",
     "impact": "4/29 CPI 數據將直接決定 5/5 RBA 利率決策方向。若 headline CPI 如預期飆至 4.8%，幾乎確定 5 月將再升息至 4.35%，甚至不排除升息 50 個基點的可能。NAB 預測家庭消費成長僅 1% 意味著 AU 站點非必需品類銷售將面臨嚴峻考驗。企業端的成本轉嫁潮（管材、油漆、建材、牛奶等）顯示通膨正從能源擴散至更廣泛的商品類別，賣家的進貨成本也將同步上升。Westpac 預測三次連續升息的情境下，消費者可支配收入將進一步大幅壓縮，線上消費主力族群（年輕房貸族）首當其衝。",
@@ -4817,6 +5036,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "Amazon FBA 3.5% 燃油附加費已於 4/17 生效：北美平均每件加收 $0.17，歐洲加收 1.5%，UPS/FedEx 同步加價，賣家利潤再壓縮",
     "summary": "Amazon 於 4/17 正式對全球 FBA 賣家實施燃油與物流附加費。北美（美國與加拿大）FBA 費用加收 3.5%，平均每件商品增加約 US$0.17；歐洲（英國、法國、德國、義大利、西班牙、波蘭、瑞典、荷蘭、愛爾蘭、比利時）加收 1.5%。5/2 起附加費將擴展至 Buy with Prime 與 Multi-Channel Fulfillment（MCF）服務。Amazon 在致賣家通知中表示：「燃油與物流的成本上升已推高整個行業的營運成本。當成本持續處於高位時，我們會實施臨時附加費以回收部分實際成本增加。」Kavout 分析指出，原油價格目前約 $111.54/桶，較 52 週低點 $54.98 大幅上漲。值得注意的是，Amazon 在 2022 年俄烏衝突期間曾實施類似的 5% 燃油附加費，該「臨時」附加費最終被併入標準 FBA 費用中。UPS 已對美國與 15 個中東國家間的包裹加收 $0.64/磅，FedEx 對中東、南亞與非洲航線加收 $0.50-0.70/磅。美國郵政（USPS）也將於 4/26 起實施燃油附加費。",
     "impact": "3.5% FBA 附加費直接壓縮所有使用 FBA 的賣家利潤。以 2026 年初已調漲的 FBA 費用（平均每件 +$0.08）為基礎，再疊加 3.5% 附加費，賣家物流成本累計漲幅顯著。2022 年的先例顯示「臨時」附加費極可能成為永久性費用。歐洲 1.5% 的較低費率反映中東衝突對歐洲航線的影響相對較小。UPS/FedEx 對中東航線的額外加價意味著 AE/SA 站點賣家若使用非 FBA 物流方案，成本壓力同樣加劇。低毛利商品的生存空間進一步收窄，賣家需重新評估產品組合的經濟可行性。",
@@ -4843,6 +5063,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "",
+    "ai": false,
     "title": "UAE/SA 電子發票合規進入倒數：Billtrust 報告警告 MEA 地區以即時稅務驗證為執法手段，不合規發票將直接喪失 VAT 抵扣權",
     "summary": "Billtrust 4 月發布《eInvoicing Compliance Update Q2 2026》報告，對全球電子發票合規趨勢進行全面分析，特別警告中東與非洲（MEA）地區的執法模式與歐洲截然不同。報告指出，MEA 國家正將電子發票作為「即時稅務執法機制」——SA 的 ZATCA 可拒絕未經 FATOORA 平台加密整合的發票的 VAT 進項稅額抵扣，直接造成買方現金流損失；UAE 未透過認證服務提供商（ASP）傳輸的交易面臨每張發票 AED 100 罰款，並可能被停用整個系統。報告強調，與歐洲的寬限期做法不同，MEA 地區「100% 合規是營運必要條件，而非目標」。ZATCA Wave 24 要求 2022-2024 年應稅銷售額超過 SAR 375,000 的企業須在 6/30 前完成 FATOORA 平台整合。UAE 電子發票試點 7/1 啟動，年營收 ≥ AED 5,000 萬企業須於 7/31 前指定 ASP。Orchida Tax 分析指出，Peppol 合規架構可同時覆蓋 UAE、SA、比利時、德國、法國、新加坡與澳洲，多國營運企業應考慮統一架構以降低長期合規成本。",
     "impact": "MEA 地區「不合規即喪失 VAT 抵扣」的執法模式對 AE/SA 站點賣家影響深遠——這不僅是罰款問題，而是直接的現金流損失。SA 站點賣家若未在 6/30 前完成 FATOORA 整合，其供應商開立的發票可能無法用於 VAT 進項抵扣。AE 站點大型賣家（年營收 ≥ AED 5,000 萬）距 7/31 ASP 指定截止日僅剩約 3 個月。更關鍵的是，買方可能因供應商不合規而喪失抵扣權——這要求賣家不僅自身合規，還需確保整個供應鏈的合規狀態。Peppol 統一架構的建議對同時在 AU/AE/SA 多站點營運的賣家尤其值得關注。",
@@ -4869,6 +5090,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "Westpac 三週內二度調升固定利率至 6.29% 起跳：四大銀行全面重新定價，僅 19 家銀行仍提供 6% 以下固定利率（去年同期 83 家）",
     "summary": "Westpac 於 4/23 宣布再度調升固定利率，為三週內第二次加價，最低固定利率起跳價升至 6.29%。News.com.au 報導，Westpac 首席經濟學家 Luci Ellis 預測 RBA 將在 5、6、8 月連續三次升息，中東衝突推升的油價正逐步傳導至更廣泛的通膨。Canstar 數據顯示，自上次 RBA 決策以來，超過 90% 的銀行已調整固定利率，四大銀行全部完成重新定價，其中 Westpac 與 NAB 在此期間各調升兩次。目前全澳僅 19 家銀行仍提供至少一款 6% 以下的固定利率產品——去年同期為 83 家。Canstar 數據洞察總監 Sally Tindall 表示：「對借款人而言，這是一個明確信號——鎖定較具競爭力的固定利率的機會正在快速消失。」NAB Forward View 報告預測 2026 年實質家庭消費成長僅約 1%，房價成長預計放緩但受強勁人口增長與供給緊張支撐仍維持正成長。",
     "impact": "固定利率突破 6.29% 且可選產品從 83 家驟降至 19 家，顯示銀行體系已全面定價「利率持續上升」情境。這對 AU 站點消費環境的影響是結構性的：房貸壓力加劇將持續壓縮家庭可支配收入，尤其影響雪梨與墨爾本外圍郊區的年輕房貸族——這正是線上消費的核心族群。Westpac 預測三次連續升息意味著到 8 月利率可能達到 4.85%，屆時消費環境將更加嚴峻。NAB 預測家庭消費成長僅 1% 的背景下，非必需品類銷售將面臨持續性而非暫時性的下行壓力。",
@@ -4896,6 +5118,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "伊朗 IRGC 扣押兩艘貨櫃船並砲擊第三艘：停火延長首日海峽即爆衝突，伊朗國會議長稱重開海峽「不可能」，AE/SA 海運通道全面癱瘓",
     "summary": "Trump 宣布無限期延長停火僅數小時後，伊朗革命衛隊（IRGC）4/22 在荷姆茲海峽扣押巴拿馬籍 MSC Francesca 與賴比瑞亞籍 Epaminondas 兩艘貨櫃船，指控其「未經授權試圖通過海峽」。英國海事貿易行動中心（UKMTO）同日確認第三艘貨櫃船遭 IRGC 砲艇開火，船橋嚴重受損。CNBC 報導當日僅約 6 艘船舶通過海峽（含 3 艘油輪），遠低於衝突前日均 135 艘。伊朗國會議長兼首席談判代表 Ghalibaf 於深夜聲明稱，在美國持續封鎖與「以色列戰爭販子」的「公然違反停火」行為下，重開海峽「不可能」。Guardian 報導伊朗與美國正實施「雙重封鎖」——美國封鎖伊朗港口，伊朗控制海峽通行。Vortexa 數據顯示美國實施封鎖後一週內仍有 34 艘受制裁伊朗關聯油輪進出波斯灣。NPR 報導美國正向中東增派數千名軍事人員。Trump 在 Truth Social 發文稱伊朗「財政崩潰中」，若解除封鎖「永遠無法達成協議」。",
     "impact": "停火延長首日即爆發扣船與砲擊事件，徹底粉碎了海峽短期內恢復通行的希望。伊朗國會議長的「不可能」聲明意味著政治層面已關閉談判空間。雙重封鎖格局（美封伊朗港口 + 伊控海峽）使 AE/SA 站點海運通道全面癱瘓。MSC Francesca 為全球第二大貨櫃航運公司 MSC 旗下船舶，其被扣押將進一步嚇阻其他船公司嘗試通行。保險費率預計再度飆升，即使未來海峽重開，高額戰爭險將成為永久性成本。賣家必須將「海峽長期關閉」納入基準情境規劃。",
@@ -4926,6 +5149,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "Westpac 領先指標 3 月跌至負值，8 月以來首次低於趨勢線：Morgan Stanley 預測 RBA 年內不再升息，但四大銀行仍押注 5/5 升息，下週 Q1 CPI 成決戰關鍵",
     "summary": "Westpac-Melbourne Institute 領先經濟指標 3 月六個月年化增長率跌至 -0.13%，為 2025 年 8 月以來首次低於趨勢線，較 10 月的 +0.31% 大幅惡化 0.44 個百分點，顯示澳洲經濟動能正在快速流失。Westpac 表示澳洲經濟在今年前幾個月已失去動能，預計未來數月將進一步走弱。Morgan Stanley 4/22 發布報告，成為首家預測 RBA 年內不再升息的主要投行，認為中東衝突與能源衝擊的破壞力正在快速顯現，未來數週市場升息預期可能大幅下修。然而四大銀行仍一致預期 5/5 RBA 會議將升息 25 個基點至 4.35%，ASX 利率期貨定價升息機率約 72-77%。Citi 首席經濟學家 Josh Williamson 警告 RBA 必須升息以防止通膨預期脫錨。AFR 報導下週三（4/29）公布的 Q1 CPI 數據將是決定性因素——若核心通膨仍高於 3.5%，5 月升息幾乎確定；若出現意外降溫，RBA 可能暫停。",
     "impact": "領先指標跌至負值是澳洲經濟放緩的強烈信號，預示未來 3-9 個月消費環境將持續惡化。Morgan Stanley 與四大銀行的分歧反映了 RBA 面臨的兩難：升息壓制通膨但加速經濟衰退，不升息則通膨預期脫錨。無論哪種結果，AU 站點賣家都面臨逆風——升息壓縮消費力，不升息則物價持續上漲侵蝕購買力。下週 Q1 CPI 數據將決定短期走向，賣家應提前準備兩套方案。72-77% 的升息機率意味著 5 月升息仍是基準情境，房貸壓力將再度加劇。",
@@ -4956,6 +5180,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "",
+    "ai": false,
     "title": "Amazon 賣家發動 24 小時廣告抵制：抗議廣告費自動從銷售款扣除新政策與 3.5% 燃油附加費，Amazon 宣布延後至 8/1 實施",
     "summary": "數百名 Amazon 賣家於 4/15-16 發動 24 小時廣告支出暫停行動，抗議 Amazon 近期多項政策變更。eMarketer 報導，爭議核心為 Amazon 新推出的廣告付款政策——將廣告費用從賣家銷售款中自動扣除，取代原本允許賣家以信用卡支付的方式。American Bazaar 報導，Amazon 同時宣布對商家徵收 3.5% 燃油附加費，以抵銷伊朗戰爭導致的油價飆升。八位數營收賣家 Michael Patrón 公開表示「我們的利潤已經被榨乾了」。EcommerceBytes 報導，Amazon 在賣家反彈後宣布將廣告付款政策延後至 8/1 實施，顯示平台對賣家反饋的回應。MyAmazonGuy 分析指出，新政策將廣告費直接綁定零售收入，壓縮了賣家將收入再投資於廣告與庫存的時間窗口。MediaPost 報導，賣家擔憂若不抵制，Amazon 可能推出更多不利政策。部分賣家已開始評估轉向 Walmart 與 Temu 等提供更優惠條件的平台。",
     "impact": "3.5% 燃油附加費直接增加所有站點（含 AU/AE/SA）賣家的營運成本，疊加已經飆升的物流費用，利潤空間進一步壓縮。廣告付款政策雖延後至 8/1，但賣家仍需為現金流管理做好準備——廣告費從銷售款自動扣除意味著可用資金減少，影響庫存補貨與廣告再投資的靈活性。對中小型賣家衝擊尤大，原本透過信用卡支付廣告費可獲得 3% 現金回饋，新政策下此收益將消失。賣家向 Walmart/Temu 分散的趨勢若加速，可能影響 Amazon 平台的賣家生態與商品豐富度。",
@@ -4986,6 +5211,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "貿易"
     ],
     "market": "",
+    "ai": false,
     "title": "美國 $1,660 億關稅退還入口網站正式上線：IEEPA 關稅退款啟動但 Section 122 的 15% 附加稅持續，澳洲出口商面臨退款申請與新稅並存的複雜局面",
     "summary": "美國海關與邊境保護局（CBP）4/21 正式啟動關稅退還申請入口網站，超過 33 萬名進口商可開始申請退還因最高法院裁定違憲的 IEEPA 關稅所繳納的款項，總額估計達 $1,660 億美元。Time 報導，FedEx、Costco、Skechers、Toyota、Nintendo 等逾 3,000 家企業已提起訴訟要求退款。CNN 報導退款流程分階段進行，首階段僅開放特定類型的關稅支付申請。Fortune 報導中小企業在退款流程中處於劣勢——缺乏人力追蹤法律與合規細節，多數採取觀望態度。American Prospect 分析指出，Trump 在最高法院裁定後立即以 Section 122 實施的 15% 臨時進口附加稅（150 天有效期）已遭民主黨州與自由派團體法律挑戰。BDO 報告指出，澳洲出口商面臨「退款與新稅並存」的複雜局面——可申請 IEEPA 關稅退款，但同時須繳納 Section 122 的 15% 附加稅，且 Section 301 調查 7 月結果可能帶來額外懲罰性關稅。",
     "impact": "對透過美國市場銷售的 AU 站點跨境賣家而言，IEEPA 關稅退款提供了回收過去一年多繳關稅的機會，但申請流程複雜且可能耗時數月。Section 122 的 15% 附加稅持續適用，意味著當前出口至美國的成本並未降低。中小型賣家在退款流程中處於劣勢，建議委託報關行代為處理。更關鍵的是 7 月 Section 301 調查結果——若澳洲被認定執法不力，可能面臨額外懲罰性關稅，屆時出口成本將進一步攀升。整體而言，美國貿易政策的不確定性持續升高，跨境賣家需更靈活的多市場策略。",
@@ -5016,6 +5242,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AE",
+    "ai": false,
     "title": "UAE 電子發票生態加速成熟：Cygnet.One 成為 FTA EmaraTax 入口網站可選 ASP，全球逾 20 國 Q2 電子發票強制令密集生效",
     "summary": "Cygnet.One 4/22 宣布已成為 UAE 聯邦稅務局（FTA）EmaraTax 入口網站上可選擇的官方認證服務提供商（ASP），企業可直接透過 EmaraTax 平台選擇 Cygnet.One 作為電子發票服務商。此舉標誌著 UAE 電子發票生態系統正在加速成熟，ASP 選擇從「市場自行尋找」進入「官方平台直接選擇」階段。Billtrust 4 月發布全球電子發票合規更新報告指出，2026 年 Q2 全球逾 20 個國家有活躍或新啟動的電子發票強制令，中東與非洲地區的電子發票法規已成為「稅務執法武器」，不合規的後果已超越罰款，擴展至拒絕 VAT 進項稅額抵扣甚至營運停擺。VATupdate 週報確認 UAE FTA 自 4/14 起已降低多項行政罰則並更新 VAT、消費稅與企業稅合規規則。Sun Management 宣布將於 5/7 舉辦「UAE E-Invoicing 2026 Decoded」研討會，顯示市場對合規指引的需求強勁。距 7/1 試點啟動僅剩約 10 週，距 7/31 大型企業 ASP 指定截止日僅剩約 14 週。",
     "impact": "ASP 可透過 EmaraTax 官方平台直接選擇，大幅降低了 AE 站點賣家尋找與評估 ASP 的門檻。此前賣家需自行在市場上搜尋認證 ASP，現在可直接在 FTA 官方入口完成選擇，流程更透明且可信度更高。全球電子發票強制令密集生效的趨勢意味著，跨多國營運的賣家需同時應對多個市場的合規要求。Billtrust 報告強調的「不合規後果超越罰款」警告值得重視——FTA 可拒絕 VAT 進項稅額抵扣，對賣家現金流影響遠大於罰款本身。距 7/1 試點僅剩 10 週，建議賣家儘早透過 EmaraTax 選擇 ASP 並啟動系統整合。",
@@ -5043,6 +5270,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "Trump 無限期延長停火但封鎖持續：英法宣布組建荷姆茲海峽多國護航任務，海峽再度關閉後通行量歸零，AE/SA 供應鏈恢復遙遙無期",
     "summary": "Trump 於 4/21 在 Truth Social 宣布無限期延長對伊朗的停火，稱伊朗政府「嚴重分裂」，需更多時間提出統一方案。但他同時明確表示美國海軍封鎖將持續，直到談判結束。CBS News、CNBC、Al Jazeera 等多家媒體確認，停火延長是應巴基斯坦請求，但伊朗已表示不會參加原定的伊斯蘭堡第二輪和談。此前伊朗於 4/17 短暫宣布海峽「完全開放」，但在美國拒絕解除封鎖後，4/18 再度關閉海峽並由 IRGC 向試圖通過的船舶開火。英國與法國於 4/17-18 正式宣布組建「獨立且嚴格防禦性」的多國護航任務，已有十餘國表態參與，包括掃雷作業。Business Standard 報導英法於 4/22 召開新一輪軍事規劃峰會。油價在停火延長消息後小幅回落，但分析師警告封鎖持續意味著供應面壓力不減。達拉斯聯儲模型估計若海峽關閉延續 2-3 個季度，WTI 原油可能達 $115-132/桶。",
     "impact": "停火延長降低了戰事立即恢復的風險，但封鎖持續意味著 AE/SA 站點海運通道仍然切斷。伊朗 4/18 再度關閉海峽並開火，使海峽通行量再次歸零。英法多國護航任務是中長期利好，但明確表示需「持久和平協議」後才會部署，短期內無法改善通行。賣家面臨的結構性供應鏈中斷將持續數月。空運仍是唯一替代方案但運力緊張且成本高昂。油價雖因停火延長小幅回落，但封鎖持續使能源成本維持高位，物流成本壓力不減。",
@@ -5073,6 +5301,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳洲 3 月家庭支出暴增 2.9% 但逾半為油價推升：消費者轉向「精打細算」模式，Westpac 預測 RBA 將再升息 3 次至 4.85%",
     "summary": "CBA 數據顯示澳洲 3 月家庭支出暴增 2.9%，但逾半增幅由燃油成本推動（交通類 +22.9%、加油站消費 +45%）。扣除燃油後實際增長僅 +1%。消費者通膨預期升至 5.9%（2022 年以來最高）。Westpac 預測 RBA 將再升息 3 次至 4.85%。RBA 4/17 會議維持利率 4.10% 不變，但聲明指出「通膨可能在一段時間內維持高於目標」且「風險進一步偏向上行」，5:4 的分裂投票顯示鷹派仍佔多數。IBTimes 報導經濟學家普遍預期 5 月將升息至 4.35%。Guardian 報導澳洲人正大幅削減外食支出，餐飲業協會主席表示「消費者信心下跌時反應極為迅速」，NAB 調查顯示連咖啡與零食消費也在萎縮。SBS 報導消費者已轉向「只加需要的油量」的節約行為模式。燃油消費稅已於 4/1 減半至 26.3 分/升，但油價仍遠高於戰前水準。",
     "impact": "支出數據的「虛假繁榮」（逾半由油價推升）將推動 RBA 更鷹派——表面上消費強勁，實際上家庭可支配收入正在被燃油成本侵蝕。Westpac 預測升息至 4.85% 意味著房貸壓力將進一步加劇。非必需品類面臨嚴峻壓力，消費者已進入「精打細算」模式。「外食轉居家」趨勢為廚房用品、食品儲存容器等品類帶來機會。物流成本因油價飆升而上漲，但消費者價格敏感度同步升高，成本轉嫁空間極為有限。RBA 4/17 維持利率不變提供短暫喘息，但 5 月升息幾乎確定。",
@@ -5104,6 +5333,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "UNSW 警告澳洲面臨停滯性通膨風險：Deloitte 估計百萬就業崗位受威脅，油價若持續高位 GDP 恐萎縮，燃油消費稅減半效果有限",
     "summary": "UNSW BusinessThink 4/22 發布深度分析，警告中東油價衝擊正將澳洲推向停滯性通膨（stagflation）——高通膨與低增長並存的最糟經濟組合。Deloitte Access Economics 估計若油價飆至 US$175/桶，澳洲經濟將陷入深度衰退，失業率攀升至 6.8%（逾百萬人失業），通膨飆至 7.5%。HSBC 首席經濟學家 Paul Bloxham 預測若油價維持 US$140 以上，澳洲 GDP 將在 Q2 與 Q3 連續萎縮。OECD 3 月已將全球 G20 通膨預測上調 1.2 個百分點至 4%。澳洲政府 4/1 起將燃油消費稅減半（從 52.6 分降至 26.3 分/升），油價已從 3 月底的 $2.38/升高點回落 10-25 分，但仍遠高於戰前 $1.66-1.80/升水準。Guardian 報導即使海峽短暫開放，油價回到戰前水準仍需數週至數月。澳洲超級年金基金也受衝擊，材料板塊暴跌 14%，A-REIT 下跌 9%。",
     "impact": "停滯性通膨是電商賣家最不利的經濟環境——物流成本因油價上漲而攀升，但消費者購買力同步萎縮，成本無法轉嫁。燃油消費稅減半僅部分緩解壓力，油價仍較戰前高出 30-40%。Deloitte 的百萬失業預測雖為極端情境，但即使溫和情境下 GDP 增長也僅 1.9%，消費環境將持續疲軟。超級年金基金虧損將進一步打擊消費者信心（澳洲家庭高度關注退休金表現）。賣家需為「高成本 + 低需求」的雙重壓力做好至少 2-3 個季度的準備。",
@@ -5134,6 +5364,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AE",
+    "ai": false,
     "title": "UAE 電子發票 ASP 指定倒數 14 週：Tally Solutions 發布完整分階段實施指南，VAT 法修正案確認取消反向收費自開發票、進項稅額 5 年到期",
     "summary": "Tally Solutions 4 月發布 UAE 電子發票完整分階段實施時程指南。Phase 1（7/1-12/31）為試點與自願實施期，年營收 ≥ AED 5,000 萬的大型企業須於 7/31 前完成 ASP 指定。Phase 2（2027/1/1 起）為強制實施期，所有 B2B 與 B2G 交易須以 Peppol PINT AE XML 格式透過 ASP 傳輸。Alvarez & Marsal 分析指出，MoF 已公布修正後的 VAT 執行條例（Cabinet Decision No. 100 of 2025），核心變革包括：取消反向收費機制下的自開發票要求、引入 5 年進項稅額退稅期限（逾期永久喪失）、FTA 可拒絕與逃稅相關供應鏈的進項稅額抵扣。Flying Colour Tax 4 月更新確認新 VAT 規則已全面生效。ClearTax 指出 B2C 交易暫時排除在電子發票範圍外，但 FTA 保留未來納入的權力。不合規罰款維持：未實施系統每月 AED 5,000、每張未開電子發票 AED 100。距 7/31 ASP 指定截止日僅剩約 14 週。",
     "impact": "距 ASP 指定截止日僅剩 14 週，AE 站點年營收 ≥ AED 5,000 萬的大型賣家時間壓力加劇。VAT 法修正案的三大變革直接影響賣家日常營運：取消反向收費自開發票簡化了流程但要求保留完整供應商文件；5 年進項稅額到期意味著 2021 年的 VAT 進項稅額將於年底永久喪失；「知情或應知情」規則要求對供應商進行 VAT 盡職調查。B2C 暫時排除對平台賣家是利好，但 FTA 保留未來納入權力意味著需提前準備。ASP 產能預計年底前額滿，延遲行動可能面臨無 ASP 可選的窘境。",
@@ -5164,6 +5395,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "SA",
+    "ai": false,
     "title": "ZATCA 電子發票 Wave 24 整合期限 6/30 僅剩 10 週：主動數據稽核已啟動比對 Fatoora 與 VAT 申報差異，SAR 375,000 門檻企業須加速整合",
     "summary": "ZATCA 電子發票 Phase 2 第 24 波整合期限（6/30）進入最後 10 週倒數。HalSimplify 報告指出，自 2023 年 1 月 Phase 2 啟動以來，已有數千家沙烏地企業因不合規發票遭罰。Wave 24 適用於 2022-2024 年應稅銷售額超過 SAR 375,000 的企業，須在 6/30 前完成 ERP/發票系統與 FATOORA 平台的整合，實現 B2B 發票即時清算（clearance）與 B2C 發票即時報告（reporting）。Tally Solutions 發布 Phase 2 合規檢查清單，要求發票須包含 XML 格式、加密印章（cryptographic stamp）與 QR Code。ClearTax 更新 ZATCA 最新公告頁面，確認新版 SDK 已發布，新增 B2G 發票標識與持續供應發票標識。多位 GCC 稅務專家報告 ZATCA 已啟動主動數據稽核——系統性比對 Fatoora 電子發票數據與 VAT 申報表，針對差異發出正式說明要求。ZATCA 正試行預填 VAT 申報表，預計 2026 年底或 2027 年初推出，屆時申報將完全透明。稅務特赦計畫延長至 6/30，為有歷史合規問題的賣家提供修正窗口。",
     "impact": "SA 站點賣家面臨雙重壓力：Wave 24 整合截止日（6/30）與 ZATCA 主動數據稽核同步進行。任何 Fatoora 電子發票數據與 VAT 申報表之間的不一致都可能觸發正式稽核。預填 VAT 申報表意味著 ZATCA 將擁有完整的交易數據，手動調整或遺漏將無所遁形。SAR 375,000 門檻（約 USD 100,000）涵蓋大多數活躍的 SA 站點賣家。稅務特赦計畫（至 6/30）為有歷史問題的賣家提供了最後的低成本修正窗口——特赦到期後罰款將大幅增加。",
@@ -5195,6 +5427,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "美軍扣押伊朗貨船、伊朗重新關閉海峽：4/22 停火明日到期，AE/SA 站點海運中斷恐持續數月",
     "summary": "美國海軍於 4/19 扣押伊朗貨船 MV Touska，伊朗於 4/18 在短暫重新開放後再度關閉荷莫茲海峽。IRGC 向試圖通過海峽的船舶開火。五角大廈表示封鎖期間已有 27 艘船舶被迫折返。停火協議將於 4/22（明日）到期，和談毫無進展。伊朗拒絕參加第二輪伊斯蘭堡談判。NPR 報導伊朗首席談判代表表示「我們自己都無法通行，不可能讓其他人通過」。油價再度飆升，達拉斯聯儲模型估計若海峽關閉延續 2-3 個季度，WTI 原油價格可能達到 $115-132/桶。",
     "impact": "AE/SA 站點 FBA 供應鏈面臨結構性中斷——海運通道完全切斷，空運成為唯一替代方案但運力極度緊張且成本高昂。備貨週期需延長至 14-16 週。戰爭險保費持續攀升。油價飆升進一步推高所有物流成本。若 4/22 停火到期後戰事恢復，海運恢復時間表將更加不可預測。",
@@ -5225,6 +5458,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳洲 3 月家庭支出暴增 2.9% 但逾半為油價推升：消費者轉向「精打細算」模式，RBA 5 月再升息壓力加劇",
     "summary": "CBA 數據顯示澳洲 3 月家庭支出暴增 2.9%，但逾半增幅由燃油成本推動（交通類 +22.9%、加油站消費 +45%）。扣除燃油後實際增長僅 +1%。消費者通膨預期升至 5.9%（2022 年以來最高）。Westpac 預測 RBA 將再升息 3 次至 4.85%。澳洲人正大幅削減外食支出，NAB 調查顯示連咖啡與零食消費也在萎縮。SBS 報導消費者已轉向「只加需要的油量」的節約行為模式。",
     "impact": "支出數據的「虛假繁榮」將推動 RBA 更鷹派。非必需品類面臨嚴峻壓力。「外食轉居家」趨勢為廚房用品等品類帶來機會。物流成本因油價飆升而上漲，但消費者價格敏感度同步升高，成本轉嫁空間極為有限。",
@@ -5239,6 +5473,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "4/22 停火到期倒數：和談無進展、美伊雙方立場僵持，戰事恢復將使油價衝破 $115，全球供應鏈面臨最危險一週",
     "summary": "停火協議將於 4/22 到期，和談毫無進展。European Business Magazine 稱本週為「開戰以來最危險的一週」。三大不可調和議題：鈾濃縮、真主黨資金、荷莫茲海峽控制權。川普表示可能「重新開始轟炸」但也稱協議仍有可能。達拉斯聯儲模型：若海峽關閉延續 2 個季度油價達 $115/桶，3 個季度達 $132/桶。全球 GDP 增長在 Q2 將下降 2.9 個百分點。",
     "impact": "三個市場全面受衝擊。AU：油價飆升→物流成本+消費壓縮。AE/SA：直接供應鏈中斷持續或惡化。全球 GDP 下滑意味所有市場消費需求受抑制。",
@@ -5257,6 +5492,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AE",
+    "ai": false,
     "title": "UAE 電子發票 ASP 指定倒數 3 個月：BDO 發布完整實施時程，MyInvois 整合指南公布，自由區企業也須合規",
     "summary": "BDO 於 4/20 透過 VATupdate 發布 UAE 電子發票完整實施時程。MD 243 適用範圍確認：UAE 境內所有企業均須合規，包括自由區企業與未登記 VAT 的實體。Advintekglobal 公布 MyInvois 平台整合指南。ASP 產能預計 2026 年底前額滿。FTA 稽核追溯期可延長至 15 年。Phase 1 大型企業須於 7/31 前完成 ASP 指定。",
     "impact": "AE 站點賣家距 ASP 截止日僅剩 3 個月。自由區賣家確認納入範圍。15 年追溯期意味歷史記錄完整性至關重要。",
@@ -5270,6 +5506,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "SA",
+    "ai": false,
     "title": "ZATCA 已啟動電子發票數據稽核：即時比對 Fatoora 與 VAT 申報差異，Wave 24 整合期限 6/30 僅剩 10 週",
     "summary": "多位 GCC 稅務專家報告 ZATCA 已啟動主動數據稽核——系統性比對 Fatoora 電子發票數據與 VAT 申報表，針對差異發出正式說明要求。Wave 24 截止日 6/30，適用於 2022-2024 年營收達 SAR 375,000 以上的企業。ZATCA 正試行預填 VAT 申報表，預計 2026 年底或 2027 年初推出。",
     "impact": "SA 站點賣家面臨主動稽核，任何不一致觸發稽核。預填申報表意味完全透明。Wave 24 僅剩 10 週。",
@@ -5284,6 +5521,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "美國正式啟動伊朗港口海上封鎖：首日無船突破封鎖線，海峽通行量暴跌逾 95%，全球船東警告「風險過高無法通行」",
     "summary": "美國中央司令部（CENTCOM）4/14 宣布，針對伊朗港口的海上封鎖已於美東時間週一上午 10 時正式啟動，首 24 小時內無船舶突破封鎖線。CENTCOM 強調封鎖僅適用於「進出伊朗港口與沿海區域的所有國籍船舶」，非伊朗港口的航行自由不受影響，約 10,000 名美軍水兵、海軍陸戰隊員與飛行員及十餘艘軍艦參與行動。然而 CNN 引述 Kpler 數據指出，封鎖啟動後仍有至少 9 艘商船通過海峽，包括兩艘美國制裁的伊朗關聯油輪。Al Jazeera 統計，自 2/28 開戰以來僅 279 艘船舶通過海峽，較戰前日均約 100 艘暴跌逾 95%。停火後（4/8 起）也僅 45 艘船舶進出。全球船東警告在美國封鎖與伊朗控制指令相互衝突下，通行風險過高。伊朗警告若其港口被封鎖，鄰國海灣港口也將不安全。油價跳漲，美股期貨下跌。WSJ 報導美伊雙方雖立場僵持，但均釋出願意繼續外交談判的信號。",
     "impact": "封鎖從「停火期間的不確定性」升級為「主動軍事行動」，AE/SA 站點供應鏈中斷已進入最嚴峻階段。CENTCOM 雖聲稱非伊朗港口航行自由不受影響，但伊朗威脅報復鄰國港口使 UAE/SA 港口安全性存疑。船東普遍認為風險過高拒絕通行，意味著即使理論上可通過，實際運力仍極度受限。油價跳漲將進一步推升運費與物流成本。封鎖若持續，AE/SA 站點的庫存補充將面臨結構性困難，空運成為唯一可靠但極昂貴的替代方案。",
@@ -5314,6 +5552,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "RBA 明日（4/17）利率決策：市場定價升息至 4.35% 機率逾六成，四大銀行一致預測連續第三次升息，Q1 CPI 數據成關鍵",
     "summary": "RBA 將於明日（4/16-17）召開利率決策會議，市場與四大銀行普遍預期將再升息 25 個基點至 4.35%，為 2026 年第三次連續升息。Fenro 分析指出，RBA 3 月會議以 5:4 的微弱多數通過升息至 4.10%，目前利率已高於 1990 年以來長期均值 3.87%。Janus Henderson 4 月報告警告，中東衝突帶來的能源價格衝擊需求彈性極低，高油價實質上等同於對家庭徵稅，ANZ-Roy Morgan 消費者信心指數已跌至 1973 年以來歷史低位。Finder 調查顯示僅 38% 經濟學家正確預測了 3 月升息，顯示市場對 RBA 決策的不確定性仍高。ABC 報導，RBA 副行長 Andrew Hauser 此前表示高通膨「有毒」，決策者決心將通膨壓低。CPI 年增率仍達 3.7%，遠高於 RBA 目標區間 2-3%。NAB 家庭支出數據顯示 2 月消費仍增長 0.4%，過去 12 個月增長 6.7%，頑強的消費支出使 RBA 抗通膨之路更加困難。四大銀行固定利率已突破 6%。",
     "impact": "若 RBA 如預期升息至 4.35%，將是 2023 年 11 月以來的最高利率水準，直接壓縮澳洲家庭可支配收入。消費者信心處於 50 年低位意味著非必需品類銷售將持續承壓。固定利率突破 6% 使房貸壓力進一步加劇，尤其影響雪梨與墨爾本外圍郊區的年輕房貸族——這正是線上消費的主力族群。NAB 數據顯示消費仍有韌性，但這反而可能促使 RBA 更鷹派，形成「消費越強→升息越多→最終消費崩跌」的惡性循環風險。賣家需為 Q2-Q3 消費環境持續惡化做好準備。",
@@ -5344,6 +5583,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AE",
+    "ai": false,
     "title": "UAE 電子發票強制令倒數：7/1 試點啟動、大型企業須 7/31 前指定 ASP，Peppol PINT AE 技術規格已公布 50 項必填欄位",
     "summary": "UAE 財政部（MoF）與聯邦稅務局（FTA）的電子發票強制令進入實質準備階段。根據 2/23 公布的技術指引文件，UAE 採用去中心化模式，以 Peppol 網路為基礎，要求所有 B2B 與 B2G 交易發票以 XML 格式（PINT AE 標準）透過認證服務提供商（ASP）傳輸。KPMG 分析指出，技術文件定義了 50 項必填資料欄位與 16 種業務情境，涵蓋自由區交易、視同供應、電商交易、出口等。關鍵時程：7/1 試點啟動（自願參與）、年營收 ≥ AED 5,000 萬企業須於 7/31 前指定 ASP、2027/1/1 起強制實施。RSM 報告指出，不合規罰款包括未實施系統每月 AED 5,000、每張未開電子發票 AED 100（月上限 AED 5,000）、未報告系統故障每日 AED 1,000。B2C 交易暫時排除在外。VAT 集團成員間交易享有 24 個月寬限期（至 2029/1/1）。此強制令與 4/14 生效的新 VAT 罰則框架形成雙重合規壓力。",
     "impact": "UAE 電子發票強制令對 AE 站點賣家的影響取決於營收規模。年營收 ≥ AED 5,000 萬的大型賣家須在 7/31 前完成 ASP 指定，距今僅 3.5 個月。中小型賣家（< AED 5,000 萬）的強制期限為 2027/7/1，但提前準備可避免屆時倉促應對。電商交易被列為 16 種特殊業務情境之一，意味著平台賣家的發票格式與資料要求可能有特殊規定。50 項必填欄位要求 ERP 系統升級與資料清理，TRN、法定名稱、地址等主資料必須與 FTA 記錄完全一致，否則電子發票將被即時退回。此強制令疊加昨日生效的新 VAT 罰則框架，AE 站點賣家面臨前所未有的合規壓力。",
@@ -5374,6 +5614,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "SA",
+    "ai": false,
     "title": "沙烏地四大經濟特區法規今日（4/15）正式生效：Zakat 豁免、預扣稅全免、區內零 VAT，跨境電商物流據點新選項浮現",
     "summary": "沙烏地四大經濟特區（King Abdullah Economic City、Ras Al-Khair、Jazan、Cloud Computing SEZ）的監管框架於今日（4/15-16）正式生效，標誌著 Vision 2030 經濟多元化戰略的重要里程碑。The Saudi Times 4/14 報導，合格特區企業可享受的核心優惠包括：Zakat 義務豁免、預扣稅全額免除、區內貨物交換零 VAT 稅率、從沙烏地本土進入特區的貨物零 VAT、從海外進口至特區的貨物可能不在 VAT 範圍內。KPMG SA 分析指出，特區企業同時豁免適用沙烏地公司法、商業登記法與商號法，大幅降低外國投資者的行政負擔。Al Tamimi 律所提醒，企業須以沙烏地有限責任公司（LLC）形式設立，且需符合各區特定的許可條件與經濟實質要求。Aurifer Tax 分析指出，2-3 月已開放經濟實質要求（ESR）公眾諮詢，顯示稅務優惠將與實質營運掛鉤。House of Saud 報告指出，工業特區（KAEC、RAK、Jazan）提供 20 年企業所得稅減免 75%，前 5 年免 Saudization 配額。",
     "impact": "四大特區的稅務優惠為在 SA 設立物流或營運據點的跨境賣家提供了顯著的成本優勢。零 VAT 與預扣稅豁免可大幅降低區內營運的稅務負擔。KAEC 定位於先進製造與物流，對電商供應鏈最具直接相關性——若賣家在 KAEC 設立倉儲或配送中心，區內貨物流轉可享零 VAT。Cloud Computing SEZ 對數據密集型電商營運（如 AI 定價、庫存管理系統）提供稅務優勢。然而，經濟實質要求意味著不能僅設立空殼公司，須有實際營運與人員。前 5 年免 Saudization 配額降低了初期人力成本壓力。",
@@ -5404,6 +5645,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "貿易"
     ],
     "market": "",
+    "ai": false,
     "title": "美國 15% 臨時進口附加稅持續影響澳洲出口：兩項 Section 301 調查 7 月結果出爐，de minimis 豁免持續暫停衝擊跨境小包",
     "summary": "United States Studies Centre（USSC）4/2 發布「解放日一週年」分析報告，全面回顧美國關稅政策對澳洲的影響。2025 年 4 月的「解放日」關稅經美國最高法院 2026 年 2 月裁定違憲後，美國隨即以《1974 年貿易法》第 122 條為依據，對全球實施 15% 臨時進口附加稅（原為 10%，後上調至 15%），有效期 150 天。Fenro 分析指出，牛肉等關鍵農產品獲豁免，但多數澳洲商品面臨 15% 稅率。更具威脅性的是兩項 Section 301 調查將於 7 月出結果，其中一項評估貿易夥伴是否執行禁止強迫勞動商品進口的法律，不利裁定可能導致針對澳洲的懲罰性關稅。同時，de minimis 豁免（原 US$800 以下免稅）已於 2025 年 8 月暫停並於 2026 年 2 月確認延續，所有小額包裹均須繳納關稅。Queensland TIQ 指出，Section 232 國安關稅（鋼鐵、銅、特定晶片）不受最高法院裁定影響，持續適用。澳洲出口商反映政府支援不足，部分在中國製造的澳洲品牌面臨遠高於 15% 的實際稅率。",
     "impact": "de minimis 豁免暫停對跨境電商影響最為直接——從澳洲直發美國的小額包裹不再享有免稅待遇，所有商品均須繳納 15% 附加稅，大幅壓縮低單價商品的利潤空間。對 AU 站點賣家而言，若其供應鏈涉及中國製造，出口至美國的實際稅率可能遠高於 15%（中國商品面臨 60-145% 不等的關稅）。7 月 Section 301 調查結果是最大不確定性——若澳洲被認定執法不力，可能面臨額外懲罰性關稅。澳歐 FTA 3 月底完成談判，為澳洲出口商提供了市場多元化的新選項，但距正式生效仍需 1-2 年。整體而言，全球貿易環境的不確定性持續升高，跨境賣家需更靈活的多市場策略。",
@@ -5435,6 +5677,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "伊斯蘭堡和談破裂、美國宣布封鎖伊朗石油出口：荷姆茲海峽危機升級，聯合國警告全球糧食危機迫近",
     "summary": "美伊停火後的伊斯蘭堡週末和談未能取得突破，Trump 總統隨即宣布對伊朗石油出口實施海上封鎖。據 BBC Verify 分析，停火以來每日僅個位數船舶通過海峽，遠低於衝突前日均 138 艘。Spectrum News 報導，伊朗戰爭已進入第 45 天，供應鏈專家警告影響將是「多面向且長期的」。船用燃料價格在六週內翻倍，美國汽油均價較戰前上漲 $1.15/加侖。Hapag-Lloyd 估計每週額外成本 $5,000-6,000 萬美元，約 1,000 艘商船仍滯留波斯灣。聯合國 FAO 發出警告，海峽承載全球 20% 石油與天然氣、三分之一農業肥料及 50% 硫磺出口，停火前出發的貨物已抵達目的地，全球正進入供應可能收緊的階段，糧食危機風險上升。Resilience.org 分析指出，即使海峽重新開放，煉油廠與管線損壞意味著能源與物資全面恢復需數月時間。保險成本飆升進一步推高全球貿易成本基礎。",
     "impact": "和談破裂與美國封鎖令使中東物流前景進一步惡化。AE/SA 站點供應鏈中斷已從「暫時性」轉為「結構性」風險。肥料短缺可能推高農產品價格，影響食品類商品成本。船用燃料翻倍直接推升運費，遠東至中東航線成本持續攀升。保險費率飆升為所有經過高風險區域的貨物增加額外成本層。Hapag-Lloyd 明確表示部分成本將轉嫁客戶，賣家物流成本壓力將持續加劇。空運替代方案因中東航班受限而容量有限且價格高昂。",
@@ -5465,6 +5708,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳洲消費者信心崩跌 12.5% 至 80.1：COVID 以來最大單月跌幅，油價飆至 $2.40/L，RBA 副行長暗示可能再升息",
     "summary": "Westpac-Melbourne Institute 4 月消費者信心指數暴跌 12.5% 至 80.1，為 COVID 疫情以來最大單月跌幅，逼近歷史低點。Westpac 澳洲宏觀預測主管 Matthew Hassan 指出，油價飆升與 RBA 再次升息 25 個基點形成雙重打擊。Capital Brief 報導，4 月第一週平均油價達 $2.40/升，較 3 月調查時上漲 37 分，較 2 月初上漲 77 分——為該調查歷史上最大漲幅，百分比漲幅可比 1979 年石油危機。「家庭財務 vs 一年前」分項指數暴跌 16.7% 至 66.8，「是否適合購買大型家用品」指數下跌 15% 至 83.3。RBA 副行長 Andrew Hauser 同日在紐約演講中表示，決策者「不再有信心認為當前利率設定足夠限制性」，利率可能需要進一步上升。Bloomberg 報導，商業信心同步暴跌。Westpac 銀行向 ASX 警告，中東衝突已影響其資金市場部門收益，淨利息收益率貢獻從 Q1 的 15bp 降至 Q2 的 7bp。市場目前定價 5 月升息機率約 65-72%。",
     "impact": "消費者信心崩跌直接衝擊非必需品類銷售。「是否適合購買大型家用品」指數跌至 83.3，顯示消費者大幅縮減大額支出意願，電子產品、家具、家電等品類首當其衝。油價 $2.40/L 意味著物流配送成本同步上升，壓縮賣家利潤空間。80% 受訪者預期未來一年房貸利率將上升，40% 預期漲幅超過 1 個百分點——這將進一步壓縮家庭可支配收入。RBA 副行長的鷹派發言強化了 5 月再升息預期，消費環境短期內難以改善。Westpac 銀行自身業績受損顯示金融體系壓力正在擴散。",
@@ -5495,6 +5739,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "",
+    "ai": false,
     "title": "UAE 新 VAT 罰則框架今日正式生效：FTA 2025 年稽查量暴增 89%，「知情或應知情」規則擴大供應鏈連帶責任",
     "summary": "UAE 內閣第 129/2025 號決議今日（4/14）正式生效，全面改革 VAT 行政罰則框架。Alpha Auditing 分析指出，新制核心變革包括遲繳稅款從複利制改為年利率 14% 單利制、自願揭露罰款改為每月 1%、申報錯誤首次罰款降至 AED 500。同時，FTA 於 4/7 公布 2025 年執法數據：全年進行約 176,000 次市場稽查，較 2024 年的 93,000 次暴增 89%，沒收 2,950 萬包無數位稅章菸草產品。Consultancy-me 4/10 報導，UAE VAT 法新增的「知情或應知情」（knew or should have known）規則要求企業對供應鏈中的逃稅行為承擔連帶責任——即使企業本身並未直接參與逃稅，若 FTA 認定其「應當知情」，進項稅額抵扣仍可被拒絕。ClearTax 分析指出，2026 年 VAT 修法同時取消了反向收費機制下的自開發票要求，並引入 5 年 VAT 退稅申請期限，逾期未申請的進項稅額將永久喪失。Deloitte 中東於 4/2 舉辦 UAE 自由區合規要求研討會，顯示自由區企業的海關與監管合規壓力持續升高。",
     "impact": "FTA 稽查量暴增 89% 顯示執法力度大幅強化，AE 站點賣家面臨更高的合規審查風險。「知情或應知情」規則是最具影響力的變革——賣家必須對供應商進行 VAT 盡職調查，否則即使自身合規，仍可能因供應鏈中的逃稅行為而喪失進項稅額抵扣。5 年退稅期限意味著 2021 年的 VAT 進項稅額將於 2026 年底到期。取消反向收費自開發票簡化了合規流程，但要求賣家確保保留完整的供應商發票與進口文件。自由區賣家需特別關注海關合規要求的變化。",
@@ -5525,6 +5770,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳洲 ACCC 罰款上限翻倍至 $1 億澳元，不公平交易行為禁令法案進入國會：電商賣家定價與行銷合規風險升高",
     "summary": "澳洲國會已通過《Treasury Laws Amendment (Doubling Penalties for ACCC Enforcement) Act 2026》，自 3 月 28 日起生效，將競爭法與消費者法違規的最高民事罰款從 $5,000 萬澳元翻倍至 $1 億澳元（約 USD 6,900 萬）。White & Case 分析指出，罰款計算仍取三者最高值：$1 億、違法所得的 3 倍、或違規期間調整後營業額的 30%。刑事罰則同步提高，涵蓋卡特爾行為、虛假陳述、產品安全違規與金字塔銷售。Norton Rose Fulbright 4 月報告特別警告，ACCC 在通膨與價格衝擊時期會加強對「價格哄抬」行為的監控，已明確表示將對「因價格急劇上漲而進行誤導性或欺騙性行為」的零售商採取行動。同時，《Competition and Consumer Amendment (Unfair Trading Practices) Bill 2026》已於 4/1 提交眾議院，預計 2027 年 7 月生效，將首次在 ACL 中引入原則性的不公平交易行為禁令，涵蓋訂閱陷阱、隱藏費用等行為。ACCC 已將不公平交易行為列為 2026-27 年執法重點。",
     "impact": "罰款翻倍直接提高了 AU 站點賣家的合規風險成本。在當前油價飆升與通膨壓力下，ACCC 明確將「價格哄抬」列為監控重點——賣家在調整售價時必須確保定價行為有合理依據，避免被認定為「誤導性或欺騙性」。不公平交易行為法案雖預計 2027 年生效，但 ACCC 已開始關注訂閱模式、隱藏費用等行為，使用 Subscribe & Save 等訂閱功能的賣家需確保取消流程透明。虛假陳述罰則提高意味著產品 listing 中的功能宣稱、原產地標示、環保聲明等需更加嚴謹。",
@@ -5555,6 +5801,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "SA",
+    "ai": false,
     "title": "沙烏地四大經濟特區法規 4/16 生效、ZATCA 電子發票 Wave 24 整合期限 6/30：跨境賣家合規時間表更新",
     "summary": "BDO 發布 GCC Q1 2026 稅務更新報告，揭示沙烏地多項重大合規變革即將到來。四大經濟特區（King Abdullah Economic City、Ras Al-Khair、Jazan、Cloud Computing SEZ）的監管框架將於 4 月 16 日正式生效，提供區內貨物交換零 VAT 稅率、預扣稅豁免與 Zakat 排除等優惠。ZATCA 電子發票 Phase 2 第 24 波要求 2022-2024 年應稅銷售額超過 SAR 375,000 的企業須在 6 月 30 日前完成 FATOORA 平台整合。同時，SAMA 4/13 公布數據顯示沙烏地 2025 年電子支付佔零售支付總額的 85%（2024 年為 79%），電子交易量達 146 億筆（2024 年為 126 億筆），mada 支付系統在 POS 與電商交易中的使用量持續增長。PwC 中東 GCC 間接稅報告指出，SA 同時推出線上市場「視同供應商」VAT 規則指引，進一步明確數位平台在 VAT 徵收中的角色，並將稅務特赦計畫延長至 2026 年 6 月 30 日。",
     "impact": "ZATCA Wave 24 電子發票整合期限（6/30）對 SA 站點賣家影響最為直接——年銷售額超過 SAR 375,000 的賣家必須在期限前完成系統與 FATOORA 平台的整合，否則面臨罰款。「視同供應商」規則指引進一步明確 Amazon 作為平台在 VAT 徵收中的責任，可能影響平台代扣代繳機制。電子支付佔比達 85% 顯示沙烏地消費者高度數位化，有利於電商滲透率持續提升。經濟特區優惠可能為在 SA 設立物流或營運據點的賣家提供稅務優勢。稅務特赦延長至 6/30 為有歷史合規問題的賣家提供了修正窗口。",
@@ -5582,6 +5829,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "美伊停火後荷姆茲海峽仍「實質關閉」：伊朗堅持許可制通行並擬收取每船 200 萬美元通行費，600+ 船舶持續滯留",
     "summary": "美國與伊朗於 4 月 8 日宣布為期兩週的停火協議，荷姆茲海峽重新開放為協議核心條件之一。然而截至 4 月 10 日，海峽仍處於「實質關閉」狀態。據 Straits Times、Al Jazeera 與 Windward 報導，停火後僅有少量散貨船通過海峽，每日通行量約 10-15 艘，遠低於衝突前的 135 艘。伊朗堅持所有船舶須經其革命衛隊協調許可方可通行，並在其 10 點和平方案中提出每船約 200 萬美元的通行費，收入由伊朗與阿曼分配。Lloyd's List Intelligence 數據顯示，超過 600 艘船舶（含 325 艘油輪）仍滯留波斯灣。ADNOC 執行長 Sultan Al Jaber 公開表示：「海峽並未開放，這不是航行自由，這是脅迫。」英國外相 Cooper 拒絕接受伊朗收取通行費的主張。Maersk 表示停火「可能創造通行機會，但尚未提供完整的海事確定性」，暫不調整航線。遠東至中東運費較衝突前上漲 50-80%，歐洲至中東上漲 40-50%。",
     "impact": "停火未帶來實質性物流改善，AE/SA 站點的供應鏈中斷將持續。Maersk 維持繞行好望角策略不變，FBA 入倉時效仍嚴重延長。運費持續高位（遠東至中東漲幅 50-80%），賣家物流成本壓力未減。伊朗若成功實施通行費制度，將為全球航運增加新的永久性成本。Bahrain 港口關閉、Qatar 出口暫停、Kuwait 受限等區域港口狀態持續影響中東物流網絡。空運成本因中東航班停飛仍處高位。",
@@ -5608,6 +5856,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "",
+    "ai": false,
     "title": "UAE 全新 VAT 罰則框架今日（4/14）正式生效：遲繳改為年利率 14% 單利制，企業須立即完成合規調整",
     "summary": "UAE 內閣第 129/2025 號決議（Cabinet Decision No. 129 of 2025）於明日 4 月 14 日正式生效，全面改革 VAT、企業稅與消費稅的行政罰則框架。核心變革：(1) 遲繳稅款罰則從原本「2% 即時 + 每月 4%（最高 300%）」複利制，改為年利率 14% 按月計算的單利制——以 AED 100,000 遲繳 8 個月為例，舊制罰款 AED 30,000，新制僅 AED 9,333；(2) 自願揭露罰款改為每月 1%，鼓勵企業主動糾錯；(3) 申報錯誤首次罰款從 AED 1,000 降至 AED 500；(4) 未以阿拉伯文保存紀錄罰款從 AED 20,000 降至 AED 5,000（降幅 75%）；(5) 稅務稽核後揭露罰款從 50% 降至 15%。同時，FTA 獲授權拒絕與逃稅相關供應鏈的進項稅額抵扣，即使買方並非直接參與逃稅。2021 年的 VAT 進項稅額將於 2026 年底到期，未申請退還者將永久喪失。多家稅務顧問機構（PwC、Andersen、Flying Colour Tax）呼籲企業在生效前完成歷史申報自查。",
     "impact": "AE 站點賣家面臨全新合規環境。短期遲繳壓力雖降低，但 FTA 新增的「進項稅額拒絕抵扣」權力影響深遠——若供應鏈中任何環節涉及逃稅，即使賣家本身合規，進項稅額仍可能被拒絕。這要求賣家對供應商進行更嚴格的 VAT 盡職調查。2021 年未申請退還的 VAT 進項稅額將於年底到期，涉及金額可能相當可觀。自願揭露的每月 1% 罰款意味著歷史錯誤越早修正代價越低。跨 AE/SA 雙站點賣家需同時應對 UAE 新罰則與 SA ZATCA 的合規要求。",
@@ -5634,6 +5883,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "RBA 4/17 利率決策在即：市場預期再升息至 4.35%，Deloitte 警告澳洲經濟「油箱見底」，GDP 恐降至 1.9%",
     "summary": "RBA 將於本週四（4/17）召開利率決策會議，市場普遍預期將再升息 25 個基點至 4.35%，為今年第三次升息。Deloitte Access Economics 3 月季度報告以「Running on Empty」為題，警告澳洲經濟正面臨國內通膨與國際能源衝擊的雙重供給危機，預測 2026-27 年 GDP 成長率僅 1.9%（低於先前預估的 2.4%）。Janus Henderson 4 月報告指出，RBA 已在 2-3 月連續升息 50 個基點至 4.10%，能源價格衝擊的需求彈性極低，高油價實質上等同於對家庭徵稅。ANZ-Roy Morgan 消費者信心指數維持在 1973 年以來歷史低位附近。Trading Economics 數據顯示澳洲利率自 1990 年以來平均為 3.87%，目前 4.10% 已高於長期均值。Fenro 分析指出，RBA 3 月會議紀錄承認「已收緊但不確定是否收緊到位」，中東衝突帶來的油價上漲為短期通膨的關鍵驅動因素。",
     "impact": "若 RBA 如預期升息至 4.35%，將進一步壓縮澳洲家庭可支配收入，非必需品類銷售持續承壓。消費者已進入「精準消費」模式，品牌忠誠度下降，價格敏感度上升。四大銀行固定利率已突破 6%，房貸壓力將進一步抑制消費支出。Deloitte 指出財政政策未能分擔通膨壓力，負擔集中在年輕房貸族與租屋族——這恰好是線上消費的主力族群。賣家需為 Q2-Q3 的消費持續疲軟做好準備。",
@@ -5660,6 +5910,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "平台"
     ],
     "market": "AU",
+    "ai": false,
     "title": "Pattern 報告：Amazon AU 滲透率升至 60% 超越 eBay，Temu 達 47%，澳洲本土電商平台加速退場",
     "summary": "Pattern 發布《2026 Marketplace Consumer Report》，揭示澳洲電商市場格局正經歷結構性轉變。Amazon AU 使用率從 2023 年的 52% 攀升至 2026 年的 60%，正式超越 eBay（從 62% 跌至 51%）成為澳洲最大電商平台。前瞻意向更為懸殊：66% 消費者計畫未來一年在 Amazon 購物。Temu 滲透率快速擴張至 47%，Shein 達 30%，中國跨境平台持續搶佔市場。本土平台方面，Catch 與 MyDeal 已關閉，Kogan 面臨競爭壓力。93% 的澳洲消費者在過去 12 個月內曾在電商平台購物。各平台呈現明確的品類分化：Amazon 在電子產品與家居用品領先，eBay 在二手商品與收藏品仍有優勢，Temu/Shein 主攻低價時尚與日用品。Australia Post 報告顯示 2025 年澳洲線上消費達創紀錄的 826 億澳元，年增 14%，線上零售佔比接近四分之一。",
     "impact": "Amazon AU 市場領導地位確立，為跨境賣家提供更大的市場機會。但 Temu（47%）與 Shein（30%）的快速崛起帶來低價競爭壓力，尤其在時尚、日用品等品類。本土平台退場意味著更多消費者流向全球平台，Amazon AU 的流量與轉換率有望受益。826 億澳元的線上消費規模與 14% 的年增率顯示，即使在經濟逆風下，電商滲透率仍在加速。區域與郊區消費者的線上購物增長尤為顯著，物流覆蓋能力成為競爭關鍵。",
@@ -5686,6 +5937,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "合規"
     ],
     "market": "AU",
+    "ai": false,
     "title": "AUSTRAC Tranche 2 反洗錢新規 4 月起開放登記，9 萬家新實體納入監管，電商賣家 KYC 義務擴大",
     "summary": "澳洲金融交易報告與分析中心（AUSTRAC）的反洗錢/反恐融資（AML/CTF）Tranche 2 改革已於 2026 年 3 月 31 日起開放登記，約 9 萬家新實體將被納入監管範圍，涵蓋律師、會計師、房地產經紀人、貴金屬交易商等專業服務提供者。過渡規則（Transitional Rules 2026）允許現有報告實體在過渡期內繼續使用舊有的客戶識別程序（ACIP），但須在過渡期結束前完成向新制客戶盡職調查（CDD）框架的轉換。關鍵日期：2026 年 6 月 30 日前須完成海外分支機構的合規通知。The Modern Regulator 4 月監管更新指出，AUSTRAC 承認無法立即監管所有 9 萬家新實體，將優先關注登記率與各專業領域的準備程度。同時，ACCC 新的併購審查門檻也於 4 月 1 日生效，擴大了少數股權與累積收購的通報範圍。",
     "impact": "AML/CTF Tranche 2 擴大了澳洲的反洗錢監管範圍，雖然電商平台本身不在此波直接監管對象中，但為 Amazon AU 賣家提供服務的會計師、律師、支付服務商等專業機構將面臨更嚴格的 KYC/CDD 要求。這可能導致賣家在開戶、稅務申報、法律諮詢等環節面臨更多合規文件要求與更長的處理時間。同時，ACCC 併購審查門檻擴大可能影響電商領域的併購活動與市場整合。長期而言，澳洲整體合規環境趨嚴，跨境賣家需提前準備更完整的身份驗證與商業文件。",
@@ -5713,6 +5965,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "Maersk 發布中東局勢更新：荷姆茲海峽軍事行動未見緩和跡象，亞歐航線運費飆升 29-31%",
     "summary": "Maersk 於 4 月 1 日發布最新中東局勢報告指出，中東地區軍事行動「目前未顯示明確放緩跡象」，公司對衝突演變的能見度極低。Maersk 持續監控局勢並採取必要措施保護人員、資產與客戶貨物安全。同時，Xeneta 首席分析師 Peter Sand 指出，荷姆茲海峽封鎖五週以來，所有主要東西向航線的即期運費均大幅上升：遠東至美西上漲 29%、遠東至北歐上漲 31%、遠東至地中海上漲 30%。Maersk 同步宣布對澳洲與紐西蘭實施聯運燃油費更新（Intermodal Fuel Fee update），並引入臨時緊急燃油附加費（Emergency Bunker Surcharge, EBS）。超過 150 艘油輪在海峽外閒置，約佔全球油輪船隊的重要比例，進一步加劇其他航線的運力緊張。",
     "impact": "AE/SA 站點的 FBA 入倉時效持續嚴重延長，從亞洲發往中東的貨物面臨航線中斷與運力不足。Maersk 對澳洲實施的聯運燃油費更新與 EBS 附加費，將直接推升 AU 站點的物流成本。全球運費飆升 29-31% 意味著所有站點的進口商品成本均在上升，賣家利潤空間持續被壓縮。繞行好望角導致運輸時間延長 10-20 天，庫存規劃難度大幅增加。",
@@ -5739,6 +5992,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "",
+    "ai": false,
     "title": "Westpac 預測 RBA 再升息三次至 4.85%，澳洲 GDP 恐降至 1.0%，失業率年底升至 5.0%",
     "summary": "Westpac 於 4 月 6 日發布最新經濟展望，預測 RBA 將在 5 月、6 月、8 月各升息 25 個基點，現金利率峰值將達 4.85%，隨後維持至 2028 年才開始降息。GDP 成長率預計從目前水準大幅放緩至 2026 年僅 1.0%，2027 年 1.6%，失業率年底將升至 5.0%。Janus Henderson 4 月經濟報告指出，RBA 已在 2 月與 3 月連續升息共 50 個基點至 4.10%，3 年期公債殖利率飆升 44 個基點至 4.65%，10 年期升 32 個基點至 4.97%。Rabobank 報告顯示澳元已跌破 0.69 美元。Oxford Economics 警告，若中東衝突延續至 4 月底之後，澳洲將面臨「急劇衰退」，GDP 可能在 Q2 萎縮 0.3%、Q3 再跌 0.8%。四大銀行固定利率已全面突破 6%。",
     "impact": "RBA 持續升息將嚴重壓縮澳洲家庭可支配收入，HSBC 估計消費支出將被削減約 1.8 個百分點。消費者購買力急劇下降，非必需品類銷售將持續承壓，轉換率與客單價預計進一步下滑。失業率上升至 5.0% 將進一步打擊消費信心。澳元貶值雖有利於出口，但將推升進口商品成本，跨境賣家的採購成本上升。賣家需為可能的經濟衰退做好準備。",
@@ -5765,6 +6019,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "AE",
+    "ai": false,
     "title": "UAE 全新 VAT 罰則框架 4/14 正式生效：遲繳改為年利率 14%，自願揭露罰款改為每月 1%，行政罰款大幅降低",
     "summary": "UAE 內閣第 129/2025 號決議（Cabinet Decision No. 129 of 2025）將於 2026 年 4 月 14 日正式生效，全面改革 VAT、企業稅與消費稅的行政罰則框架。主要變革包括：(1) 遲繳稅款罰則從原本的「2% 即時 + 每月 4%（最高 300%）」複利制，改為年利率 14% 按日計算的單利制；(2) 自願揭露（Voluntary Disclosure）罰款從原本的 5%-40% 階梯制，改為每月 1% 的時間比例制，無上限；(3) 稅務稽核後揭露的固定罰款從 50% 降至 15%；(4) 申報錯誤罰款從首次 AED 1,000 降至 AED 500；(5) 行政類罰款（如未更新地址、未提交紀錄）降幅達 75%。同時，稅務程序法引入 5 年追溯期限制，但涉及逃稅可延長至 15 年。多家稅務顧問機構呼籲企業在 4/14 前完成歷史 VAT 申報的自我審查與自願揭露。",
     "impact": "AE 站點賣家面臨全新的 VAT 合規環境。新罰則框架雖然短期遲繳壓力降低（14% 年利率 vs 原本可達 300%），但自願揭露的每月 1% 無上限罰款意味著歷史錯誤拖越久代價越高。同時，新法要求賣家對供應商進行 VAT 盡職調查（Know Your Supplier），若供應鏈涉及逃稅且賣家「應知而未知」，進項稅額可能被拒絕抵扣。跨 AE/SA 雙站點賣家需同時應對兩套不同的合規要求。",
@@ -5791,6 +6046,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "合規"
     ],
     "market": "AU",
+    "ai": false,
     "title": "RBA 宣布 10 月 1 日起全面禁止信用卡附加費，交換費上限大幅調降，電商賣家定價策略需調整",
     "summary": "澳洲央行（RBA）支付系統委員會（PSB）於 4 月 1 日發布結論報告，宣布自 2026 年 10 月 1 日起，全面禁止商家對 eftpos、Visa 與 Mastercard 的借記卡、預付卡及信用卡交易收取附加費（surcharge）。同時，信用卡交換費（interchange fee）上限從 0.8% 大幅調降至 0.3%，借記卡從 10 分或 0.2% 降至 8 分或 0.16%。聯邦政府估計此舉每年可為消費者與企業節省近 18 億澳元。2027 年 4 月起將進一步實施外國發行卡交換費上限與透明度要求。RBA 預計 2026 年中啟動第二階段公眾諮詢，評估是否將行動錢包、BNPL 與電商平台納入監管。American Express 不在此次禁令範圍內。",
     "impact": "雖然 Amazon AU 本身不對消費者收取信用卡附加費，但此政策將改變整體零售定價生態。競爭對手（尤其實體零售商與獨立電商）過去透過附加費轉嫁支付成本，禁令後將被迫調整定價策略，可能縮小與 Amazon 的價格差距。交換費調降將降低所有商家的支付處理成本，有利於整體電商生態。RBA 預計將電商平台納入第二階段監管審查，Amazon AU 需關注後續政策走向。對於使用獨立站（如 Shopify）的跨境賣家，附加費禁令將直接影響其定價與成本回收方式。",
@@ -5817,6 +6073,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "SA",
+    "ai": false,
     "title": "ZATCA Fatoora Wave 24 門檻降至 SAR 37.5 萬，數千家中小企業須於 6/30 前完成電子發票整合",
     "summary": "沙烏地稅務海關總署（ZATCA）正式公告 Fatoora 電子發票計畫第 24 波次（Wave 24），首次將營收門檻降至 SAR 375,000（約 USD 100,000），大幅擴大強制適用範圍。凡在 2022、2023 或 2024 年任一年度 VAT 應稅營收超過 SAR 375,000 的企業，均須於 2026 年 6 月 30 日前完成與 Fatoora 平台的第二階段（Phase 2）電子發票整合。受影響的企業類型包括：獨立零售商、專業服務提供商（會計師、律師、顧問）、餐飲業、醫療診所、電商與數位服務業者、物流運輸業者等。這是 Fatoora 計畫自啟動以來門檻最低的一波，預計將數千家中小企業納入強制電子發票範圍。未按時完成整合的企業將面臨發票被拒絕與財務罰款。",
     "impact": "SA 站點的中小型第三方賣家首當其衝。過去因營收未達門檻而免於 Phase 2 整合的賣家，現在可能被納入 Wave 24 範圍。Amazon SA 平台作為「視同供應商」，需確保其系統能支援賣家的電子發票合規需求。未完成整合的賣家可能面臨發票被 ZATCA 拒絕，影響正常交易與 VAT 申報。同時，UAE 的 Peppol 電子發票系統也將於 7 月啟動試點，跨 SA/AE 雙站點賣家需同時應對兩套不同標準（FATOORA vs Peppol）。",
@@ -5843,6 +6100,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "貿易"
     ],
     "market": "",
+    "ai": false,
     "title": "澳洲與歐盟正式完成 FTA 談判，99% 以上商品將享零關稅待遇",
     "summary": "3 月 24 日，澳洲總理 Albanese 與歐盟執委會主席 von der Leyen 共同宣布，歷時近八年的澳歐自由貿易協定（A-EU FTA）談判正式完成。根據協定，97.8% 的澳洲出口商品將享有歐盟零關稅待遇，歐盟方面則有 97.2%（全面實施後達 99.5%）的出口商品免稅進入澳洲。協定涵蓋數位貿易專章，包括禁止強制轉移原始碼、支持無紙化貿易與電子簽章等條款。歐盟預估未來十年對澳出口可增長 33%，每年為歐盟企業節省約 10 億歐元關稅。PwC 分析指出，企業應立即開始準備原產地規則與優惠稅率申請流程。",
     "impact": "歐盟商品進入澳洲的關稅大幅降低，將直接影響 Amazon AU 站點的歐洲品牌商品定價競爭力。歐洲食品、酒類、汽車零件、化妝品等品類的進口成本下降，有利於擴大選品。數位貿易專章的電子簽章與無紙化貿易條款，將簡化跨境賣家的合規流程。長期而言，更多歐洲品牌可能透過 Amazon AU 進入澳洲市場。",
@@ -5869,6 +6127,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳洲消費者信心指數跌至 1973 年以來歷史新低 63.1，RBA 升息至 4.1%，通膨預期飆至 6.9%",
     "summary": "ANZ-Roy Morgan 最新調查顯示，澳洲消費者信心指數本週暴跌 5.4 點至 63.1，創下自 1973 年該指標建立以來的歷史新低，甚至低於 2020 年 COVID 封城時期。通膨預期飆升至 6.9%，為 2010 年開始追蹤以來最高。RBA 於上週將現金利率上調至 4.1%，金融市場已定價年底前再升息三次。全國平均無鉛汽油價格飆至每公升 $2.534，較衝突前上漲約 40%。SQM Research 總經理 Louis Christopher 警告，澳洲可能已「即時進入衰退」。Perpetual 分析指出，3 月汽油價格月增 30%，將為 CPI 增加整整一個百分點。",
     "impact": "消費者購買力急劇下降，非必需品類銷售將嚴重承壓。消費者已從「促銷恐慌」轉向「精準消費」模式，品牌忠誠度持續下降。RBA 持續升息將進一步壓縮家庭可支配收入，影響線上消費意願。賣家需密切關注轉換率、退貨率及廣告 ROAS 的變化。物流成本上升疊加消費降級，中小型賣家利潤空間將被嚴重擠壓。",
@@ -5896,6 +6155,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "地緣政治"
     ],
     "market": "",
+    "ai": false,
     "title": "荷姆茲海峽通行量暴跌 94%，全球物流進入「繞道非洲」新常態，亞歐航線延長 10-14 天",
     "summary": "美以對伊朗軍事行動（2/28 起）持續衝擊全球物流。據 Windward 與 BBC 數據，荷姆茲海峽通行量較戰前暴跌 94%（從每日 120-140 艘降至 5-6 艘），阿拉伯灣港口停靠量下降 47%。Maersk、Hapag-Lloyd、CMA CGM 均已撤回紅海復航計畫，Vespucci Maritime CEO Lars Jensen 在 TPM26 表示「紅海正常化至少推遲六個月以上」。超過 700 艘船舶在海峽外等待，約佔全球貨櫃船隊 10%。亞歐航線繞行好望角，運輸時間延長 10-14 天。GCCA 警告，替代路線（Jeddah、Salalah、Sohar、Fujairah）正面臨擁堵風險，冷鏈設備失衡問題加劇。",
     "impact": "AE/SA 站點的 FBA 入倉時效將持續嚴重延長，空運成本因中東航班大規模停飛而飆升。從亞洲（尤其中國）發往 UAE/SA 的貨物面臨航線中斷與運力嚴重不足。AU 站點也因全球航運改道而受到間接影響，進口商品到貨時間延長。保險費率持續攀升，整體物流成本較衝突前上升 30-50%。",
@@ -5922,6 +6182,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "總經"
     ],
     "market": "AU",
+    "ai": false,
     "title": "澳洲《不公平交易行為法案》草案出爐，瞄準電商暗黑模式、訂閱陷阱與滴漏定價",
     "summary": "澳洲聯邦政府於 2 月 9 日發布《Competition and Consumer Amendment (Unfair Trading Practices) Bill 2026》草案，擬修訂澳洲消費者法（ACL），禁止數位經濟中的不公平交易行為。法案主要針對三大領域：(1) 暗黑模式（dark patterns）等不合理操縱消費者決策的行為；(2) 不公平訂閱行為，包括取消訂閱障礙與自動續約未充分通知；(3) 滴漏定價（drip pricing），即在交易過程中逐步加價。ACCC 2026-2027 年度執法重點也將聚焦數位市場操縱行為。若通過，新法將於 2027 年 7 月生效，違規罰款可達 5,000 萬澳元以上。",
     "impact": "Amazon AU 及其第三方賣家需審視現有的定價展示、訂閱服務（如 Subscribe & Save）及結帳流程是否符合新法要求。滴漏定價條款將影響運費、手續費等附加費用的展示方式。暗黑模式禁令可能影響 UI/UX 設計中的促銷倒數計時、庫存緊迫提示等常見手法。ACCC 明確表示執法不限於大型平台，所有線上銷售介面均在監管範圍內。",
@@ -5948,6 +6209,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       "稅務"
     ],
     "market": "",
+    "ai": false,
     "title": "沙烏地 ZATCA「視同供應商」新規正式生效，電商平台 VAT 責任大幅加重；UAE 電子發票系統 7 月上路",
     "summary": "沙烏地 ZATCA 發布的電子市場營運商（ECO）VAT 指引已於 2026 年 1 月 1 日正式生效。根據修訂後的 VAT 實施條例第 47 條，電商平台為未註冊 VAT 的沙烏地境內賣家代銷商品時，將被視為「視同供應商」（deemed supplier），需承擔完整的 VAT 申報與繳納責任（稅率 15%）。平台需對賣家進行持續的居住地與 VAT 註冊狀態查核。同時，UAE 財政部已公布電子發票系統（EIS）綜合指引 V1.0，採用 Peppol 標準的電子發票系統預計 2026 年 7 月啟動，賣家需透過認證服務提供商（ASP）進行合規對接。",
     "impact": "Amazon SA 作為電商平台，需確保其「視同供應商」機制完全符合 ZATCA 新規，包括對第三方賣家的 VAT 註冊狀態查核、發票開立與申報流程。未註冊 VAT 的中小型賣家可能面臨被平台要求補辦註冊或調整合作模式。UAE 電子發票系統的上線將增加 AE 站點賣家的合規成本與系統對接需求。跨 SA/AE 雙站點經營的賣家需同時應對兩套不同的電子發票標準（FATOORA vs Peppol）。",

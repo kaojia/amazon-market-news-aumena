@@ -30,6 +30,7 @@ jobs:
         env:
           RENDER_DEPLOY_URL: ${{ secrets.RENDER_DEPLOY_URL }}
           PUSH_SECRET: ${{ secrets.PUSH_SECRET }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python scripts/fetch_and_push.py
 
       - name: Build index.html
