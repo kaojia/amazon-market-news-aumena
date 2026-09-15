@@ -43,6 +43,15 @@ PLATFORM_QUOTA = 3   # seller-platform : external = 3 : 2
 # Source types treated as "seller platform" for the quota.
 PLATFORM_SOURCE_TYPES = {"seller_central", "forum"}
 
+# Source types genuinely trusted enough to SKIP the consumer-noise filters
+# (denylist + consumer-deal). Only real seller-community forums qualify.
+# NOTE: "seller_central" here is just Google-News RSS queried with seller
+# keywords — Google returns consumer "best deals" listicles for those queries
+# too, so those items MUST still run the noise gauntlet (the seller-signal
+# rescue keeps genuine fee/policy/FBA news). Real official Seller Central
+# announcements come from inject_sc_news.py and are tagged 官方公告 separately.
+NOISE_EXEMPT_SOURCE_TYPES = {"forum"}
+
 # Keyword-based priority rules
 HIGH_PRIORITY_KEYWORDS = [
     "政策變更", "policy change", "fee change", "費用調整",
@@ -318,8 +327,9 @@ def is_excluded(item):
     if any(kw.lower() in text for kw in EXCLUDE_KEYWORDS):
         return True
 
-    # Seller-platform sources are never consumer noise — keep them.
-    if item.get("source_type") in PLATFORM_SOURCE_TYPES:
+    # Only genuine seller-community forums skip the consumer-noise filters.
+    # seller_central RSS is Google-aggregated and still runs the gauntlet below.
+    if item.get("source_type") in NOISE_EXEMPT_SOURCE_TYPES:
         return False
 
     # A seller signal (Prime Day, fee/policy/logistics/tax…) rescues an item even
