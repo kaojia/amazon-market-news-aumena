@@ -30,7 +30,7 @@ PUSH_SECRET = os.environ.get("PUSH_SECRET", "jenny-daily-push")
 # Gemini (Google) — used to turn a bare headline into a real Traditional-Chinese
 # summary + seller-impact + action. Optional: no key ⇒ fall back to templates.
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
-GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash-lite")
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash-lite")
 
 MARKETPLACES = ["AU", "AE", "SA"]
 
