@@ -46,6 +46,12 @@ DEFAULT_MCID = "A33U8K4OVYB8JR"          # Plustek AE (verified: served=AE)
 DEFAULT_MARKETPLACE = "AE"
 DEFAULT_LIMIT = 6
 
+# Fetch Amazon's OWN Chinese translation (AE offers zh-CN, Simplified) rather
+# than machine-translating ourselves, then convert Simplified→Traditional to
+# match the dashboard's zh-TW. --lang zh-Hant/zh-TW would just fall back to
+# English (AE doesn't offer Traditional), so we take zh-CN + OpenCC.
+DEFAULT_LANG = "zh-CN"
+
 # Local amz-sc install isn't on PATH (see memory: amz-sc-path-workaround).
 AMZ_SC_SCRIPTS = r"C:\Users\chiawenk\AppData\Roaming\Python\Python313\Scripts"
 
@@ -72,7 +78,8 @@ CATEGORY_ZH = {
 
 # --- amz-sc call -------------------------------------------------------------
 
-def fetch_official_news(mcid: str, marketplace: str, limit: int) -> dict:
+def fetch_official_news(mcid: str, marketplace: str, limit: int,
+                        lang: str | None) -> dict:
     """Run `amz-sc news list` and return the parsed results dict."""
     env = dict(os.environ)
     env["PYTHONIOENCODING"] = "utf-8"
@@ -83,6 +90,8 @@ def fetch_official_news(mcid: str, marketplace: str, limit: int) -> dict:
         "amz-sc", "--mcid", mcid, "--marketplace", marketplace, "--agent",
         "news", "list", "--limit", str(limit),
     ]
+    if lang:
+        cmd += ["--lang", lang]
     try:
         proc = subprocess.run(
             cmd, env=env, capture_output=True, text=True, encoding="utf-8",
@@ -103,6 +112,26 @@ def fetch_official_news(mcid: str, marketplace: str, limit: int) -> dict:
         sys.exit(f"could not parse amz-sc output: {e}\n{proc.stdout[:400]}")
 
     return payload.get("results", payload)
+
+
+# --- Simplified -> Traditional -----------------------------------------------
+
+def _make_s2t():
+    """Return a Simplified→Traditional (Taiwan) converter, or identity."""
+    try:
+        from opencc import OpenCC
+        cc = OpenCC("s2twp")  # Simplified → Traditional w/ Taiwan phrasing
+        return lambda s: cc.convert(s) if s else s
+    except Exception:
+        print("  ⚠️ opencc unavailable — keeping Simplified Chinese as-is.")
+        return lambda s: s
+
+
+def convert_articles(articles: list[dict], s2t) -> None:
+    """In-place convert title/summary of each article to Traditional Chinese."""
+    for a in articles:
+        a["title"] = s2t(a.get("title", ""))
+        a["summary"] = s2t(a.get("summary", ""))
 
 
 # --- card rendering ----------------------------------------------------------
@@ -196,6 +225,9 @@ def main() -> None:
     ap.add_argument("--mcid", default=DEFAULT_MCID)
     ap.add_argument("--marketplace", default=DEFAULT_MARKETPLACE)
     ap.add_argument("--limit", type=int, default=DEFAULT_LIMIT)
+    ap.add_argument("--lang", default=DEFAULT_LANG,
+                    help="Feed locale from Amazon (default zh-CN, then converted "
+                         "to Traditional). Pass 'en' to keep English.")
     ap.add_argument("--no-build", action="store_true",
                     help="Skip re-running build.py afterwards.")
     args = ap.parse_args()
@@ -206,7 +238,7 @@ def main() -> None:
     repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     os.chdir(repo_root)
 
-    result = fetch_official_news(args.mcid, args.marketplace, args.limit)
+    result = fetch_official_news(args.mcid, args.marketplace, args.limit, args.lang)
     served = result.get("served_marketplace")
     if result.get("marketplace_mismatch"):
         print(f"  ⚠️ requested {result.get('requested_marketplace')} but feed "
@@ -215,7 +247,11 @@ def main() -> None:
     if not articles:
         sys.exit("no official announcements returned — nothing to inject.")
 
-    print(f"  fetched {len(articles)} official {served} announcements")
+    # Amazon serves zh-CN (Simplified); convert to Traditional for the dashboard.
+    if args.lang and args.lang.lower().startswith("zh"):
+        convert_articles(articles, _make_s2t())
+
+    print(f"  fetched {len(articles)} official {served} announcements ({args.lang})")
     block = build_block(articles)
     filepath = f"daily-report-{date}.html"
     inject(filepath, date, block)
