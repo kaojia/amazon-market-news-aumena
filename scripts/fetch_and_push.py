@@ -503,6 +503,34 @@ def gemini_enrich(news_items):
     return news_items
 
 
+def gemini_translate(text):
+    """Translate one string to Traditional Chinese via Gemini. Last-resort
+    fallback for when the free Google/MyMemory endpoints are rate-limited.
+    Returns None on any failure (no key, network, empty) so the caller keeps
+    the original text."""
+    if not GEMINI_API_KEY or not text.strip():
+        return None
+    prompt = (
+        "把以下文字翻譯成繁體中文，只回傳翻譯結果本身，不要加引號、"
+        "說明或原文：\n\n" + text.strip()
+    )
+    url = (f"https://generativelanguage.googleapis.com/v1beta/models/"
+           f"{GEMINI_MODEL}:generateContent")
+    payload = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {"temperature": 0.2},
+    }
+    try:
+        resp = requests.post(url, json=payload, timeout=30,
+                             headers={"x-goog-api-key": GEMINI_API_KEY})
+        if resp.status_code != 200:
+            return None
+        out = resp.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
+        return out or None
+    except Exception:
+        return None
+
+
 # ---------------------------------------------------------------------------
 # Translation
 # ---------------------------------------------------------------------------
@@ -524,8 +552,13 @@ def translate_to_chinese(text):
     try:
         return MyMemoryTranslator(source='en-US', target='zh-TW').translate(text) or text
     except Exception as e:
-        print(f"  Translation failed: {e}")
-        return text
+        print(f"  MyMemory failed ({e}); trying Gemini…")
+    # Both free translators rate-limited — fall back to Gemini (rarely throttled).
+    gz = gemini_translate(text)
+    if gz:
+        return gz
+    print("  Translation failed on all backends; keeping original text.")
+    return text
 
 
 def translate_news_items(news_items):
