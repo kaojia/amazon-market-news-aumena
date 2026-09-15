@@ -293,9 +293,12 @@ def build():
                 print(f"    skipped error-page card: {title[:40]!r}")
                 continue
             tags = map_tags(card["region_text"])
+            # Marketplace code leads the region text ("AU - 平台", "AE - 官方公告…").
+            mkt = re.match(r"\s*([A-Z]{2})\b", card["region_text"] or "")
             article = {
                 "date": date,
                 "tags": tags,
+                "market": mkt.group(1) if mkt else "",
                 "title": card["title"],
                 "summary": card["summary"],
                 "impact": card["impact"],
