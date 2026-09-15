@@ -122,6 +122,11 @@ body {
 .modal-body .impact strong { color: #1e40af; }
 .modal-body .action { background: #f0fdf4; padding: 18px 22px; border-radius: 12px; margin-bottom: 16px; font-size: 14px; line-height: 1.8; color: #14532d; }
 .modal-body .action strong { color: #166534; }
+/* Official Seller Central announcement body (賣家後台 cards): the content IS the
+   business impact, so it's shown once, in full, under 官方公告原文. */
+.modal-body .official { background: #fff7ed; padding: 18px 22px; border-radius: 12px; margin-bottom: 16px; font-size: 14px; line-height: 1.95; color: #7c2d12; white-space: pre-wrap; border-left: 4px solid #ea580c; }
+.modal-body .official strong { display: block; margin-bottom: 10px; color: #c2410c; font-size: 15px; }
+.card-type.type-official { background: var(--tag-backstage-bg, #fff7ed); color: var(--tag-backstage, #c2410c); }
 .modal-body .source { font-size: 13px; color: var(--text-muted); margin-top: 16px; }
 .modal-body .source a { color: var(--accent); text-decoration: none; }
 .modal-body .source a:hover { text-decoration: underline; }
@@ -326,6 +331,10 @@ let currentSearch = '';
 const PER_PAGE = 9;
 let currentPage = 1;
 
+// 賣家後台 cards are genuine Seller Central official announcements — their body
+// IS the business impact, so they get a dedicated 官方公告原文 layout.
+function isOfficial(a) { return (a.tags || []).includes('賣家後台'); }
+
 function getFiltered() {
   return articles.filter(a => {
     const matchFilter = currentFilter === 'all' || a.tags.includes(currentFilter);
@@ -374,7 +383,7 @@ function renderGrid() {
       <div class="card-body">
         <div class="card-meta">
           <span class="card-date">${a.date}</span>
-          <span class="card-type">日報</span>
+          <span class="card-type${isOfficial(a) ? ' type-official' : ''}">${isOfficial(a) ? '官方公告' : '日報'}</span>
           <div class="card-tags">
             ${a.tags.map(t => `<span class="card-tag tag-${t}">${t}</span>`).join('')}
           </div>
@@ -421,18 +430,34 @@ function srcHref(url, title) {
 
 function openModal(idx) {
   const a = articles[idx];
+  const official = isOfficial(a);
   document.getElementById('modalMeta').innerHTML = `
     <span class="card-date">${a.date}</span>
-    <span class="card-type">日報</span>
+    <span class="card-type${official ? ' type-official' : ''}">${official ? '官方公告' : '日報'}</span>
     ${a.tags.map(t => `<span class="card-tag tag-${t}">${t}</span>`).join('')}`;
   document.getElementById('modalTitle').textContent = a.title;
-  document.getElementById('modalBody').innerHTML = `
+
+  let body;
+  if (official) {
+    // The announcement text itself is the business impact — show it once, in
+    // full, and drop the canned 影響/Action blocks and duplicate summary.
+    const src = (a.sources || [])[0];
+    const srcLink = src
+      ? `<div class="source">🔗 <a href="${srcHref(src.url, a.title)}" target="_blank" rel="noopener">前往 Seller Central 原公告</a></div>`
+      : '';
+    body = `
+    <div class="official"><strong>📋 官方公告原文</strong>${a.impact || a.summary}</div>
+    ${srcLink}`;
+  } else {
+    body = `
     <div class="summary">${a.summary}</div>
     ${a.impact ? `<div class="impact"><strong>🎯 對 Amazon 經營的影響：</strong>${a.impact}</div>` : ''}
     ${a.action ? `<div class="action"><strong>✅ Action 建議：</strong>${a.action}</div>` : ''}
     <div class="source">
       來源：${(a.sources || []).map(s => `<a href="${srcHref(s.url, a.title)}" target="_blank" rel="noopener">${s.name}</a>`).join(' | ')}
     </div>`;
+  }
+  document.getElementById('modalBody').innerHTML = body;
   document.getElementById('modal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
