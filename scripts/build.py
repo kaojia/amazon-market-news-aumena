@@ -103,6 +103,7 @@ class DailyReportParser(HTMLParser):
                 "action": "",
                 "sources": [],
                 "priority": None,
+                "ai": "ai-summary" in cls,
             }
             if "high" in cls:
                 self._current_card["priority"] = "high"
@@ -299,6 +300,7 @@ def build():
                 "date": date,
                 "tags": tags,
                 "market": mkt.group(1) if mkt else "",
+                "ai": card.get("ai", False),
                 "title": card["title"],
                 "summary": card["summary"],
                 "impact": card["impact"],

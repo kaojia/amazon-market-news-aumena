@@ -27,6 +27,11 @@ from deep_translator import GoogleTranslator, MyMemoryTranslator
 RENDER_DEPLOY_URL = os.environ.get("RENDER_DEPLOY_URL", "")
 PUSH_SECRET = os.environ.get("PUSH_SECRET", "jenny-daily-push")
 
+# Gemini (Google) — used to turn a bare headline into a real Traditional-Chinese
+# summary + seller-impact + action. Optional: no key ⇒ fall back to templates.
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash-lite")
+
 MARKETPLACES = ["AU", "AE", "SA"]
 
 # Daily dashboard/LINE item counts and source mix.
@@ -423,6 +428,72 @@ def enrich_summaries(news_items):
 
 
 # ---------------------------------------------------------------------------
+# Gemini AI enrichment
+# ---------------------------------------------------------------------------
+
+def gemini_enrich(news_items):
+    """Turn each headline into a real zh-TW summary + seller impact + action via
+    Gemini. One batched request for all items. On ANY failure (no key, network,
+    bad JSON) items are left untouched so the template fallback still runs.
+    Successfully enriched items get item["ai"] = True.
+    """
+    if not GEMINI_API_KEY:
+        print("  ℹ️ 未設定 GEMINI_API_KEY，略過 AI 摘要（改用範本）")
+        return news_items
+    if not news_items:
+        return news_items
+
+    mp_names = {"AU": "澳洲", "AE": "阿聯酋", "SA": "沙烏地阿拉伯"}
+    lines = []
+    for i, it in enumerate(news_items):
+        mp = mp_names.get(it.get("marketplace", ""), it.get("marketplace", ""))
+        lines.append(f'{i}. [{mp}/{it.get("category","")}] {it.get("title","")}')
+    headlines = "\n".join(lines)
+
+    prompt = (
+        "你是 Amazon 跨境電商賣家的市場情報分析師，服務 AU/MENA(澳洲、阿聯酋、"
+        "沙烏地)賣家。以下是今日新聞標題清單，每則含[市場/分類]。\n"
+        "請「僅根據標題」為每則產生繁體中文分析（不要杜撰標題沒有的具體數字或日期）：\n"
+        "- summary: 1 句話說明這則新聞在講什麼\n"
+        "- impact: 1-2 句，對 Amazon 賣家經營的實際影響（若影響有限就誠實說明）\n"
+        "- action: 1 句具體建議賣家可採取的行動或該關注的重點\n\n"
+        f"新聞清單：\n{headlines}\n\n"
+        "只回傳 JSON 陣列，每個元素對應一則（依序），格式："
+        '[{"summary":"...","impact":"...","action":"..."}]，不要有其他文字或 markdown。'
+    )
+
+    url = (f"https://generativelanguage.googleapis.com/v1beta/models/"
+           f"{GEMINI_MODEL}:generateContent")
+    payload = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {"temperature": 0.4, "responseMimeType": "application/json"},
+    }
+    try:
+        resp = requests.post(url, json=payload, timeout=60,
+                             headers={"x-goog-api-key": GEMINI_API_KEY})
+        if resp.status_code != 200:
+            print(f"  ⚠️ Gemini {resp.status_code}: {resp.text[:200]} — 改用範本")
+            return news_items
+        text = (resp.json()["candidates"][0]["content"]["parts"][0]["text"]).strip()
+        text = re.sub(r"^```(?:json)?|```$", "", text.strip()).strip()
+        results = json.loads(text)
+    except Exception as e:
+        print(f"  ⚠️ Gemini 失敗 ({e}) — 改用範本")
+        return news_items
+
+    n = 0
+    for it, r in zip(news_items, results):
+        if isinstance(r, dict) and r.get("summary"):
+            it["summary"] = r.get("summary", "").strip()
+            it["impact"] = r.get("impact", it["summary"]).strip()
+            it["action"] = r.get("action", "請關注後續發展").strip()
+            it["ai"] = True
+            n += 1
+    print(f"  🤖 Gemini 已生成 {n}/{len(news_items)} 則摘要")
+    return news_items
+
+
+# ---------------------------------------------------------------------------
 # Translation
 # ---------------------------------------------------------------------------
 
@@ -529,8 +600,12 @@ def main():
     # 3. Filter items - top 5 for both LINE and dashboard
     top_news_dashboard = filter_top_news(all_news, max_items=5)
 
-    # 4. Fetch article summaries from source pages
-    print("\n📝 擷取文章摘要...")
+    # 4a. AI-generate real summaries/impact/action from the headline (Gemini).
+    print("\n🤖 產生 AI 摘要...")
+    top_news_dashboard = gemini_enrich(top_news_dashboard)
+
+    # 4b. Fill any items Gemini didn't cover with category templates.
+    print("\n📝 擷取文章摘要（範本補齊）...")
     top_news_dashboard = enrich_summaries(top_news_dashboard)
 
     # 5. Translate all dashboard items to Traditional Chinese
@@ -568,17 +643,22 @@ def save_daily_report(news_items, now):
     cards_html = ""
     for item in news_items:
         p_class = priority_class.get(item.get("priority", ""), "")
+        # Mark AI-enriched cards so the dashboard shows their real summary/impact.
+        ai_class = " ai-summary" if item.get("ai") else ""
+        summary = item.get("summary", "")
+        impact = item.get("impact", summary)
+        action = item.get("action", "請關注後續發展")
         source_html = ""
         if item.get("source_url"):
             source_html = f'<div class="source"><a href="{item["source_url"]}">{item.get("source_name", "來源")}</a></div>'
 
         cards_html += f"""
-    <div class="card{p_class}">
+    <div class="card{p_class}{ai_class}">
         <h3>{item.get("title", "")}</h3>
         <div class="region">{item.get("marketplace", "")} - {item.get("category", "")}</div>
-        <div class="summary">{item.get("summary", "")}</div>
-        <div class="impact"><p>{item.get("summary", "")}</p></div>
-        <div class="action"><p>請關注後續發展</p></div>
+        <div class="summary">{summary}</div>
+        <div class="impact"><p>{impact}</p></div>
+        <div class="action"><p>{action}</p></div>
         {source_html}
     </div>
 """
