@@ -18,7 +18,7 @@ import sys
 from datetime import datetime, timezone, timedelta
 
 import requests
-from deep_translator import GoogleTranslator
+from deep_translator import GoogleTranslator, MyMemoryTranslator
 
 # ---------------------------------------------------------------------------
 # Config
@@ -362,8 +362,14 @@ def translate_to_chinese(text):
     chinese_chars = sum(1 for c in text if '一' <= c <= '鿿')
     if chinese_chars / max(len(text), 1) > 0.3:
         return text
+    # Google's free endpoint frequently rate-limits on the CI runner; fall back
+    # to MyMemory so titles still get translated instead of staying English.
     try:
-        return GoogleTranslator(source='auto', target='zh-TW').translate(text)
+        return GoogleTranslator(source='auto', target='zh-TW').translate(text) or text
+    except Exception as e:
+        print(f"  Google translate failed ({e}); trying MyMemory…")
+    try:
+        return MyMemoryTranslator(source='en-US', target='zh-TW').translate(text) or text
     except Exception as e:
         print(f"  Translation failed: {e}")
         return text
