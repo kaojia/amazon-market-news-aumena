@@ -64,6 +64,41 @@ EXCLUDE_KEYWORDS = [
     "music", "album", "concert",
 ]
 
+# Consumer "best deals to buy" listicles — no seller-actionable content. These
+# match against title/summary but are OVERRIDDEN by SELLER_SIGNAL_KEYWORDS below
+# (so genuine seller-facing deal news like Prime Day submission windows survives).
+CONSUMER_DEAL_KEYWORDS = [
+    "best deal", "best deals", "deals we", "deals we'd buy", "top deals",
+    "deal of the day", "drops to half price", "half price", "% off", "off:",
+    "best buy", "best picks", "top picks", "what to buy", "worth buying",
+    "gift guide", "best gifts", "unboxing", "review:",
+    "最划算", "降至半價", "限時優惠", "最佳優惠", "值得買", "值得購",
+    "我們自己購買", "大減價", "半價", "禮物推薦", "開箱",
+]
+
+# External-news source domains that produce (near-)exclusively consumer shopping
+# content, never seller-actionable policy/fee/logistics news. Drop outright.
+SOURCE_DENYLIST = [
+    "techradar", "tomsguide", "tom's guide", "7news", "cnet", "gizmodo",
+    "pcmag", "wirecutter", "trusted reviews", "trustedreviews",
+]
+
+# An external item is only kept if it carries at least one of these seller-facing
+# signals; otherwise it's macro/consumer noise. Also used to RESCUE items that
+# tripped CONSUMER_DEAL_KEYWORDS (e.g. "Prime Day" deal-submission news).
+SELLER_SIGNAL_KEYWORDS = [
+    "policy", "政策", "regulation", "法規", "compliance", "合規", "mandatory", "強制",
+    "fee", "費用", "cost", "收費", "pricing",
+    "fba", "fulfillment", "倉儲", "庫存", "inventory", "warehouse",
+    "tax", "vat", "稅", "tariff", "關稅",
+    "logistics", "物流", "shipping", "配送", "delivery", "供應鏈",
+    "advertising", "廣告", "ppc", "sponsored", "campaign",
+    "seller", "賣家", "seller central", "賣家後台", "merchant",
+    "prime day", "黃金日", "prime big deal", "會員日", "deadline", "截止",
+    "listing", "刊登", "account", "帳號", "帳戶", "suspension", "停權",
+    "選品", "product idea", "產品創意",
+]
+
 CATEGORY_RULES = {
     "政策": ["政策", "policy", "regulation", "合規", "compliance", "mandatory"],
     "費用": ["fee", "費用", "cost", "pricing", "收費"],
@@ -260,10 +295,41 @@ def classify_item(item):
     return item
 
 
-def is_excluded(item):
-    """Check if an item should be excluded based on irrelevant keywords."""
+def _has_seller_signal(item):
+    """True if the item carries any seller-facing signal keyword."""
     text = f"{item.get('title', '')} {item.get('summary', '')}".lower()
-    return any(kw.lower() in text for kw in EXCLUDE_KEYWORDS)
+    return any(kw.lower() in text for kw in SELLER_SIGNAL_KEYWORDS)
+
+
+def is_excluded(item):
+    """Check if an item should be excluded (no direct seller impact).
+
+    Three layers: (1) hard EXCLUDE_KEYWORDS (books/celebrity/games…);
+    (2) source-domain denylist for consumer-review outlets; (3) consumer
+    "best deals to buy" listicles — unless a seller signal rescues them.
+    Seller-platform items (SC announcements / forums) bypass 2 & 3.
+    """
+    text = f"{item.get('title', '')} {item.get('summary', '')}".lower()
+    if any(kw.lower() in text for kw in EXCLUDE_KEYWORDS):
+        return True
+
+    # Seller-platform sources are never consumer noise — keep them.
+    if item.get("source_type") in PLATFORM_SOURCE_TYPES:
+        return False
+
+    # A seller signal (Prime Day, fee/policy/logistics/tax…) rescues an item even
+    # from a denylisted outlet or a deal-flavoured headline.
+    if _has_seller_signal(item):
+        return False
+
+    src = f"{item.get('source_name', '')} {item.get('source_url', '')}".lower()
+    if any(dom in src for dom in SOURCE_DENYLIST):
+        return True
+
+    if any(kw.lower() in text for kw in CONSUMER_DEAL_KEYWORDS):
+        return True
+
+    return False
 
 
 def filter_top_news(all_items, max_items=MAX_ITEMS, platform_quota=PLATFORM_QUOTA):
@@ -287,7 +353,13 @@ def filter_top_news(all_items, max_items=MAX_ITEMS, platform_quota=PLATFORM_QUOT
         return x.get("source_type") in PLATFORM_SOURCE_TYPES
 
     platform_pool = sorted([x for x in classified if is_platform(x)], key=prio)
-    external_pool = sorted([x for x in classified if not is_platform(x)], key=prio)
+    # External news must carry a seller-facing signal, else it's macro/consumer
+    # noise (e.g. federal budget, generic "Amazon Australia" shopping roundups).
+    external_all = [x for x in classified if not is_platform(x)]
+    external_pool = sorted([x for x in external_all if _has_seller_signal(x)], key=prio)
+    dropped_ext = len(external_all) - len(external_pool)
+    if dropped_ext:
+        print(f"  外部新聞無賣家訊號、丟棄 {dropped_ext} 則")
 
     seen_titles = set()
 
