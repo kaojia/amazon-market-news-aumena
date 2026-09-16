@@ -503,6 +503,69 @@ def gemini_enrich(news_items):
     return news_items
 
 
+# Rubric shared with scripts/review_market_relevance.py (imported there).
+MARKET_RUBRIC = (
+    "你是為澳洲(AU)與中東(阿聯酋 UAE、沙烏地阿拉伯 SA)Amazon 賣家服務的市場情報分析師。"
+    "針對每則新聞標題，判斷它是否與 AU 或中東賣家的經營有關。\n"
+    "KEEP（保留）條件（符合任一即可）：主題涉及澳洲/阿聯酋/沙烏地/中東市場；"
+    "或雖提及其他國家但對 AU/中東賣家有直接影響（荷姆茲海峽/中東物流、影響中東或澳洲的關稅與貿易、"
+    "Amazon 全球賣家政策(費用/廣告/上架規則)、沙烏地 ZATCA 電子發票、AWS 中東、影響澳洲進出口的總經或反傾銷措施）。\n"
+    "DROP（移除）條件：主題主要是其他市場(印度/美國/英國/歐洲/中國/非洲/新加坡/韓國等)的在地電商、"
+    "賣家費用、物流服務、市場規模或在地企業，且與 AU/中東賣家沒有直接關聯；或純股市/財經行情、"
+    "與 Amazon 賣家經營無關的一般時事。\n"
+    "關鍵：先判斷這則新聞「主要發生地/對象市場」是哪個國家——若主要是印度/美國/英國等非 AU/中東市場"
+    "的在地事件(即使內容提到 Amazon)，就 DROP。例如『Amazon 在印度新增配送站』主要對象是印度→DROP。\n"
+    "只回傳 JSON 陣列，每元素對應清單一則(依 index)："
+    '[{"index":0,"verdict":"KEEP"}]，不要其他文字或 markdown。'
+)
+
+
+def gemini_market_filter(news_items):
+    """Drop items whose primary subject is a market other than AU/UAE/Saudi with
+    no AU/MENA seller relevance. One batched Gemini call. Fail-open: on missing
+    key or ANY error, keep all items so news is never silently lost."""
+    if not GEMINI_API_KEY or not news_items:
+        return news_items
+
+    verdicts = ["KEEP"] * len(news_items)
+    CHUNK = 15
+    for i in range(0, len(news_items), CHUNK):
+        chunk = news_items[i:i + CHUNK]
+        lines = []
+        for j, it in enumerate(chunk):
+            # NOTE: deliberately omit the item's marketplace tag — it is only the
+            # fetch-query origin (e.g. an "AU" query returning India news), which
+            # misleads the classifier. Judge on the headline + source outlet.
+            src = it.get("source_name", "")
+            lines.append(f'{j}. {it.get("title","")}（來源：{src}）')
+        prompt = MARKET_RUBRIC + "\n\n新聞清單：\n" + "\n".join(lines)
+        url = (f"https://generativelanguage.googleapis.com/v1beta/models/"
+               f"{GEMINI_MODEL}:generateContent")
+        payload = {"contents": [{"parts": [{"text": prompt}]}],
+                   "generationConfig": {"temperature": 0.1,
+                                        "responseMimeType": "application/json"}}
+        try:
+            resp = requests.post(url, json=payload, timeout=60,
+                                 headers={"x-goog-api-key": GEMINI_API_KEY})
+            if resp.status_code != 200:
+                print(f"  ⚠️ 市場過濾 Gemini {resp.status_code} — 保留全部")
+                continue
+            text = resp.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
+            text = re.sub(r"^```(?:json)?|```$", "", text.strip()).strip()
+            for r in json.loads(text):
+                idx = r.get("index")
+                if isinstance(idx, int) and 0 <= idx < len(chunk):
+                    verdicts[i + idx] = r.get("verdict", "KEEP")
+        except Exception as e:
+            print(f"  ⚠️ 市場過濾失敗 ({e}) — 保留全部")
+
+    keep = [it for it, v in zip(news_items, verdicts) if v != "DROP"]
+    removed = len(news_items) - len(keep)
+    if removed:
+        print(f"  🌏 市場過濾：移除非 AU/中東相關 {removed} 則，保留 {len(keep)} 則")
+    return keep
+
+
 def gemini_translate(text):
     """Translate one string to Traditional Chinese via Gemini. Last-resort
     fallback for when the free Google/MyMemory endpoints are rate-limited.
@@ -640,7 +703,9 @@ def main():
         print("⚠️ 今日無新聞可推送")
         return
 
-    # 3. Filter items - top 5 for both LINE and dashboard
+    # 3. Keep only AU/MENA-relevant news (Gemini), then pick top 5.
+    print("\n🌏 市場相關性過濾（AU/中東）...")
+    all_news = gemini_market_filter(all_news)
     top_news_dashboard = filter_top_news(all_news, max_items=5)
 
     # 4a. AI-generate real summaries/impact/action from the headline (Gemini).
