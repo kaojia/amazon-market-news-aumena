@@ -662,7 +662,11 @@ def push_to_line(news_items):
     }
 
     try:
-        url = f"{RENDER_DEPLOY_URL.rstrip('/')}/push/news"
+        # 合併部署後端點為 /jenny/push/news；容錯 RENDER_DEPLOY_URL 是否已含 /jenny
+        base = RENDER_DEPLOY_URL.rstrip("/")
+        if base.endswith("/jenny"):
+            base = base[: -len("/jenny")]
+        url = f"{base}/jenny/push/news"
         resp = requests.post(url, json=payload, timeout=30)
         print(f"  推送狀態碼：{resp.status_code}")
         print(f"  回應：{resp.text}")
