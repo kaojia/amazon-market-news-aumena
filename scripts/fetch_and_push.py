@@ -15,6 +15,7 @@ import json
 import os
 import re
 import sys
+import time
 from datetime import datetime, timezone, timedelta
 
 import requests
@@ -128,6 +129,27 @@ CATEGORY_RULES = {
 # Fetch functions
 # ---------------------------------------------------------------------------
 
+def fetch_url(url, label, timeout=15, headers=None, retries=3, backoff=5):
+    """GET with retry/backoff. Returns a 200 Response, or None.
+
+    Non-200 statuses (e.g. 429 rate-limit on cloud runner IPs) and network
+    errors are logged loudly and retried, so a "success but empty" run is
+    diagnosable from the log instead of failing silently.
+    """
+    for attempt in range(1, retries + 1):
+        try:
+            resp = requests.get(url, timeout=timeout, headers=headers)
+            if resp.status_code == 200:
+                return resp
+            print(f"  ⚠️ {label}: HTTP {resp.status_code} (attempt {attempt}/{retries})")
+        except Exception as e:
+            print(f"  ⚠️ {label}: {e} (attempt {attempt}/{retries})")
+        if attempt < retries:
+            time.sleep(backoff * attempt)
+    print(f"  ❌ {label}: 放棄 (已重試 {retries} 次)")
+    return None
+
+
 def fetch_sc_announcements():
     """Fetch Seller Central news via Google News RSS with SC-specific queries."""
     announcements = []
@@ -143,17 +165,14 @@ def fetch_sc_announcements():
     ]
 
     for mp, query, region in sc_queries:
-        try:
-            url = f"https://news.google.com/rss/search?q={query}&hl=en&gl={region}&ceid={region}:en"
-            resp = requests.get(url, timeout=15)
-            if resp.status_code == 200:
-                items = parse_rss_items(resp.text, limit=4)
-                for item in items:
-                    item["source_type"] = "seller_central"
-                    item["marketplace"] = mp
-                announcements.extend(items)
-        except Exception as e:
-            print(f"  ⚠️ SC News ({mp}): {e}")
+        url = f"https://news.google.com/rss/search?q={query}&hl=en&gl={region}&ceid={region}:en"
+        resp = fetch_url(url, f"SC News ({mp})")
+        if resp:
+            items = parse_rss_items(resp.text, limit=4)
+            for item in items:
+                item["source_type"] = "seller_central"
+                item["marketplace"] = mp
+            announcements.extend(items)
 
     return announcements
 
@@ -170,17 +189,14 @@ def fetch_external_news():
     ]
 
     for query, mp, region in queries:
-        try:
-            url = f"https://news.google.com/rss/search?q={query}&hl=en&gl={region}&ceid={region}:en"
-            resp = requests.get(url, timeout=15)
-            if resp.status_code == 200:
-                items = parse_rss_items(resp.text, limit=3)
-                for item in items:
-                    item["source_type"] = "external"
-                    item["marketplace"] = mp
-                news.extend(items)
-        except Exception as e:
-            print(f"  ⚠️ Google News ({query[:40]}): {e}")
+        url = f"https://news.google.com/rss/search?q={query}&hl=en&gl={region}&ceid={region}:en"
+        resp = fetch_url(url, f"Google News ({query[:40]})")
+        if resp:
+            items = parse_rss_items(resp.text, limit=3)
+            for item in items:
+                item["source_type"] = "external"
+                item["marketplace"] = mp
+            news.extend(items)
 
     return news
 
@@ -195,15 +211,12 @@ def fetch_seller_forums():
     ]
 
     for mp, url in forum_urls:
-        try:
-            resp = requests.get(url, timeout=15, headers={
-                "User-Agent": "Mozilla/5.0 (compatible; NewsBot/1.0)"
-            })
-            if resp.status_code == 200:
-                items = parse_forum_page(resp.text, mp, limit=3)
-                forums.extend(items)
-        except Exception as e:
-            print(f"  ⚠️ Forum {mp}: {e}")
+        resp = fetch_url(url, f"Forum {mp}", headers={
+            "User-Agent": "Mozilla/5.0 (compatible; NewsBot/1.0)"
+        })
+        if resp:
+            items = parse_forum_page(resp.text, mp, limit=3)
+            forums.extend(items)
 
     return forums
 
@@ -704,7 +717,8 @@ def main():
     print(f"\n📊 共抓取 {len(all_news)} 則新聞")
 
     if not all_news:
-        print("⚠️ 今日無新聞可推送")
+        print("⚠️ 今日無新聞可推送（若上方有 ⚠️/❌ HTTP 錯誤，多半是來源對雲端 IP 限流，"
+              "而非真的沒新聞——可手動重跑 workflow）")
         return
 
     # 3. Keep only AU/MENA-relevant news (Gemini), then pick top 5.
