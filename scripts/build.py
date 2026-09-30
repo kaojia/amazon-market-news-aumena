@@ -295,7 +295,8 @@ def build():
                 continue
             tags = map_tags(card["region_text"])
             # Marketplace code leads the region text ("AU - 平台", "AE - 官方公告…").
-            mkt = re.match(r"\s*([A-Z]{2})\b", card["region_text"] or "")
+            # Official cards shared across markets carry a dotted code ("AE·AU").
+            mkt = re.match(r"\s*([A-Z]{2}(?:·[A-Z]{2})*)", card["region_text"] or "")
             article = {
                 "date": date,
                 "tags": tags,
