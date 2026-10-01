@@ -58,6 +58,19 @@ body {
 .nav-link[data-filter="featured"] { color: #b45309; }
 .nav-link[data-filter="featured"]:hover { background: #fffbeb; color: #92400e; }
 .nav-link[data-filter="featured"].active { background: #f59e0b; color: #fff; }
+/* Backend-origin filter chips in the nav */
+.nav-link[data-filter^="backend:"] { font-weight: 700; }
+.nav-link[data-filter="backend:AU"] { color: #1e40af; }
+.nav-link[data-filter="backend:AU"]:hover { background: #dbeafe; color: #1e3a8a; }
+.nav-link[data-filter="backend:AU"].active { background: #2563eb; color: #fff; }
+.nav-link[data-filter="backend:MENA"] { color: #92400e; }
+.nav-link[data-filter="backend:MENA"]:hover { background: #fef3c7; color: #78350f; }
+.nav-link[data-filter="backend:MENA"].active { background: #d97706; color: #fff; }
+/* Prominent seller-backend origin badge on official cards */
+.backend-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 11px; border-radius: 12px; font-size: 12px; font-weight: 800; letter-spacing: .3px; border: 1px solid transparent; }
+.backend-badge.au   { background: #dbeafe; color: #1e40af; border-color: #93c5fd; }
+.backend-badge.mena { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
+.backend-badge.both { background: #ede9fe; color: #6d28d9; border-color: #c4b5fd; }
 .nav-search { display: flex; align-items: center; gap: 8px; margin-left: 12px; }
 .search-input { width: 180px; padding: 7px 14px; border: 1px solid var(--border); border-radius: 20px; font-size: 13px; font-family: inherit; outline: none; transition: border-color 0.2s, width 0.3s; background: var(--bg); }
 .search-input:focus { border-color: var(--accent); width: 240px; }
@@ -209,6 +222,8 @@ body {
     <div class="nav-links" id="navLinks">
       <a class="nav-link active" data-filter="all">全部</a>
       <a class="nav-link" data-filter="賣家後台">賣家後台</a>
+      <a class="nav-link" data-filter="backend:AU">🇦🇺 AU 後台</a>
+      <a class="nav-link" data-filter="backend:MENA">🕌 MENA 後台</a>
       <a class="nav-link" data-filter="稅務">稅務</a>
       <a class="nav-link" data-filter="合規">合規</a>
       <a class="nav-link" data-filter="總經">總經</a>
@@ -359,13 +374,19 @@ function marketName(a) {
 // Which Seller Central backend an official announcement came from. AE/SA both
 // live under the MENA backend; AU is its own. Shows "MENA 後台" / "AU 後台" /
 // "MENA + AU 後台" so cross-market announcements read clearly.
+function marketBackends(a) {
+  const s = new Set();
+  (a.market || '').split('·').forEach(m => { if (m) s.add(m === 'AU' ? 'AU' : 'MENA'); });
+  return s;
+}
 function backendOrigin(a) {
-  const seen = [];
-  (a.market || '').split('·').forEach(m => {
-    const label = (m === 'AU') ? 'AU' : 'MENA';
-    if (m && !seen.includes(label)) seen.push(label);
-  });
+  const seen = [...marketBackends(a)];
   return (seen.length ? seen.join(' + ') : '跨境') + ' 後台';
+}
+function backendClass(a) {
+  const b = marketBackends(a);
+  if (b.size > 1) return 'both';
+  return b.has('AU') ? 'au' : 'mena';
 }
 function priorityOf(a) {
   if (a.color === '#dc2626') return { key: 'high', label: '高關注', dot: '🔴' };
@@ -389,9 +410,17 @@ function cardGuidance(a) {
   return TAG_GUIDANCE[cardCategory(a)] || 'Amazon 市場動態，建議點擊原文確認細節與對營運的影響。';
 }
 
+const FILTER_LABELS = {
+  'all': '最新情報',
+  'backend:AU': '🇦🇺 AU 後台公告',
+  'backend:MENA': '🕌 MENA 後台公告',
+};
 function getFiltered() {
   return articles.filter(a => {
-    const matchFilter = currentFilter === 'all' || a.tags.includes(currentFilter);
+    let matchFilter;
+    if (currentFilter === 'all') matchFilter = true;
+    else if (currentFilter.startsWith('backend:')) matchFilter = isOfficial(a) && marketBackends(a).has(currentFilter.slice(8));
+    else matchFilter = a.tags.includes(currentFilter);
     const matchSearch = !currentSearch
       || a.title.toLowerCase().includes(currentSearch)
       || a.summary.toLowerCase().includes(currentSearch)
@@ -421,7 +450,7 @@ function renderGrid() {
   const start = (currentPage - 1) * PER_PAGE;
   const paged = filtered.slice(start, start + PER_PAGE);
   const grid = document.getElementById('articlesGrid');
-  const filterLabel = currentFilter === 'all' ? '最新情報' : currentFilter;
+  const filterLabel = FILTER_LABELS[currentFilter] || currentFilter;
   document.getElementById('sectionTitle').textContent = currentSearch ? `搜尋：${currentSearch}` : filterLabel;
   document.getElementById('sectionCount').textContent = `共 ${filtered.length} 則`;
   if (paged.length === 0) {
@@ -445,7 +474,7 @@ function renderGrid() {
         <div class="card-title">${a.title}</div>
         ${isOfficial(a)
           ? `<div class="card-excerpt-meta">
-               <span>🏢 ${backendOrigin(a)}</span><span class="dot-sep">·</span><span>🗂 ${cardCategory(a)}</span>
+               <span class="backend-badge ${backendClass(a)}">🏢 ${backendOrigin(a)}</span><span class="dot-sep">·</span><span>🗂 ${cardCategory(a)}</span>
              </div>
              <div class="card-excerpt">${a.summary.substring(0, 150)}...</div>`
           : `<div class="card-excerpt-meta">
@@ -510,7 +539,7 @@ function openModal(idx) {
       : '';
     body = `
     <div class="meta-chips">
-      <span class="meta-chip"><strong>🏢 賣家後台</strong> ${backendOrigin(a)}</span>
+      <span class="backend-badge ${backendClass(a)}">🏢 ${backendOrigin(a)}</span>
       <span class="meta-chip"><strong>🗂 分類</strong> ${cardCategory(a)}</span>
     </div>
     <div class="official"><strong>📋 官方公告原文</strong>${a.impact || a.summary}</div>
