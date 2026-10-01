@@ -270,6 +270,7 @@ def build():
         return
 
     all_articles = []
+    seen_keys = set()  # dedup same article repeated across daily reports
 
     for filepath in report_files:
         date = extract_date(filepath)
@@ -293,6 +294,16 @@ def build():
                     or "That's an error" in title or "That’s all we know" in title):
                 print(f"    skipped error-page card: {title[:40]!r}")
                 continue
+            # Dedup: same article often re-fetched on consecutive days, sometimes
+            # with slightly different translated titles. Prefer the source URL as
+            # key (stable across days); fall back to the normalized title.
+            srcs = card.get("sources") or []
+            first_url = srcs[0]["url"].strip() if srcs and srcs[0].get("url") else ""
+            key = first_url or re.sub(r"\s+", "", title).lower()
+            if key and key in seen_keys:
+                print(f"    skipped duplicate card: {title[:40]!r}")
+                continue
+            seen_keys.add(key)
             tags = map_tags(card["region_text"])
             # Marketplace code leads the region text ("AU - 平台", "AE - 官方公告…").
             # Official cards shared across markets carry a dotted code ("AE·AU").
