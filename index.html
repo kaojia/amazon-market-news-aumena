@@ -356,6 +356,17 @@ function marketName(a) {
   if (!a.market) return '跨境';
   return a.market.split('·').map(m => MARKET_NAMES[m] || m).join('·');
 }
+// Which Seller Central backend an official announcement came from. AE/SA both
+// live under the MENA backend; AU is its own. Shows "MENA 後台" / "AU 後台" /
+// "MENA + AU 後台" so cross-market announcements read clearly.
+function backendOrigin(a) {
+  const seen = [];
+  (a.market || '').split('·').forEach(m => {
+    const label = (m === 'AU') ? 'AU' : 'MENA';
+    if (m && !seen.includes(label)) seen.push(label);
+  });
+  return (seen.length ? seen.join(' + ') : '跨境') + ' 後台';
+}
 function priorityOf(a) {
   if (a.color === '#dc2626') return { key: 'high', label: '高關注', dot: '🔴' };
   if (a.color === '#f59e0b') return { key: 'medium', label: '中度關注', dot: '🟡' };
@@ -433,7 +444,10 @@ function renderGrid() {
         </div>
         <div class="card-title">${a.title}</div>
         ${isOfficial(a)
-          ? `<div class="card-excerpt">${a.summary.substring(0, 150)}...</div>`
+          ? `<div class="card-excerpt-meta">
+               <span>🏢 ${backendOrigin(a)}</span><span class="dot-sep">·</span><span>🗂 ${cardCategory(a)}</span>
+             </div>
+             <div class="card-excerpt">${a.summary.substring(0, 150)}...</div>`
           : `<div class="card-excerpt-meta">
                <span class="prio-badge ${priorityOf(a).key}">${priorityOf(a).dot} ${priorityOf(a).label}</span>
                <span>🌏 ${marketName(a)}</span><span class="dot-sep">·</span><span>🗂 ${cardCategory(a)}</span>
@@ -495,6 +509,10 @@ function openModal(idx) {
       ? `<div class="source">🔗 <a href="${srcHref(src.url, a.title)}" target="_blank" rel="noopener">前往 Seller Central 原公告</a></div>`
       : '';
     body = `
+    <div class="meta-chips">
+      <span class="meta-chip"><strong>🏢 賣家後台</strong> ${backendOrigin(a)}</span>
+      <span class="meta-chip"><strong>🗂 分類</strong> ${cardCategory(a)}</span>
+    </div>
     <div class="official"><strong>📋 官方公告原文</strong>${a.impact || a.summary}</div>
     ${srcLink}`;
   } else {
