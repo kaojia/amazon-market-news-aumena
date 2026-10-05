@@ -11,6 +11,7 @@ Optional:
   AMZ_SC_PATH        – Path to amz-sc binary (default: amz-sc)
 """
 
+import glob
 import json
 import os
 import re
@@ -40,6 +41,10 @@ MARKETPLACES = ["AU", "AE", "SA"]
 # (Seller Central announcements + seller forums); the rest go to external news.
 MAX_ITEMS = 5
 PLATFORM_QUOTA = 3   # seller-platform : external = 3 : 2
+
+# Google News RSS queries look back 3–7 days, so the same article keeps coming
+# back on consecutive days. Skip anything already sent in the last N days.
+PUSH_HISTORY_DAYS = 7
 
 # Source types treated as "seller platform" for the quota.
 PLATFORM_SOURCE_TYPES = {"seller_central", "forum"}
@@ -358,6 +363,29 @@ def is_excluded(item):
         return True
 
     return False
+
+
+def load_recent_pushed_urls(today, days=PUSH_HISTORY_DAYS):
+    """Source URLs already pushed in the previous ``days`` daily reports.
+
+    Today's own report is excluded so a manual re-run picks the same items.
+    """
+    cutoff = (today - timedelta(days=days)).strftime("%Y-%m-%d")
+    today_str = today.strftime("%Y-%m-%d")
+    urls = set()
+    for path in glob.glob("daily-report-*.html"):
+        m = re.search(r"(\d{4}-\d{2}-\d{2})", path)
+        if not m or not (cutoff <= m.group(1) < today_str):
+            continue
+        with open(path, encoding="utf-8") as f:
+            urls.update(u.strip() for u in re.findall(r'href="([^"]+)"', f.read()))
+    return urls
+
+
+def drop_already_pushed(items, pushed_urls):
+    kept = [x for x in items if x.get("source_url", "").strip() not in pushed_urls]
+    print(f"  前 {PUSH_HISTORY_DAYS} 天已推過、略過 {len(items) - len(kept)} 則")
+    return kept
 
 
 def filter_top_news(all_items, max_items=MAX_ITEMS, platform_quota=PLATFORM_QUOTA):
@@ -721,7 +749,14 @@ def main():
               "而非真的沒新聞——可手動重跑 workflow）")
         return
 
-    # 3. Keep only AU/MENA-relevant news (Gemini), then pick top 5.
+    # 3. Drop items already pushed in recent days (before spending Gemini calls).
+    print("\n🔁 跨日去重...")
+    all_news = drop_already_pushed(all_news, load_recent_pushed_urls(now))
+    if not all_news:
+        print("⚠️ 抓到的新聞前幾天都已推過，今日不推送")
+        return
+
+    # 3b. Keep only AU/MENA-relevant news (Gemini), then pick top 5.
     print("\n🌏 市場相關性過濾（AU/中東）...")
     all_news = gemini_market_filter(all_news)
     top_news_dashboard = filter_top_news(all_news, max_items=5)
