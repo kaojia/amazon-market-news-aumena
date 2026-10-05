@@ -295,15 +295,17 @@ def build():
                 print(f"    skipped error-page card: {title[:40]!r}")
                 continue
             # Dedup: same article often re-fetched on consecutive days, sometimes
-            # with slightly different translated titles. Prefer the source URL as
-            # key (stable across days); fall back to the normalized title.
+            # with slightly different translated titles or a fresh Google News
+            # redirect URL. Treat a card as a duplicate if EITHER its source URL
+            # or its normalized title was already seen.
             srcs = card.get("sources") or []
             first_url = srcs[0]["url"].strip() if srcs and srcs[0].get("url") else ""
-            key = first_url or re.sub(r"\s+", "", title).lower()
-            if key and key in seen_keys:
+            title_key = re.sub(r"\s+", "", title).lower()
+            keys = {k for k in (first_url, title_key) if k}
+            if keys & seen_keys:
                 print(f"    skipped duplicate card: {title[:40]!r}")
                 continue
-            seen_keys.add(key)
+            seen_keys |= keys
             tags = map_tags(card["region_text"])
             # Marketplace code leads the region text ("AU - 平台", "AE - 官方公告…").
             # Official cards shared across markets carry a dotted code ("AE·AU").
