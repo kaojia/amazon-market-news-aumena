@@ -1,6 +1,6 @@
-# Amazon Market News AU/MENA
+# Amazon Market News AU/MENA/EU
 
-跨境電商情報站 — 自動彙整 AU / AE / SA 市場每日新聞
+跨境電商情報站 — 自動彙整 AU / AE / SA 與歐洲（UK、DE、FR、IT、ES、NL、PL、SE、BE、IE）市場每日新聞
 
 🔗 **網站：https://kaojia.github.io/amazon-market-news-aumena/**
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """review_market_relevance.py — classify every published card as relevant to
-Australia (AU) / Middle East (UAE, Saudi) Amazon sellers, or not.
+Australia (AU) / Middle East (UAE, Saudi) / Europe (UK, EU) Amazon sellers, or not.
 
 Reads the cards straight out of index.html's articles JSON, asks Gemini to
 KEEP/DROP each against a strict rubric, and writes the verdicts to
@@ -30,16 +30,18 @@ BATCH = 12
 OUT = "market_review.json"
 
 RUBRIC = (
-    "你是為澳洲(AU)與中東(阿聯酋 UAE、沙烏地阿拉伯 SA)Amazon 賣家服務的市場情報分析師。"
-    "針對每則新聞，判斷它是否與 AU 或中東賣家的經營有關。\n"
+    "你是為澳洲(AU)、中東(阿聯酋 UAE、沙烏地阿拉伯 SA)與歐洲(英國 UK 及德/法/義/西/荷/波/瑞/比/愛爾蘭等歐盟站)"
+    "Amazon 賣家服務的市場情報分析師。"
+    "針對每則新聞，判斷它是否與 AU、中東或歐洲賣家的經營有關。\n"
     "KEEP（保留）條件（符合任一即可）：\n"
-    "- 主題涉及澳洲、阿聯酋、沙烏地或中東市場；\n"
-    "- 雖提及其他國家，但對 AU/中東賣家有直接影響，例如：荷姆茲海峽/中東物流、"
-    "影響中東或澳洲的關稅與貿易、Amazon 全球賣家政策(費用/廣告/上架規則)、"
-    "沙烏地 ZATCA 電子發票、AWS 中東資料中心、影響澳洲進出口的總經或反傾銷措施。\n"
+    "- 主題涉及澳洲、阿聯酋、沙烏地、中東、英國或歐盟各國市場；\n"
+    "- 雖提及其他國家，但對 AU/中東/歐洲賣家有直接影響，例如：荷姆茲海峽/中東物流、"
+    "影響中東/澳洲/歐洲的關稅與貿易、Amazon 全球賣家政策(費用/廣告/上架規則)、"
+    "沙烏地 ZATCA 電子發票、AWS 中東資料中心、影響澳洲進出口的總經或反傾銷措施、"
+    "歐盟 GPSR/EPR/VAT/OSS/海關改革、英國 VAT/海關/產品安全法規、Pan-EU FBA/EFN。\n"
     "DROP（移除）條件：\n"
-    "- 主題主要是其他市場(印度/美國/英國/歐洲/中國/非洲/新加坡等)的在地電商、"
-    "賣家費用、物流服務、市場規模或在地企業，且與 AU/中東賣家沒有直接關聯；\n"
+    "- 主題主要是其他市場(印度/美國/中國/日本/非洲/新加坡等)的在地電商、"
+    "賣家費用、物流服務、市場規模或在地企業，且與 AU/中東/歐洲賣家沒有直接關聯；\n"
     "- 純股市/財經行情、與 Amazon 賣家經營無關的一般時事。\n"
     "只回傳 JSON 陣列，每個元素對應清單中一則(依 index 順序)："
     '[{"index":0,"verdict":"KEEP","reason":"..."}]，reason 用繁體中文一句話，不要其他文字或 markdown。'

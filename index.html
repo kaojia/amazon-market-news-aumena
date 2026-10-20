@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Amazon Market News AU/MENA POST | 跨境電商情報站</title>
+<title>Amazon Market News AU/MENA/EU POST | 跨境電商情報站</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -66,10 +66,14 @@ body {
 .nav-link[data-filter="backend:MENA"] { color: #92400e; }
 .nav-link[data-filter="backend:MENA"]:hover { background: #fef3c7; color: #78350f; }
 .nav-link[data-filter="backend:MENA"].active { background: #d97706; color: #fff; }
+.nav-link[data-filter="backend:EU"] { color: #166534; }
+.nav-link[data-filter="backend:EU"]:hover { background: #dcfce7; color: #14532d; }
+.nav-link[data-filter="backend:EU"].active { background: #16a34a; color: #fff; }
 /* Prominent seller-backend origin badge on official cards */
 .backend-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 11px; border-radius: 12px; font-size: 12px; font-weight: 800; letter-spacing: .3px; border: 1px solid transparent; }
 .backend-badge.au   { background: #dbeafe; color: #1e40af; border-color: #93c5fd; }
 .backend-badge.mena { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
+.backend-badge.eu   { background: #dcfce7; color: #166534; border-color: #86efac; }
 .backend-badge.both { background: #ede9fe; color: #6d28d9; border-color: #c4b5fd; }
 .nav-search { display: flex; align-items: center; gap: 8px; margin-left: 12px; }
 .search-input { width: 180px; padding: 7px 14px; border: 1px solid var(--border); border-radius: 20px; font-size: 13px; font-family: inherit; outline: none; transition: border-color 0.2s, width 0.3s; background: var(--bg); }
@@ -212,10 +216,10 @@ body {
         <path d="M100 62l12 10-14 4" fill="#ff9900"/>
         <!-- NEWS text -->
         <text x="60" y="52" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="26" font-weight="700" fill="#ffffff" letter-spacing="2">NEWS</text>
-        <text x="60" y="104" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" font-weight="700" fill="#ff9900" letter-spacing="2">AU/MENA</text>
+        <text x="60" y="104" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="11" font-weight="700" fill="#ff9900" letter-spacing="2">AU/MENA/EU</text>
       </svg>
       <div class="nav-brand-text">
-        <span class="nav-brand-name">Amazon Market News AU/MENA</span>
+        <span class="nav-brand-name">Amazon Market News AU/MENA/EU</span>
         <span class="nav-brand-sub">跨境電商情報站</span>
       </div>
     </a>
@@ -224,6 +228,7 @@ body {
       <a class="nav-link" data-filter="賣家後台">賣家後台</a>
       <a class="nav-link" data-filter="backend:AU">🇦🇺 AU 後台</a>
       <a class="nav-link" data-filter="backend:MENA">🕌 MENA 後台</a>
+      <a class="nav-link" data-filter="backend:EU">🇪🇺 EU 後台</a>
       <a class="nav-link" data-filter="稅務">稅務</a>
       <a class="nav-link" data-filter="合規">合規</a>
       <a class="nav-link" data-filter="總經">總經</a>
@@ -348,7 +353,7 @@ body {
 
 <!-- FOOTER -->
 <div class="site-footer">
-  <p>Amazon Market News AU/MENA | 跨境電商情報站</p>
+  <p>Amazon Market News AU/MENA/EU | 跨境電商情報站</p>
   <p>由 Kiro AI 自動彙整，每日更新 | 資訊僅供參考，請以官方公告為準</p>
   <p style="margin-top:8px;">Hosted on GitHub Pages</p>
 </div>
@@ -366,17 +371,20 @@ function isOfficial(a) { return (a.tags || []).includes('賣家後台'); }
 
 // General (日報) cards carry little text beyond the title, so we surface the
 // classification signals we DO have instead of the vacuous generic summary.
-const MARKET_NAMES = { AU: '澳洲', AE: '阿聯酋', SA: '沙烏地', US: '美國' };
+const MARKET_NAMES = { AU: '澳洲', AE: '阿聯酋', SA: '沙烏地', US: '美國',
+  UK: '英國', DE: '德國', FR: '法國', IT: '義大利', ES: '西班牙', NL: '荷蘭',
+  PL: '波蘭', SE: '瑞典', BE: '比利時', IE: '愛爾蘭', EU: '歐洲' };
+const EU_MARKETS = new Set(['UK', 'DE', 'FR', 'IT', 'ES', 'NL', 'PL', 'SE', 'BE', 'IE', 'EU']);
 function marketName(a) {
   if (!a.market) return '跨境';
   return a.market.split('·').map(m => MARKET_NAMES[m] || m).join('·');
 }
 // Which Seller Central backend an official announcement came from. AE/SA both
-// live under the MENA backend; AU is its own. Shows "MENA 後台" / "AU 後台" /
-// "MENA + AU 後台" so cross-market announcements read clearly.
+// live under the MENA backend; AU is its own; UK + EU sites roll up to EU.
+// Shows e.g. "MENA + AU + EU 後台" so cross-market announcements read clearly.
 function marketBackends(a) {
   const s = new Set();
-  (a.market || '').split('·').forEach(m => { if (m) s.add(m === 'AU' ? 'AU' : 'MENA'); });
+  (a.market || '').split('·').forEach(m => { if (m) s.add(m === 'AU' ? 'AU' : EU_MARKETS.has(m) ? 'EU' : 'MENA'); });
   return s;
 }
 function backendOrigin(a) {
@@ -386,7 +394,7 @@ function backendOrigin(a) {
 function backendClass(a) {
   const b = marketBackends(a);
   if (b.size > 1) return 'both';
-  return b.has('AU') ? 'au' : 'mena';
+  return b.has('AU') ? 'au' : b.has('EU') ? 'eu' : 'mena';
 }
 function priorityOf(a) {
   if (a.color === '#dc2626') return { key: 'high', label: '高關注', dot: '🔴' };
@@ -414,6 +422,7 @@ const FILTER_LABELS = {
   'all': '最新情報',
   'backend:AU': '🇦🇺 AU 後台公告',
   'backend:MENA': '🕌 MENA 後台公告',
+  'backend:EU': '🇪🇺 EU 後台公告',
 };
 function getFiltered() {
   return articles.filter(a => {
@@ -610,7 +619,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
     "tags": [
       "賣家後台"
     ],
-    "market": "AE·AU",
+    "market": "AE·AU·EU",
     "ai": false,
     "title": "使用密鑰更輕鬆登入Seller Central",
     "summary": "花在記憶和輸入密碼上的每一分鐘，都讓您遠離事業。因此，我們建議您設定並使用密碼金鑰，以更簡單的方式登入，並根據您已使用裝置的方式進行設計。密鑰是一種額外的登入方式，可以取代您的傳統",
@@ -629,7 +638,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
     "tags": [
       "賣家後台"
     ],
-    "market": "AE·AU",
+    "market": "AE·AU·EU",
     "ai": false,
     "title": "加強服務供應商存取賣家中心的安全性",
     "summary": "自2026年9月1日起，我們已升級服務供應商存取賣家中心帳戶的方式。透過這些更新，每個協助管理亞馬遜業務的機構、自由職業者或虛擬助理都必須完成業務驗證，才能重新授權他們提供服務。升級",
@@ -648,7 +657,7 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
     "tags": [
       "賣家後台"
     ],
-    "market": "AU",
+    "market": "AU·EU",
     "ai": false,
     "title": "全新功能助你在全新的賣家中心加快工作速度",
     "summary": "在Amazon Accelerate 2026上，我們推出了十年來最大的賣家中心升級，圍繞您的工作方式進行重建，使您的業務管理更快、更簡單、更聰明。以下是新功能：在專門打造的工作空間中尋找所有內容。您的工具現在已組織成專用的工作區",
@@ -658,6 +667,139 @@ const __RAW_ARTICLES__ = /*__ARTICLES_JSON__*/[
       {
         "name": "Amazon Seller Central 官方公告 (2026-09-30)",
         "url": "https://www.sellercentral.amazon.dev/seller-news/articles/QTM5SUJKMzdUUlAxQzYjR1ZTTkFaU1laU0JTQ0VHOQ"
+      }
+    ],
+    "color": "#f59e0b"
+  },
+  {
+    "date": "2026-10-20",
+    "tags": [
+      "賣家後台"
+    ],
+    "market": "EU",
+    "ai": false,
+    "title": "FBA和MCF歐盟燃油和物流相關附加費的最新消息",
+    "summary": "整個行業的燃料和物流成本持續上升，我們已盡可能吸收這些成本。2026年4月，我們對履行費收取附加費，以收回部分高昂的成本，類似於其他主要承運商。由於這些持續在",
+    "impact": "整個行業的燃料和物流成本持續上升，我們已盡可能吸收這些成本。2026年4月，我們對履行費收取附加費，以收回部分高昂的成本，類似於其他主要承運商。由於這些持續在",
+    "action": "Amazon 官方公告，請依公告內容確認對帳戶/刊登/合規的影響與時程。",
+    "sources": [
+      {
+        "name": "Amazon Seller Central 官方公告 (2026-10-19)",
+        "url": "https://www.sellercentral.amazon.dev/seller-news/articles/QTFGODNHOEMyQVJPN1AjR001SDlYOFpNWFRVRlpEVg"
+      }
+    ],
+    "color": "#f59e0b"
+  },
+  {
+    "date": "2026-10-20",
+    "tags": [
+      "賣家後台"
+    ],
+    "market": "UK",
+    "ai": false,
+    "title": "英國賣家滿足Prime資格條件的更新",
+    "summary": "自2026年10月30日起，我們將更新英國商店中賣家完成訂單的賣家完成Prime (SFP)資格標準。為了更好地反映客戶的期望，我們推出了三個產品層級：標準尺寸、超大尺寸和超大尺寸。對於產品尺寸和等級要求",
+    "impact": "自2026年10月30日起，我們將更新英國商店中賣家完成訂單的賣家完成Prime (SFP)資格標準。為了更好地反映客戶的期望，我們推出了三個產品層級：標準尺寸、超大尺寸和超大尺寸。對於產品尺寸和等級要求",
+    "action": "Amazon 官方公告，請依公告內容確認對帳戶/刊登/合規的影響與時程。",
+    "sources": [
+      {
+        "name": "Amazon Seller Central 官方公告 (2026-10-14)",
+        "url": "https://www.sellercentral.amazon.dev/seller-news/articles/QTFGODNHOEMyQVJPN1AjR1ozUllMWlZXWTlQM0o0UA"
+      }
+    ],
+    "color": "#dc2626"
+  },
+  {
+    "date": "2026-10-20",
+    "tags": [
+      "賣家後台"
+    ],
+    "market": "EU",
+    "ai": false,
+    "title": "FBA部分退款現已提供退貨原因",
+    "summary": "如果您是美國、英國、德國、法國、義大利、西班牙和加拿大的Fulfilled by Amazon (FBA)賣家，現在可以選擇哪些客戶退貨原因符合提供部分退款的資格。FBA部分退款計劃可讓您為顧客提供部分退款，",
+    "impact": "如果您是美國、英國、德國、法國、義大利、西班牙和加拿大的Fulfilled by Amazon (FBA)賣家，現在可以選擇哪些客戶退貨原因符合提供部分退款的資格。FBA部分退款計劃可讓您為顧客提供部分退款，",
+    "action": "Amazon 官方公告，請依公告內容確認對帳戶/刊登/合規的影響與時程。",
+    "sources": [
+      {
+        "name": "Amazon Seller Central 官方公告 (2026-10-09)",
+        "url": "https://www.sellercentral.amazon.dev/seller-news/articles/QTFGODNHOEMyQVJPN1AjR1hYM1k3N0FLRkVYWk5YUA"
+      }
+    ],
+    "color": "#f59e0b"
+  },
+  {
+    "date": "2026-10-20",
+    "tags": [
+      "賣家後台"
+    ],
+    "market": "EU",
+    "ai": false,
+    "title": "充滿信心地推出新產品",
+    "summary": "Product Opportunity Explorer的全新增強功能和Seller Central中的新產品發佈計劃可幫助您找到下一個產品，在花費一分錢之前驗證需求，並推出經過驗證的計劃。在推出前使用Opportunity Explorer的賣家在前90天內的銷售額增加了兩倍",
+    "impact": "Product Opportunity Explorer的全新增強功能和Seller Central中的新產品發佈計劃可幫助您找到下一個產品，在花費一分錢之前驗證需求，並推出經過驗證的計劃。在推出前使用Opportunity Explorer的賣家在前90天內的銷售額增加了兩倍",
+    "action": "Amazon 官方公告，請依公告內容確認對帳戶/刊登/合規的影響與時程。",
+    "sources": [
+      {
+        "name": "Amazon Seller Central 官方公告 (2026-10-09)",
+        "url": "https://www.sellercentral.amazon.dev/seller-news/articles/QTFGODNHOEMyQVJPN1AjR1FEQVZBM1JCSEw1WUtRVQ"
+      }
+    ],
+    "color": "#f59e0b"
+  },
+  {
+    "date": "2026-10-20",
+    "tags": [
+      "賣家後台"
+    ],
+    "market": "EU",
+    "ai": false,
+    "title": "退貨和恢復洞察：現在在新的賣家中心",
+    "summary": "全新的賣家中心現已推出退貨和回收數據分析工具。監控客戶的Fulfil by Amazon (FBA)和賣家完成訂單的退貨績效資料，包括關鍵退貨指標、主要退貨原因，以及解決退貨相關問題的建議。",
+    "impact": "全新的賣家中心現已推出退貨和回收數據分析工具。監控客戶的Fulfil by Amazon (FBA)和賣家完成訂單的退貨績效資料，包括關鍵退貨指標、主要退貨原因，以及解決退貨相關問題的建議。",
+    "action": "Amazon 官方公告，請依公告內容確認對帳戶/刊登/合規的影響與時程。",
+    "sources": [
+      {
+        "name": "Amazon Seller Central 官方公告 (2026-10-08)",
+        "url": "https://www.sellercentral.amazon.dev/seller-news/articles/QTFGODNHOEMyQVJPN1AjR0E3VUY4NkhTU1lVUVdQUA"
+      }
+    ],
+    "color": "#f59e0b"
+  },
+  {
+    "date": "2026-10-20",
+    "tags": [
+      "賣家後台"
+    ],
+    "market": "EU",
+    "ai": false,
+    "title": "向奧地利送遞B2C商品的新包裹稅",
+    "summary": "自2026年10月1日起，奧地利的《包裹稅法》（ Paketsteuergesetz ， PakStG ）生效。如前所述，法律對所有送到奧地利顧客的企業對消費者(B2C)訂單，每份訂單收取€ 2.00的統一稅。該稅項根據奧地利法律規定，適用於",
+    "impact": "自2026年10月1日起，奧地利的《包裹稅法》（ Paketsteuergesetz ， PakStG ）生效。如前所述，法律對所有送到奧地利顧客的企業對消費者(B2C)訂單，每份訂單收取€ 2.00的統一稅。該稅項根據奧地利法律規定，適用於",
+    "action": "Amazon 官方公告，請依公告內容確認對帳戶/刊登/合規的影響與時程。",
+    "sources": [
+      {
+        "name": "Amazon Seller Central 官方公告 (2026-10-02)",
+        "url": "https://www.sellercentral.amazon.dev/seller-news/articles/QTE4MDVJWlNHVFQ2SFMjR01EVUpSTldYTTg0WVU2NQ"
+      }
+    ],
+    "color": "#dc2626"
+  },
+  {
+    "date": "2026-10-20",
+    "tags": [
+      "賣家後台"
+    ],
+    "market": "PL·SE",
+    "ai": false,
+    "title": "獲得EPR包裝合規成本的報銷",
+    "summary": "我們最近提醒您有關2026年8月12日生效的新歐盟包裝廢棄物法規（ PPWR ）及其單一生產商註冊要求。如果您在波蘭銷售，您有資格根據以下條款獲得延長生產者責任（ EPR ）合規成本的部分報銷",
+    "impact": "我們最近提醒您有關2026年8月12日生效的新歐盟包裝廢棄物法規（ PPWR ）及其單一生產商註冊要求。如果您在波蘭銷售，您有資格根據以下條款獲得延長生產者責任（ EPR ）合規成本的部分報銷",
+    "action": "Amazon 官方公告，請依公告內容確認對帳戶/刊登/合規的影響與時程。",
+    "sources": [
+      {
+        "name": "Amazon Seller Central 官方公告 (2026-10-05)",
+        "url": "https://www.sellercentral.amazon.dev/seller-news/articles/QTFDM1NPWlJBUlE2UjMjRzVRS1JEM0s1NzJOU1hVOA"
       }
     ],
     "color": "#f59e0b"

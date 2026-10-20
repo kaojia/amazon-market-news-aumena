@@ -35,12 +35,25 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash-lite")
 
 MARKETPLACES = ["AU", "AE", "SA"]
+# Europe (EU 招商). "EU" = pan-European item not tied to one site.
+EU_MARKETPLACES = ["UK", "DE", "FR", "IT", "ES", "NL", "PL", "SE", "BE", "IE", "EU"]
+
+# Short name per marketplace label, for Gemini prompts and template summaries.
+MP_NAMES = {
+    "AU": "澳洲", "AE": "阿聯酋", "SA": "沙烏地阿拉伯",
+    "UK": "英國", "DE": "德國", "FR": "法國", "IT": "義大利", "ES": "西班牙",
+    "NL": "荷蘭", "PL": "波蘭", "SE": "瑞典", "BE": "比利時", "IE": "愛爾蘭",
+    "EU": "歐洲",
+}
 
 # Daily dashboard/LINE item counts and source mix.
 # Of MAX_ITEMS, guarantee PLATFORM_QUOTA slots for seller-platform sources
 # (Seller Central announcements + seller forums); the rest go to external news.
 MAX_ITEMS = 5
 PLATFORM_QUOTA = 3   # seller-platform : external = 3 : 2
+# EU gets its own reserved slots on top, so AU/MENA items are never crowded out.
+EU_MAX_ITEMS = 3
+EU_PLATFORM_QUOTA = 2
 
 # Google News RSS queries look back 3–7 days, so the same article keeps coming
 # back on consecutive days. Skip anything already sent in the last N days.
@@ -155,6 +168,26 @@ def fetch_url(url, label, timeout=15, headers=None, retries=3, backoff=5):
     return None
 
 
+# Europe queries. Google News accepts only real (country, language) editions,
+# so local-language sites use their own language (titles get translated later).
+# Smaller EU sites (NL/PL/SE/BE/IE) are covered by the pan-EU "EU" queries.
+EU_SC_QUERIES = [
+    ("UK", "Amazon+UK+seller+fee+OR+policy+OR+FBA+when:7d", "GB"),
+    ("UK", "Amazon+UK+seller+central+announcement+OR+update+when:7d", "GB"),
+    ("EU", "Amazon+seller+Europe+GPSR+OR+EPR+OR+VAT+OR+OSS+when:7d", "GB"),
+    ("EU", "Amazon+Pan-European+FBA+OR+EFN+OR+%22Amazon+Europe%22+seller+when:7d", "GB"),
+    ("DE", "Amazon+Verk%C3%A4ufer+Geb%C3%BChren+OR+Richtlinie+OR+FBA+when:7d", "DE", "de"),
+    ("FR", "Amazon+vendeurs+frais+OR+politique+OR+FBA+when:7d", "FR", "fr"),
+    ("IT", "Amazon+venditori+commissioni+OR+FBA+OR+policy+when:7d", "IT", "it"),
+    ("ES", "Amazon+vendedores+tarifas+OR+FBA+OR+pol%C3%ADtica+when:7d", "ES", "es"),
+]
+
+EU_EXTERNAL_QUERIES = [
+    ("UK+ecommerce+OR+online+marketplace+regulation+OR+VAT+OR+customs+when:3d", "UK", "GB"),
+    ("EU+ecommerce+regulation+OR+GPSR+OR+%22customs+reform%22+OR+%22de+minimis%22+when:3d", "EU", "GB"),
+]
+
+
 def fetch_sc_announcements():
     """Fetch Seller Central news via Google News RSS with SC-specific queries."""
     announcements = []
@@ -169,8 +202,12 @@ def fetch_sc_announcements():
         ("SA", "Amazon+Saudi+seller+central+announcement+OR+FBA+when:7d", "AE"),
     ]
 
-    for mp, query, region in sc_queries:
-        url = f"https://news.google.com/rss/search?q={query}&hl=en&gl={region}&ceid={region}:en"
+    sc_queries += EU_SC_QUERIES
+
+    for q in sc_queries:
+        mp, query, region = q[:3]
+        lang = q[3] if len(q) > 3 else "en"
+        url = f"https://news.google.com/rss/search?q={query}&hl={lang}&gl={region}&ceid={region}:{lang}"
         resp = fetch_url(url, f"SC News ({mp})")
         if resp:
             items = parse_rss_items(resp.text, limit=4)
@@ -193,8 +230,12 @@ def fetch_external_news():
         ("Saudi+ecommerce+OR+VAT+OR+regulation+when:3d", "SA", "AE"),
     ]
 
-    for query, mp, region in queries:
-        url = f"https://news.google.com/rss/search?q={query}&hl=en&gl={region}&ceid={region}:en"
+    queries += EU_EXTERNAL_QUERIES
+
+    for q in queries:
+        query, mp, region = q[:3]
+        lang = q[3] if len(q) > 3 else "en"
+        url = f"https://news.google.com/rss/search?q={query}&hl={lang}&gl={region}&ceid={region}:{lang}"
         resp = fetch_url(url, f"Google News ({query[:40]})")
         if resp:
             items = parse_rss_items(resp.text, limit=3)
@@ -453,8 +494,7 @@ def generate_summary(item):
     marketplace = item.get("marketplace", "")
     priority = item.get("priority", "low")
 
-    mp_names = {"AU": "澳洲", "AE": "阿聯酋", "SA": "沙烏地阿拉伯"}
-    mp_name = mp_names.get(marketplace, "AU/MENA")
+    mp_name = MP_NAMES.get(marketplace, "AU/MENA/EU")
 
     templates = {
         "FBA": f"與 Amazon {mp_name}站 FBA 物流服務相關的最新動態，可能影響賣家倉儲與配送策略。",
@@ -494,16 +534,15 @@ def gemini_enrich(news_items):
     if not news_items:
         return news_items
 
-    mp_names = {"AU": "澳洲", "AE": "阿聯酋", "SA": "沙烏地阿拉伯"}
     lines = []
     for i, it in enumerate(news_items):
-        mp = mp_names.get(it.get("marketplace", ""), it.get("marketplace", ""))
+        mp = MP_NAMES.get(it.get("marketplace", ""), it.get("marketplace", ""))
         lines.append(f'{i}. [{mp}/{it.get("category","")}] {it.get("title","")}')
     headlines = "\n".join(lines)
 
     prompt = (
-        "你是 Amazon 跨境電商賣家的市場情報分析師，服務 AU/MENA(澳洲、阿聯酋、"
-        "沙烏地)賣家。以下是今日新聞標題清單，每則含[市場/分類]。\n"
+        "你是 Amazon 跨境電商賣家的市場情報分析師，服務 AU/MENA/EU(澳洲、阿聯酋、"
+        "沙烏地、英國與歐盟各站)賣家。以下是今日新聞標題清單，每則含[市場/分類]。\n"
         "請「僅根據標題」為每則產生繁體中文分析（不要杜撰標題沒有的具體數字或日期）：\n"
         "- summary: 1 句話說明這則新聞在講什麼\n"
         "- impact: 1-2 句，對 Amazon 賣家經營的實際影響（若影響有限就誠實說明）\n"
@@ -546,15 +585,15 @@ def gemini_enrich(news_items):
 
 # Rubric shared with scripts/review_market_relevance.py (imported there).
 MARKET_RUBRIC = (
-    "你是為澳洲(AU)與中東(阿聯酋 UAE、沙烏地阿拉伯 SA)Amazon 賣家服務的市場情報分析師。"
-    "針對每則新聞標題，判斷它是否與 AU 或中東賣家的經營有關。\n"
-    "KEEP（保留）條件（符合任一即可）：主題涉及澳洲/阿聯酋/沙烏地/中東市場；"
-    "或雖提及其他國家但對 AU/中東賣家有直接影響（荷姆茲海峽/中東物流、影響中東或澳洲的關稅與貿易、"
-    "Amazon 全球賣家政策(費用/廣告/上架規則)、沙烏地 ZATCA 電子發票、AWS 中東、影響澳洲進出口的總經或反傾銷措施）。\n"
-    "DROP（移除）條件：主題主要是其他市場(印度/美國/英國/歐洲/中國/非洲/新加坡/韓國等)的在地電商、"
-    "賣家費用、物流服務、市場規模或在地企業，且與 AU/中東賣家沒有直接關聯；或純股市/財經行情、"
+    "你是為澳洲(AU)、中東(阿聯酋 UAE、沙烏地阿拉伯 SA)與歐洲(英國 UK 及德/法/義/西/荷/波/瑞/比/愛爾蘭等歐盟站)Amazon 賣家服務的市場情報分析師。"
+    "針對每則新聞標題，判斷它是否與 AU、中東或歐洲賣家的經營有關。\n"
+    "KEEP（保留）條件（符合任一即可）：主題涉及澳洲/阿聯酋/沙烏地/中東/英國/歐盟各國市場；"
+    "或雖提及其他國家但對 AU/中東/歐洲賣家有直接影響（荷姆茲海峽/中東物流、影響中東/澳洲/歐洲的關稅與貿易、"
+    "Amazon 全球賣家政策(費用/廣告/上架規則)、沙烏地 ZATCA 電子發票、AWS 中東、影響澳洲進出口的總經或反傾銷措施、歐盟 GPSR/EPR/VAT/OSS/海關改革/低價包裹免稅取消、英國 VAT/海關/產品安全法規、Pan-EU FBA/EFN）。\n"
+    "DROP（移除）條件：主題主要是其他市場(印度/美國/中國/日本/非洲/新加坡/韓國等)的在地電商、"
+    "賣家費用、物流服務、市場規模或在地企業，且與 AU/中東/歐洲賣家沒有直接關聯；或純股市/財經行情、"
     "與 Amazon 賣家經營無關的一般時事。\n"
-    "關鍵：先判斷這則新聞「主要發生地/對象市場」是哪個國家——若主要是印度/美國/英國等非 AU/中東市場"
+    "關鍵：先判斷這則新聞「主要發生地/對象市場」是哪個國家——若主要是印度/美國等非 AU/中東/歐洲市場"
     "的在地事件(即使內容提到 Amazon)，就 DROP。例如『Amazon 在印度新增配送站』主要對象是印度→DROP。\n"
     "只回傳 JSON 陣列，每元素對應清單一則(依 index)："
     '[{"index":0,"verdict":"KEEP"}]，不要其他文字或 markdown。'
@@ -563,7 +602,7 @@ MARKET_RUBRIC = (
 
 def gemini_market_filter(news_items):
     """Drop items whose primary subject is a market other than AU/UAE/Saudi with
-    no AU/MENA seller relevance. One batched Gemini call. Fail-open: on missing
+    no AU/MENA/EU seller relevance. One batched Gemini call. Fail-open: on missing
     key or ANY error, keep all items so news is never silently lost."""
     if not GEMINI_API_KEY or not news_items:
         return news_items
@@ -603,7 +642,7 @@ def gemini_market_filter(news_items):
     keep = [it for it, v in zip(news_items, verdicts) if v != "DROP"]
     removed = len(news_items) - len(keep)
     if removed:
-        print(f"  🌏 市場過濾：移除非 AU/中東相關 {removed} 則，保留 {len(keep)} 則")
+        print(f"  🌏 市場過濾：移除非 AU/中東/歐洲相關 {removed} 則，保留 {len(keep)} 則")
     return keep
 
 
@@ -756,10 +795,16 @@ def main():
         print("⚠️ 抓到的新聞前幾天都已推過，今日不推送")
         return
 
-    # 3b. Keep only AU/MENA-relevant news (Gemini), then pick top 5.
-    print("\n🌏 市場相關性過濾（AU/中東）...")
+    # 3b. Keep only AU/MENA/EU-relevant news (Gemini), then pick AU/MENA 5 + EU 3.
+    print("\n🌏 市場相關性過濾（AU/中東/歐洲）...")
     all_news = gemini_market_filter(all_news)
-    top_news_dashboard = filter_top_news(all_news, max_items=5)
+    # AU/MENA and EU are picked from separate pools so each keeps its slots.
+    eu_news = [x for x in all_news if x.get("marketplace") in EU_MARKETPLACES]
+    aumena_news = [x for x in all_news if x.get("marketplace") not in EU_MARKETPLACES]
+    print("  AU/MENA:")
+    top_news_dashboard = filter_top_news(aumena_news, MAX_ITEMS, PLATFORM_QUOTA)
+    print("  EU:")
+    top_news_dashboard += filter_top_news(eu_news, EU_MAX_ITEMS, EU_PLATFORM_QUOTA)
 
     # 4a. AI-generate real summaries/impact/action from the headline (Gemini).
     print("\n🤖 產生 AI 摘要...")
@@ -777,7 +822,7 @@ def main():
     for i, item in enumerate(top_news_dashboard, 1):
         print(f"  📤 {i}. [{item['priority']}] [{item['category']}] {item['title']}")
 
-    # 6. Push to LINE (all 5)
+    # 6. Push to LINE (all items)
     print("\n📤 推送到 LINE...")
     success = push_to_line(top_news_dashboard)
 
@@ -787,7 +832,7 @@ def main():
         print("\n❌ 推送失敗")
         sys.exit(1)
 
-    # 7. Save top 5 to daily report for dashboard
+    # 7. Save all items to daily report for dashboard
     save_daily_report(top_news_dashboard, now)
 
 
