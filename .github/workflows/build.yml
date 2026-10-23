@@ -3,7 +3,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'daily-report-*.html'
+      - 'reports/daily-report-*.html'
       - 'scripts/build.py'
       - 'index.html'
   workflow_dispatch:

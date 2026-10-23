@@ -16,24 +16,24 @@ echo ========================================
 echo.
 
 :: 檢查是否有新的日報檔案
-git status --porcelain daily-report-*.html > nul 2>&1
+git status --porcelain reports/daily-report-*.html > nul 2>&1
 set found=0
-for /f "delims=" %%F in ('git status --porcelain daily-report-*.html 2^>nul') do set found=1
+for /f "delims=" %%F in ('git status --porcelain reports/daily-report-*.html 2^>nul') do set found=1
 
 if %found%==0 (
     echo [!] 沒有偵測到新的日報檔案。
-    echo     請先將 daily-report-YYYY-MM-DD.html 放入此資料夾。
+    echo     請先將 daily-report-YYYY-MM-DD.html 放入 reports 資料夾。
     echo.
     pause
     exit /b
 )
 
 echo [1/4] 偵測到新日報檔案：
-git status --short daily-report-*.html
+git status --short reports/daily-report-*.html
 echo.
 
 echo [2/4] 加入 Git 並提交...
-git add daily-report-*.html
+git add reports/daily-report-*.html
 git commit -m "Add daily report %TODAY%"
 echo.
 

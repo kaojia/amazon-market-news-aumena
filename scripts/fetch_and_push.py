@@ -414,7 +414,7 @@ def load_recent_pushed_urls(today, days=PUSH_HISTORY_DAYS):
     cutoff = (today - timedelta(days=days)).strftime("%Y-%m-%d")
     today_str = today.strftime("%Y-%m-%d")
     urls = set()
-    for path in glob.glob("daily-report-*.html"):
+    for path in glob.glob("reports/daily-report-*.html"):
         m = re.search(r"(\d{4}-\d{2}-\d{2})", path)
         if not m or not (cutoff <= m.group(1) < today_str):
             continue
@@ -839,7 +839,7 @@ def main():
 def save_daily_report(news_items, now):
     """Save fetched news as a daily-report HTML for the dashboard build."""
     date_str = now.strftime("%Y-%m-%d")
-    filename = f"daily-report-{date_str}.html"
+    filename = f"reports/daily-report-{date_str}.html"
 
     if os.path.exists(filename):
         print(f"  ℹ️ {filename} already exists, will overwrite with fresh data")

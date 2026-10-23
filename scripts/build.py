@@ -264,7 +264,7 @@ def priority_color(priority):
 
 
 def build():
-    report_files = sorted(glob.glob("daily-report-*.html"))
+    report_files = sorted(glob.glob("reports/daily-report-*.html"))
     if not report_files:
         print("No daily-report-*.html files found.")
         return

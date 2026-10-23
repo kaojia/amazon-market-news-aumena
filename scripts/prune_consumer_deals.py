@@ -129,7 +129,7 @@ def main() -> None:
     os.chdir(repo_root)
 
     total = 0
-    for path in sorted(glob.glob("daily-report-*.html")):
+    for path in sorted(glob.glob("reports/daily-report-*.html")):
         n = prune_file(path, args.dry_run)
         if n:
             print(f"  {path}: {'would drop' if args.dry_run else 'dropped'} {n}")

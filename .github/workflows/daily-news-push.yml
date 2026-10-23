@@ -40,7 +40,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add daily-report-*.html index.html
+          git add reports/daily-report-*.html index.html
           git diff --cached --quiet || git commit -m "Auto: daily news $(date +%Y-%m-%d)"
           git push || true
 

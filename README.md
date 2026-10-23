@@ -19,7 +19,7 @@
 ## 運作機制
 
 ```
-daily-report-*.html  →  build.py  →  index.html  →  GitHub Pages
+reports/daily-report-*.html  →  build.py  →  index.html  →  GitHub Pages
      (日報資料)          (解析注入)      (網站頁面)       (自動部署)
 ```
 
@@ -27,18 +27,18 @@ daily-report-*.html  →  build.py  →  index.html  →  GitHub Pages
 
 | 檔案 | 用途 |
 |------|------|
-| `daily-report-YYYY-MM-DD.html` | 每日新聞日報（HTML 格式，含新聞卡片） |
+| `reports/daily-report-YYYY-MM-DD.html` | 每日新聞日報（HTML 格式，含新聞卡片） |
 | `index.html` | 網站主頁（模板 + 資料，由 build 腳本產生） |
 | `scripts/build.py` | Python 建置腳本，掃描所有日報並注入資料到 index.html |
 | `.github/workflows/build.yml` | GitHub Actions CI/CD，自動建置 + 部署 |
 
 ### 自動化流程
 
-1. **新增日報**：將 `daily-report-YYYY-MM-DD.html` 放入 repo 根目錄
+1. **新增日報**：將 `reports/daily-report-YYYY-MM-DD.html` 放入 `reports/` 資料夾
 2. **Push 到 main**：`git add` → `git commit` → `git push`
 3. **GitHub Actions 自動觸發**：
    - 執行 `python scripts/build.py`
-   - 腳本掃描所有 `daily-report-*.html`，解析每張新聞卡片
+   - 腳本掃描所有 `reports/daily-report-*.html`，解析每張新聞卡片
    - 將解析結果（JSON）注入 `index.html` 的 `/*__ARTICLES_JSON__*/` 佔位符
    - 自動 commit 更新後的 `index.html`
    - 部署到 GitHub Pages
@@ -106,7 +106,7 @@ python scripts/build.py
 ```bash
 # 1. 把新日報放進資料夾
 # 2. 執行以下指令
-git add daily-report-2026-XX-XX.html
+git add reports/daily-report-2026-XX-XX.html
 git commit -m "Add daily report XX-XX"
 git push
 

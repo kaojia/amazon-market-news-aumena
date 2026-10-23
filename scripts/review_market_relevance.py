@@ -111,7 +111,7 @@ def _norm(t):
 
 def apply_drops(drop_titles):
     dropped = 0
-    for path in sorted(glob.glob("daily-report-*.html")):
+    for path in sorted(glob.glob("reports/daily-report-*.html")):
         content = open(path, encoding="utf-8").read()
         spans = list(_find_card_spans(content))
         to_drop = []

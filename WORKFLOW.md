@@ -7,7 +7,7 @@
     ↓
 在 Kiro 中搜尋新聞 & 產生日報 HTML
     ↓
-daily-report-YYYY-MM-DD.html 存入 repo 根目錄
+reports/daily-report-YYYY-MM-DD.html 存入 `reports/` 資料夾
     ↓
 ┌─────────────────────────────────────────────┐
 │  路徑 A：發送 Email                          │
@@ -42,7 +42,7 @@ daily-report-YYYY-MM-DD.html 存入 repo 根目錄
 ### 2. 產生日報 HTML
 
 - **工具**：Kiro（手動操作）
-- **輸出**：`daily-report-YYYY-MM-DD.html`，存放於 repo 根目錄
+- **輸出**：`reports/daily-report-YYYY-MM-DD.html`，存放於 `reports/` 資料夾
 - **格式要求**：
   - 每則新聞為一個 `.card` div
   - 包含 `.region`、`.summary`、`.impact`、`.action`、`.source` 子區塊
@@ -55,7 +55,7 @@ daily-report-YYYY-MM-DD.html 存入 repo 根目錄
 #### 方式 A：產生 .eml 檔案
 
 ```powershell
-powershell scripts\generate-eml.ps1 -HtmlPath daily-report-YYYY-MM-DD.html -Type daily -OpenOutlook
+powershell scripts\generate-eml.ps1 -HtmlPath reports/daily-report-YYYY-MM-DD.html -Type daily -OpenOutlook
 ```
 
 - 產生 RFC 2822 格式的 `.eml` 檔案
@@ -65,10 +65,10 @@ powershell scripts\generate-eml.ps1 -HtmlPath daily-report-YYYY-MM-DD.html -Type
 
 ```powershell
 # 開啟草稿確認
-powershell scripts\send-via-outlook.ps1 -HtmlPath daily-report-YYYY-MM-DD.html -Type daily
+powershell scripts\send-via-outlook.ps1 -HtmlPath reports/daily-report-YYYY-MM-DD.html -Type daily
 
 # 直接寄出
-powershell scripts\send-via-outlook.ps1 -HtmlPath daily-report-YYYY-MM-DD.html -Type daily -Send
+powershell scripts\send-via-outlook.ps1 -HtmlPath reports/daily-report-YYYY-MM-DD.html -Type daily -Send
 ```
 
 ### 4. 發佈到網站
@@ -84,7 +84,7 @@ publish.bat
 #### 方式 B：手動 Git 操作
 
 ```bash
-git add daily-report-YYYY-MM-DD.html
+git add reports/daily-report-YYYY-MM-DD.html
 git commit -m "Add daily report YYYY-MM-DD"
 git push
 ```
@@ -93,7 +93,7 @@ git push
 
 Push 到 main 後自動觸發：
 
-1. `build.py` 掃描所有 `daily-report-*.html`
+1. `build.py` 掃描所有 `reports/daily-report-*.html`
 2. 解析每張新聞卡片，提取標題、摘要、影響分析、Action 建議、來源
 3. 自動分類標籤（物流、總經、稅務、合規、貿易、平台）
 4. 產生 JSON 注入 `index.html`
@@ -145,7 +145,7 @@ Push 到 main 後自動觸發：
 | `scripts/build.py` | 解析日報 HTML → JSON → 注入 index.html |
 | `.github/workflows/build.yml` | CI/CD 自動建置 + 部署 GitHub Pages |
 | `index.html` | 網站主頁模板 |
-| `daily-report-*.html` | 每日新聞日報資料檔 |
+| `reports/daily-report-*.html` | 每日新聞日報資料檔 |
 
 ---
 
@@ -164,12 +164,12 @@ Push 到 main 後自動觸發：
 # 1. 在 Kiro 中產生今日日報 HTML
 
 # 2. 寄送 Email
-powershell scripts\generate-eml.ps1 -HtmlPath daily-report-2026-05-06.html -Type daily -OpenOutlook
+powershell scripts\generate-eml.ps1 -HtmlPath reports/daily-report-2026-05-06.html -Type daily -OpenOutlook
 
 # 3. 發佈到網站
 .\publish.bat
 # 或
-git add daily-report-2026-05-06.html
+git add reports/daily-report-2026-05-06.html
 git commit -m "Add daily report 2026-05-06"
 git push
 
