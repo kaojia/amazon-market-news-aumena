@@ -18,3 +18,7 @@ __pycache__/
 scripts/send-via-outlook.ps1
 scripts/setup-task-scheduler.ps1
 scripts/generate-eml.ps1
+
+# 本機官方公告注入腳本（需 Midway），已移到 private repo kaojia/market-news-private
+scripts/inject_sc_news.py
+daily-local.sh
