@@ -27,7 +27,7 @@ from deep_translator import GoogleTranslator, MyMemoryTranslator
 # ---------------------------------------------------------------------------
 
 RENDER_DEPLOY_URL = os.environ.get("RENDER_DEPLOY_URL", "")
-PUSH_SECRET = os.environ.get("PUSH_SECRET", "jenny-daily-push")
+PUSH_SECRET = os.environ.get("PUSH_SECRET", "")
 
 # Gemini (Google) — used to turn a bare headline into a real Traditional-Chinese
 # summary + seller-impact + action. Optional: no key ⇒ fall back to templates.
@@ -722,7 +722,6 @@ def push_to_line(news_items):
         print("❌ RENDER_DEPLOY_URL not set, cannot push")
         return False
 
-    print(f"  DEBUG: PUSH_SECRET length={len(PUSH_SECRET)}, repr={repr(PUSH_SECRET)}")
     print(f"  DEBUG: RENDER_DEPLOY_URL='{RENDER_DEPLOY_URL}'")
 
     payload = {
